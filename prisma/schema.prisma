@@ -8,12 +8,14 @@ datasource db {
 }
 
 model Practice {
-  id        String    @id @default(cuid())
-  name      String
-  createdAt DateTime  @default(now())
-  users     User[]
-  patients  Patient[]
-  reports   Report[]
+  id               String            @id @default(cuid())
+  name             String
+  createdAt        DateTime          @default(now())
+  users            User[]
+  patients         Patient[]
+  reports          Report[]
+  serviceCatalog   ServiceCatalogItem[]
+  serviceTemplates ServiceTemplate[]
 }
 
 model User {
@@ -47,23 +49,103 @@ model Patient {
 // SQLite has no native enum support; these are constrained to
 // "BEFUND" | "KRANKENKASSE" and "ENTWURF" | "FINAL" in application code.
 model Report {
-  id                String       @id @default(cuid())
+  id                String            @id @default(cuid())
   practiceId        String
-  practice          Practice     @relation(fields: [practiceId], references: [id])
+  practice          Practice          @relation(fields: [practiceId], references: [id])
   patientId         String
-  patient           Patient      @relation(fields: [patientId], references: [id])
+  patient           Patient           @relation(fields: [patientId], references: [id])
   authorId          String
-  author            User         @relation(fields: [authorId], references: [id])
+  author            User              @relation(fields: [authorId], references: [id])
   type              String
-  status            String       @default("ENTWURF")
+  status            String            @default("ENTWURF")
   treatmentDate     DateTime?
-  bulletPoints      String
+  serviceTemplateId String?
+  serviceTemplate   ServiceTemplate?  @relation(fields: [serviceTemplateId], references: [id])
+  serviceEntries    ReportServiceEntry[]
+  // Server-generated summary of the reviewed service list, used as the
+  // structured basis for the AI report text (replaces free-text input).
+  serviceSummary    String
+  // Set once staff has explicitly confirmed the full checklist was reviewed
+  // (nothing left unreviewed) before generation is allowed.
+  reviewConfirmed   Boolean           @default(false)
   additionalContext String?
   generatedText     String?
   editedText        String?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   @@index([practiceId])
   @@index([patientId])
+}
+
+// Beispielkatalog von Leistungspositionen (GOZ/BEMA). Enthält bewusst keine
+// Punktwerte/Eurobeträge, da sich diese ändern und praxis-/kassenspezifisch
+// sind. Vor dem Einsatz zur echten Abrechnung gegen das aktuelle offizielle
+// Gebührenverzeichnis prüfen. practiceId = null bedeutet: globale
+// Standardposition, für alle Praxen sichtbar; gesetzt = praxiseigene
+// Zusatzposition.
+model ServiceCatalogItem {
+  id           String              @id @default(cuid())
+  practiceId   String?
+  practice     Practice?           @relation(fields: [practiceId], references: [id])
+  system       String // "GOZ" | "BEMA" | "SONSTIGES"
+  code         String
+  title        String
+  description  String?
+  category     String
+  createdAt    DateTime            @default(now())
+  templateItems ServiceTemplateItem[]
+  reportEntries ReportServiceEntry[]
+
+  @@index([practiceId])
+}
+
+// Vorlage für einen Sitzungstyp (z. B. "Kontrolluntersuchung",
+// "Füllungstherapie"), die eine feste Liste typischer Leistungspositionen
+// vorgibt. Beim Anlegen eines Berichts sind alle Positionen einer Vorlage
+// standardmäßig als erbracht markiert; nicht erbrachte Positionen müssen
+// aktiv gestrichen werden (Opt-out statt Opt-in), damit nichts vergessen
+// wird.
+model ServiceTemplate {
+  id          String                @id @default(cuid())
+  practiceId  String?
+  practice    Practice?             @relation(fields: [practiceId], references: [id])
+  name        String
+  description String?
+  createdAt   DateTime              @default(now())
+  items       ServiceTemplateItem[]
+  reports     Report[]
+
+  @@index([practiceId])
+}
+
+model ServiceTemplateItem {
+  id             String             @id @default(cuid())
+  templateId     String
+  template       ServiceTemplate    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  catalogItemId  String
+  catalogItem    ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
+  position       Int                @default(0)
+
+  @@unique([templateId, catalogItemId])
+  @@index([templateId])
+}
+
+// Kontrollierte Erfassung je Bericht: eine Zeile pro Leistungsposition der
+// verwendeten Vorlage, `performed` startet bei true (angehakt/erbracht) und
+// wird von der Praxis aktiv auf false gesetzt (durchgestrichen), wenn der
+// Arzt die Leistung nicht erbracht hat.
+model ReportServiceEntry {
+  id            String             @id @default(cuid())
+  reportId      String
+  report        Report             @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  catalogItemId String
+  catalogItem   ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
+  performed     Boolean            @default(true)
+  toothNumbers  String?
+  quantity      Int                @default(1)
+  note          String?
+  position      Int                @default(0)
+
+  @@index([reportId])
 }

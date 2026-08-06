@@ -35,7 +35,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       treatmentDate: existing.treatmentDate
         ? existing.treatmentDate.toLocaleDateString("de-DE")
         : null,
-      bulletPoints: existing.bulletPoints,
+      serviceSummary: existing.serviceSummary,
       additionalContext: additionalContext ?? existing.additionalContext,
     });
   } catch (err) {

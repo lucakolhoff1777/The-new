@@ -4,13 +4,25 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { REPORT_TYPE_LABELS } from "@/lib/reportLabels";
 
+interface ServiceEntryData {
+  id: string;
+  performed: boolean;
+  toothNumbers: string | null;
+  quantity: number;
+  note: string | null;
+  catalogItem: { system: string; code: string; title: string; category: string };
+}
+
 interface ReportData {
   id: string;
   type: string;
   status: "ENTWURF" | "FINAL";
   generatedText: string | null;
   editedText: string | null;
-  bulletPoints: string;
+  serviceSummary: string;
+  serviceTemplateName: string | null;
+  serviceEntries: ServiceEntryData[];
+  reviewConfirmed: boolean;
   additionalContext: string | null;
   patient: { firstName: string; lastName: string };
   author: { name: string };
@@ -145,12 +157,54 @@ export function ReportEditor({ report }: { report: ReportData }) {
         </a>
       </div>
 
-      <details className="mt-8 text-sm text-slate-500">
-        <summary className="cursor-pointer font-medium">Ursprüngliche Stichpunkte anzeigen</summary>
-        <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-slate-100 p-3 text-xs">
-          {report.bulletPoints}
-        </pre>
-      </details>
+      <div className="card mt-8">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-medium text-slate-900">
+            Erfasste Leistungen{report.serviceTemplateName ? ` – ${report.serviceTemplateName}` : ""}
+          </h2>
+          {report.reviewConfirmed && (
+            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+              Vollständig geprüft
+            </span>
+          )}
+        </div>
+        <div className="divide-y divide-slate-100 rounded-lg border border-slate-100">
+          {report.serviceEntries.map((entry) => {
+            const ref =
+              entry.catalogItem.code !== "–"
+                ? `${entry.catalogItem.system} ${entry.catalogItem.code}`
+                : entry.catalogItem.system;
+            return (
+              <div key={entry.id} className="flex items-start justify-between px-3 py-2 text-sm">
+                <div>
+                  <span
+                    className={
+                      entry.performed
+                        ? "text-slate-800"
+                        : "text-slate-400 line-through decoration-2"
+                    }
+                  >
+                    {entry.catalogItem.title}
+                  </span>{" "}
+                  <span className="text-xs text-slate-400">({ref})</span>
+                  {entry.performed && (entry.toothNumbers || entry.quantity !== 1 || entry.note) && (
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      {entry.toothNumbers && `Zahn/Region: ${entry.toothNumbers}`}
+                      {entry.toothNumbers && (entry.quantity !== 1 || entry.note) && " · "}
+                      {entry.quantity !== 1 && `Anzahl: ${entry.quantity}`}
+                      {entry.quantity !== 1 && entry.note && " · "}
+                      {entry.note && entry.note}
+                    </p>
+                  )}
+                </div>
+                {!entry.performed && (
+                  <span className="shrink-0 text-xs text-slate-400">nicht erbracht</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

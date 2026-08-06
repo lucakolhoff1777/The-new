@@ -17,7 +17,7 @@ interface GenerateReportInput {
     insuranceNumber: string | null;
   };
   treatmentDate: string | null;
-  bulletPoints: string;
+  serviceSummary: string;
   additionalContext: string | null;
 }
 
@@ -45,8 +45,8 @@ Krankenkasse: ${patient.insuranceName ?? "nicht angegeben"}${
   }
 Behandlungsdatum: ${input.treatmentDate ?? "nicht angegeben"}
 
-Stichpunkte von der Praxis (Befund/Behandlung):
-${input.bulletPoints}
+Erfasste, tatsächlich erbrachte Leistungen dieser Sitzung (geprüfte Leistungserfassung der Praxis):
+${input.serviceSummary}
 
 ${input.additionalContext ? `Zusätzlicher Kontext:\n${input.additionalContext}\n` : ""}
 Erstelle daraus jetzt den vollständigen Bericht.`;

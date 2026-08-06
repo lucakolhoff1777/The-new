@@ -4,12 +4,23 @@ import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateReportText } from "@/lib/anthropic";
+import { buildServiceSummary } from "@/lib/serviceSummary";
+
+const entrySchema = z.object({
+  catalogItemId: z.string().min(1),
+  performed: z.boolean(),
+  toothNumbers: z.string().optional().nullable(),
+  quantity: z.number().int().min(1).default(1),
+  note: z.string().optional().nullable(),
+});
 
 const createSchema = z.object({
   patientId: z.string().min(1),
   type: z.enum(["BEFUND", "KRANKENKASSE"]),
   treatmentDate: z.string().optional().nullable(),
-  bulletPoints: z.string().min(3, "Bitte Stichpunkte zum Befund/zur Behandlung angeben"),
+  serviceTemplateId: z.string().min(1),
+  entries: z.array(entrySchema).min(1),
+  reviewConfirmed: z.boolean(),
   additionalContext: z.string().optional().nullable(),
 });
 
@@ -26,7 +37,15 @@ export async function POST(req: Request) {
     );
   }
 
-  const { patientId, type, treatmentDate, bulletPoints, additionalContext } = parsed.data;
+  const { patientId, type, treatmentDate, serviceTemplateId, entries, reviewConfirmed, additionalContext } =
+    parsed.data;
+
+  if (!reviewConfirmed) {
+    return NextResponse.json(
+      { error: "Bitte bestätigen Sie, dass die Leistungsliste vollständig geprüft wurde." },
+      { status: 400 }
+    );
+  }
 
   const patient = await prisma.patient.findFirst({
     where: { id: patientId, practiceId: session.user.practiceId },
@@ -34,6 +53,57 @@ export async function POST(req: Request) {
   if (!patient) {
     return NextResponse.json({ error: "Patient nicht gefunden" }, { status: 404 });
   }
+
+  const template = await prisma.serviceTemplate.findFirst({
+    where: {
+      id: serviceTemplateId,
+      OR: [{ practiceId: null }, { practiceId: session.user.practiceId }],
+    },
+    include: { items: true },
+  });
+  if (!template) {
+    return NextResponse.json({ error: "Leistungsvorlage nicht gefunden" }, { status: 404 });
+  }
+
+  // Lückenlosigkeit erzwingen: jede Position der Vorlage muss genau einmal
+  // in den eingereichten Einträgen enthalten sein - keine Position darf
+  // fehlen oder unentschieden bleiben.
+  const requiredItemIds = new Set(template.items.map((i) => i.catalogItemId));
+  const submittedItemIds = new Set(entries.map((e) => e.catalogItemId));
+
+  if (requiredItemIds.size !== submittedItemIds.size) {
+    return NextResponse.json(
+      { error: "Leistungsliste ist unvollständig oder enthält unbekannte Positionen." },
+      { status: 400 }
+    );
+  }
+  for (const id of requiredItemIds) {
+    if (!submittedItemIds.has(id)) {
+      return NextResponse.json(
+        { error: "Leistungsliste ist unvollständig: Es fehlt mindestens eine Position der Vorlage." },
+        { status: 400 }
+      );
+    }
+  }
+
+  const catalogItems = await prisma.serviceCatalogItem.findMany({
+    where: { id: { in: Array.from(requiredItemIds) } },
+  });
+  const catalogItemById = new Map(catalogItems.map((c) => [c.id, c]));
+
+  const entriesWithCatalog = entries.map((e) => {
+    const catalogItem = catalogItemById.get(e.catalogItemId);
+    if (!catalogItem) throw new Error("Unbekannte Katalogposition");
+    return {
+      performed: e.performed,
+      toothNumbers: e.toothNumbers ?? null,
+      quantity: e.quantity,
+      note: e.note ?? null,
+      catalogItem,
+    };
+  });
+
+  const serviceSummary = buildServiceSummary(entriesWithCatalog);
 
   let generatedText: string;
   try {
@@ -49,7 +119,7 @@ export async function POST(req: Request) {
         insuranceNumber: patient.insuranceNumber,
       },
       treatmentDate: treatmentDate ? new Date(treatmentDate).toLocaleDateString("de-DE") : null,
-      bulletPoints,
+      serviceSummary,
       additionalContext: additionalContext || null,
     });
   } catch (err) {
@@ -67,9 +137,21 @@ export async function POST(req: Request) {
       authorId: session.user.id,
       type,
       treatmentDate: treatmentDate ? new Date(treatmentDate) : null,
-      bulletPoints,
+      serviceTemplateId: template.id,
+      serviceSummary,
+      reviewConfirmed: true,
       additionalContext: additionalContext || null,
       generatedText,
+      serviceEntries: {
+        create: entries.map((e, i) => ({
+          catalogItemId: e.catalogItemId,
+          performed: e.performed,
+          toothNumbers: e.toothNumbers || null,
+          quantity: e.quantity,
+          note: e.note || null,
+          position: i,
+        })),
+      },
     },
   });
 

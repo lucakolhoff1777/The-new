@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { NewReportForm } from "@/components/NewReportForm";
+import { ServiceChecklistForm } from "@/components/ServiceChecklistForm";
 
 export default async function NewReportPage({
   searchParams,
@@ -17,9 +17,9 @@ export default async function NewReportPage({
   });
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <h1 className="mb-6 text-xl font-semibold text-slate-900">Neuer Bericht</h1>
-      <NewReportForm patients={patients} initialPatientId={searchParams.patientId} />
+      <ServiceChecklistForm patients={patients} initialPatientId={searchParams.patientId} />
     </div>
   );
 }

@@ -9,7 +9,15 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
 
   const report = await prisma.report.findFirst({
     where: { id: params.id, practiceId: session!.user.practiceId },
-    include: { patient: true, author: { select: { name: true } } },
+    include: {
+      patient: true,
+      author: { select: { name: true } },
+      serviceTemplate: { select: { name: true } },
+      serviceEntries: {
+        orderBy: { position: "asc" },
+        include: { catalogItem: true },
+      },
+    },
   });
 
   if (!report) notFound();
@@ -23,7 +31,22 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
           status: report.status as "ENTWURF" | "FINAL",
           generatedText: report.generatedText,
           editedText: report.editedText,
-          bulletPoints: report.bulletPoints,
+          serviceSummary: report.serviceSummary,
+          serviceTemplateName: report.serviceTemplate?.name ?? null,
+          reviewConfirmed: report.reviewConfirmed,
+          serviceEntries: report.serviceEntries.map((entry) => ({
+            id: entry.id,
+            performed: entry.performed,
+            toothNumbers: entry.toothNumbers,
+            quantity: entry.quantity,
+            note: entry.note,
+            catalogItem: {
+              system: entry.catalogItem.system,
+              code: entry.catalogItem.code,
+              title: entry.catalogItem.title,
+              category: entry.catalogItem.category,
+            },
+          })),
           additionalContext: report.additionalContext,
           patient: { firstName: report.patient.firstName, lastName: report.patient.lastName },
           author: { name: report.author.name },
