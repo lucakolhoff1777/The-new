@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { generateReportText } from "@/lib/anthropic";
 import { buildServiceSummary } from "@/lib/serviceSummary";
 import { computeEffectivePerformed, parseDependsOn } from "@/lib/serviceDependency";
+import { validateFaktor, findExclusionConflicts } from "@/lib/serviceRules";
 
 const entrySchema = z.object({
   catalogItemId: z.string().min(1),
@@ -13,6 +14,8 @@ const entrySchema = z.object({
   toothNumbers: z.string().optional().nullable(),
   quantity: z.number().int().min(1).default(1),
   note: z.string().optional().nullable(),
+  faktor: z.number().min(0).max(10).optional().nullable(),
+  begruendung: z.string().optional().nullable(),
 });
 
 const createSchema = z.object({
@@ -119,6 +122,38 @@ export async function POST(req: Request) {
     };
   });
 
+  // Faktor-Regeln (§5 GOZ-Logik): Faktor muss im erlaubten Bereich liegen,
+  // und ab dem Regelhöchstfaktor ist eine schriftliche Begründung Pflicht.
+  for (const e of entries) {
+    if (!(effectiveById[e.catalogItemId] ?? false)) continue;
+    const catalogItem = catalogItemById.get(e.catalogItemId);
+    if (!catalogItem) continue;
+    const error = validateFaktor(e.faktor, e.begruendung, catalogItem, catalogItem.title);
+    if (error) {
+      return NextResponse.json({ error }, { status: 400 });
+    }
+  }
+
+  // Ausschluss-Regeln: nicht gleichzeitig abrechenbare Positionen dürfen
+  // nicht beide effektiv erbracht sein (z. B. zwei Füllungsarten am selben
+  // Zahn in derselben Sitzung).
+  const exclusionItemsById = new Map(
+    catalogItems.map((c) => [c.id, { id: c.id, title: c.title, ausschlussMit: parseDependsOn(c.ausschlussMit) }])
+  );
+  const performedIds = entries
+    .filter((e) => effectiveById[e.catalogItemId] ?? false)
+    .map((e) => e.catalogItemId);
+  const conflicts = findExclusionConflicts(performedIds, exclusionItemsById);
+  if (conflicts.length > 0) {
+    const { a, b } = conflicts[0];
+    return NextResponse.json(
+      {
+        error: `"${a.title}" und "${b.title}" dürfen laut Katalog nicht gemeinsam abgerechnet werden. Bitte eine der beiden Positionen streichen.`,
+      },
+      { status: 400 }
+    );
+  }
+
   const serviceSummary = buildServiceSummary(entriesWithCatalog);
 
   let generatedText: string;
@@ -165,6 +200,8 @@ export async function POST(req: Request) {
           toothNumbers: e.toothNumbers || null,
           quantity: e.quantity,
           note: e.note || null,
+          faktor: e.faktor ?? null,
+          begruendung: e.begruendung || null,
           position: i,
         })),
       },

@@ -37,6 +37,9 @@ model Patient {
   firstName       String
   lastName        String
   birthDate       DateTime?
+  // "GKV" (gesetzlich) | "PKV" (privat) - bestimmt, welches Gebührenwerk
+  // (BEMA vs. GOZ/GOÄ) für diesen Patienten grundsätzlich greift.
+  insuranceType   String?
   insuranceName   String?
   insuranceNumber String?
   notes           String?
@@ -78,17 +81,18 @@ model Report {
   @@index([patientId])
 }
 
-// Beispielkatalog von Leistungspositionen (GOZ/BEMA). Enthält bewusst keine
-// Punktwerte/Eurobeträge, da sich diese ändern und praxis-/kassenspezifisch
-// sind. Vor dem Einsatz zur echten Abrechnung gegen das aktuelle offizielle
-// Gebührenverzeichnis prüfen. practiceId = null bedeutet: globale
-// Standardposition, für alle Praxen sichtbar; gesetzt = praxiseigene
-// Zusatzposition.
+// Beispielkatalog von Leistungspositionen (GOZ/BEMA/GOÄ/BEL II). Enthält
+// bewusst keine Punktzahlen/Punktwerte/Festbeträge (Cent-Beträge), da sich
+// diese ändern und praxis-/kassenspezifisch sind - diese Felder existieren
+// im Schema, sind im Beispielkatalog aber unbefüllt (null) und müssen von
+// der Praxis gegen das aktuelle offizielle Gebührenverzeichnis eingetragen
+// werden. practiceId = null bedeutet: globale Standardposition, für alle
+// Praxen sichtbar; gesetzt = praxiseigene Zusatzposition.
 model ServiceCatalogItem {
   id           String              @id @default(cuid())
   practiceId   String?
   practice     Practice?           @relation(fields: [practiceId], references: [id])
-  system       String // "GOZ" | "BEMA" | "SONSTIGES"
+  system       String // "GOZ" | "BEMA" | "GOAE" | "BEL_II" | "SONSTIGES"
   code         String
   title        String
   description  String?
@@ -98,6 +102,24 @@ model ServiceCatalogItem {
   // das Feld standardmäßig ein- oder ausgeblendet ist - es lässt sich in
   // der Erfassung immer manuell einblenden.
   toothRelevant Boolean            @default(true)
+
+  // Abrechnungsdetails - bewusst optional/unbefüllt im Beispielkatalog
+  // (siehe Kommentar oben), aber vom Modell her vorgesehen:
+  punktzahl                   Float?    // GOZ/GOÄ
+  punktwertCent                Int?     // aktueller Punktwert in Cent
+  festbetragCent                Int?    // BEMA/BEL II Festbetrag in Cent
+  faktorMin                     Float?  // GOZ/GOÄ, i. d. R. 1.0
+  faktorMax                     Float?  // GOZ/GOÄ, i. d. R. 3.5
+  regelhoechstfaktor            Float?  // GOZ i. d. R. 2.3
+  begruendungspflichtAbFaktor   Float?  // ab diesem Faktor ist eine schriftliche Begründung Pflicht (§5 GOZ)
+  // Comma-separated catalogItemIds nicht gleichzeitig abrechenbarer
+  // Positionen (z. B. zwei verschiedene Füllungsarten am selben Zahn).
+  ausschlussMit                 String?
+  frequenzlimitAnzahl           Int?    // z. B. 2x
+  frequenzlimitZeitraumTage     Int?    // z. B. je 365 Tage
+  gueltigAb                     DateTime?
+  gueltigBis                    DateTime?
+
   createdAt    DateTime            @default(now())
   templateItems ServiceTemplateItem[]
   reportEntries ReportServiceEntry[]
@@ -156,6 +178,11 @@ model ReportServiceEntry {
   toothNumbers  String?
   quantity      Int                @default(1)
   note          String?
+  // Steigerungsfaktor bei GOZ/GOÄ-Positionen (i. d. R. 1.0-3.5).
+  faktor        Float?
+  // Schriftliche Begründung, Pflicht sobald faktor über dem
+  // Regelhöchstfaktor/begruendungspflichtAbFaktor der Position liegt.
+  begruendung   String?
   position      Int                @default(0)
 
   @@index([reportId])

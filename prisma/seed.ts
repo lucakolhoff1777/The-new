@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
  */
 type SeedItem = {
   key: string;
-  system: "GOZ" | "BEMA" | "SONSTIGES";
+  system: "GOZ" | "BEMA" | "GOAE" | "BEL_II" | "SONSTIGES";
   code: string;
   title: string;
   description?: string;
@@ -24,6 +24,24 @@ type SeedItem = {
   // Aufklärungsgespräch: nein). Steuert nur die Standard-Sichtbarkeit des
   // Feldes in der Erfassung, nicht dessen Verfügbarkeit.
   toothRelevant: boolean;
+  // Keys anderer CATALOG-Einträge, die nicht gemeinsam mit dieser Position
+  // abgerechnet werden dürfen (z. B. zwei verschiedene Füllungsarten am
+  // selben Zahn/Sitzung).
+  ausschlussMit?: string[];
+  // ISO-Datum, ab dem diese Position gültig ist (z. B. Reformdatum). Ohne
+  // Angabe wird kein Gültigkeitszeitraum hinterlegt.
+  gueltigAb?: string;
+};
+
+// §5 GOZ: Faktor 1,0-3,5, Regelhöchstfaktor 2,3, ab dem eine schriftliche
+// Begründung Pflicht ist. Gilt einheitlich für alle GOZ-Positionen (nicht
+// ziffernspezifisch) und wird hier pauschal auf jede GOZ-Position sowie -
+// als gängige Vereinfachung - auch auf GOÄ-Positionen angewendet.
+const STANDARD_FAKTOR = {
+  faktorMin: 1.0,
+  faktorMax: 3.5,
+  regelhoechstfaktor: 2.3,
+  begruendungspflichtAbFaktor: 2.3,
 };
 
 const CATALOG: SeedItem[] = [
@@ -49,8 +67,8 @@ const CATALOG: SeedItem[] = [
   { key: "fluoridierung", system: "GOZ", code: "–", title: "Fluoridierung", description: "Lokale Fluoridierung", category: "Prophylaxe", toothRelevant: false },
 
   { key: "kariesexkavation", system: "SONSTIGES", code: "–", title: "Kariesexkavation", description: "Entfernung kariösen Zahnschmelzes/-dentins", category: "Füllungstherapie", toothRelevant: true },
-  { key: "fuellung_einflaechig", system: "GOZ", code: "–", title: "Füllung, einflächig", description: "Kompositfüllung, einflächig", category: "Füllungstherapie", toothRelevant: true },
-  { key: "fuellung_mehrflaechig", system: "GOZ", code: "–", title: "Füllung, mehrflächig", description: "Kompositfüllung, mehrflächig", category: "Füllungstherapie", toothRelevant: true },
+  { key: "fuellung_einflaechig", system: "GOZ", code: "–", title: "Füllung, einflächig", description: "Kompositfüllung, einflächig", category: "Füllungstherapie", toothRelevant: true, ausschlussMit: ["fuellung_mehrflaechig"] },
+  { key: "fuellung_mehrflaechig", system: "GOZ", code: "–", title: "Füllung, mehrflächig", description: "Kompositfüllung, mehrflächig", category: "Füllungstherapie", toothRelevant: true, ausschlussMit: ["fuellung_einflaechig"] },
   { key: "fuellung_politur", system: "SONSTIGES", code: "–", title: "Füllung poliert", description: "Politur/Ausarbeitung der gelegten Füllung", category: "Füllungstherapie", toothRelevant: true },
   { key: "unterfuellung", system: "GOZ", code: "–", title: "Unterfüllung / Aufbaufüllung", description: "Unterfüllung bzw. Aufbaufüllung vor definitiver Versorgung", category: "Füllungstherapie", toothRelevant: true },
 
@@ -66,21 +84,23 @@ const CATALOG: SeedItem[] = [
   // die offiziellen BEMA-Kürzel BEVa/BEVb, ATG, MHU, AITa/AITb, CPTa/CPTb,
   // UPTa-d werden in der Praxis als Kürzel statt der reinen Ziffer geführt -
   // deshalb hier bewusst als "code" hinterlegt, statt eine Nummer zu raten.
-  { key: "par_beva", system: "BEMA", code: "BEVa", title: "Parodontaler Screening Index", description: "Erhebung des Parodontalen Screening Index (PSI) als Einstieg in die systematische PAR-Behandlung", category: "Parodontologie", toothRelevant: false },
-  { key: "par_bevb", system: "BEMA", code: "BEVb", title: "Erhebung Parodontalstatus", description: "Vollständige parodontale Befunderhebung (Taschentiefen, Attachmentverlust, Furkationsbefall, Zahnlockerung)", category: "Parodontologie", toothRelevant: false },
-  { key: "par_atg", system: "BEMA", code: "ATG", title: "Aufstellung Parodontal-Therapieplan", description: "Erstellung und Antrag des Parodontaltherapieplans zur Genehmigung durch die Krankenkasse", category: "Parodontologie", toothRelevant: false },
-  { key: "par_mhu", system: "BEMA", code: "MHU", title: "Mundhygieneunterweisung", description: "Unterweisung in Mundhygienetechniken im Rahmen der PAR-Behandlung", category: "Parodontologie", toothRelevant: false },
-  { key: "par_aita", system: "BEMA", code: "AITa", title: "Antiinfektiöse Therapie, geschlossenes Verfahren", description: "Nichtchirurgische subgingivale Reinigung (Scaling/Wurzelglättung) unter Lokalanästhesie", category: "Parodontologie", toothRelevant: true },
-  { key: "par_aitb", system: "BEMA", code: "AITb", title: "Antiinfektiöse Therapie, offenes Verfahren", description: "Chirurgisches Vorgehen bei der antiinfektiösen Therapie an Zähnen mit fortbestehenden tiefen Resttaschen", category: "Parodontologie", toothRelevant: true },
-  { key: "par_cpta", system: "BEMA", code: "CPTa", title: "Chirurgische Parodontitistherapie, resektiv", description: "Resektives chirurgisches Verfahren bei fortbestehenden Resttaschen nach antiinfektiöser Therapie", category: "Parodontologie", toothRelevant: true },
-  { key: "par_cptb", system: "BEMA", code: "CPTb", title: "Chirurgische Parodontitistherapie, regenerativ", description: "Regeneratives chirurgisches Verfahren bei fortbestehenden Resttaschen nach antiinfektiöser Therapie", category: "Parodontologie", toothRelevant: true },
-  { key: "par_upta", system: "BEMA", code: "UPTa", title: "Unterstützende Parodontitistherapie – Stufe a", description: "Erste Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false },
-  { key: "par_uptb", system: "BEMA", code: "UPTb", title: "Unterstützende Parodontitistherapie – Stufe b", description: "Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false },
-  { key: "par_uptc", system: "BEMA", code: "UPTc", title: "Unterstützende Parodontitistherapie – Stufe c", description: "Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false },
-  { key: "par_uptd", system: "BEMA", code: "UPTd", title: "Unterstützende Parodontitistherapie – Stufe d", description: "Abschließende Nachsorgestufe im Rahmen der zweijährigen unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false },
+  { key: "par_beva", system: "BEMA", code: "BEVa", title: "Parodontaler Screening Index", description: "Erhebung des Parodontalen Screening Index (PSI) als Einstieg in die systematische PAR-Behandlung", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_bevb", system: "BEMA", code: "BEVb", title: "Erhebung Parodontalstatus", description: "Vollständige parodontale Befunderhebung (Taschentiefen, Attachmentverlust, Furkationsbefall, Zahnlockerung)", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_atg", system: "BEMA", code: "ATG", title: "Aufstellung Parodontal-Therapieplan", description: "Erstellung und Antrag des Parodontaltherapieplans zur Genehmigung durch die Krankenkasse", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_mhu", system: "BEMA", code: "MHU", title: "Mundhygieneunterweisung", description: "Unterweisung in Mundhygienetechniken im Rahmen der PAR-Behandlung", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_aita", system: "BEMA", code: "AITa", title: "Antiinfektiöse Therapie, geschlossenes Verfahren", description: "Nichtchirurgische subgingivale Reinigung (Scaling/Wurzelglättung) unter Lokalanästhesie", category: "Parodontologie", toothRelevant: true, gueltigAb: "2021-07-01" },
+  { key: "par_aitb", system: "BEMA", code: "AITb", title: "Antiinfektiöse Therapie, offenes Verfahren", description: "Chirurgisches Vorgehen bei der antiinfektiösen Therapie an Zähnen mit fortbestehenden tiefen Resttaschen", category: "Parodontologie", toothRelevant: true, gueltigAb: "2021-07-01" },
+  { key: "par_cpta", system: "BEMA", code: "CPTa", title: "Chirurgische Parodontitistherapie, resektiv", description: "Resektives chirurgisches Verfahren bei fortbestehenden Resttaschen nach antiinfektiöser Therapie", category: "Parodontologie", toothRelevant: true, gueltigAb: "2021-07-01" },
+  { key: "par_cptb", system: "BEMA", code: "CPTb", title: "Chirurgische Parodontitistherapie, regenerativ", description: "Regeneratives chirurgisches Verfahren bei fortbestehenden Resttaschen nach antiinfektiöser Therapie", category: "Parodontologie", toothRelevant: true, gueltigAb: "2021-07-01" },
+  { key: "par_upta", system: "BEMA", code: "UPTa", title: "Unterstützende Parodontitistherapie – Stufe a", description: "Erste Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_uptb", system: "BEMA", code: "UPTb", title: "Unterstützende Parodontitistherapie – Stufe b", description: "Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_uptc", system: "BEMA", code: "UPTc", title: "Unterstützende Parodontitistherapie – Stufe c", description: "Nachsorgesitzung im Rahmen der unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
+  { key: "par_uptd", system: "BEMA", code: "UPTd", title: "Unterstützende Parodontitistherapie – Stufe d", description: "Abschließende Nachsorgestufe im Rahmen der zweijährigen unterstützenden Parodontitistherapie", category: "Parodontologie", toothRelevant: false, gueltigAb: "2021-07-01" },
 
+  { key: "dvt", system: "GOAE", code: "–", title: "Digitale Volumentomographie (DVT)", description: "3D-Röntgendiagnostik zur Planung komplexer prothetischer/chirurgischer Versorgungen; in der Zahnarztpraxis üblicherweise nach GOÄ abgerechnet", category: "Röntgen", toothRelevant: false },
   { key: "praeparation", system: "GOZ", code: "–", title: "Zahnpräparation", description: "Präparation eines Zahnes zur Aufnahme von Zahnersatz", category: "Prothetik", toothRelevant: true },
   { key: "abformung", system: "GOZ", code: "–", title: "Abformung", description: "Abformung eines oder beider Kiefer", category: "Prothetik", toothRelevant: false },
+  { key: "bel_labor", system: "BEL_II", code: "–", title: "Zahntechnische Laborleistung", description: "Laborseitige Anfertigung von Zahnersatz (z. B. Kronen-/Brückengerüst) gemäß BEL II, i. d. R. Festbetrag statt Punktzahl/Faktor", category: "Prothetik", toothRelevant: true },
   { key: "provisorium", system: "GOZ", code: "–", title: "Provisorische Versorgung", description: "Eingliederung eines Provisoriums bis zur definitiven Versorgung", category: "Prothetik", toothRelevant: true },
   { key: "eingliederung_ersatz", system: "GOZ", code: "–", title: "Eingliederung Zahnersatz", description: "Eingliederung von Zahnersatz/Zahnkrone", category: "Prothetik", toothRelevant: true },
 
@@ -190,10 +210,12 @@ const TEMPLATES: SeedTemplate[] = [
     items: [
       it("unters_privat"),
       it("aufklaerung_dokumentiert"),
+      it("dvt"),
       it("praeparation"),
       it("abformung", ["praeparation"]),
+      it("bel_labor", ["abformung"]),
       it("provisorium", ["praeparation"]),
-      it("eingliederung_ersatz", ["abformung"]),
+      it("eingliederung_ersatz", ["bel_labor"]),
     ],
   },
   {
@@ -233,13 +255,23 @@ async function main() {
 
   const itemIdByKey = new Map<string, string>();
   for (const item of CATALOG) {
+    const faktorFields =
+      item.system === "GOZ" || item.system === "GOAE" ? STANDARD_FAKTOR : {};
+    const gueltigAb = item.gueltigAb ? new Date(item.gueltigAb) : null;
+
     const existing = await prisma.serviceCatalogItem.findFirst({
       where: { practiceId: null, system: item.system, code: item.code, title: item.title },
     });
     const record = existing
       ? await prisma.serviceCatalogItem.update({
           where: { id: existing.id },
-          data: { description: item.description, category: item.category, toothRelevant: item.toothRelevant },
+          data: {
+            description: item.description,
+            category: item.category,
+            toothRelevant: item.toothRelevant,
+            gueltigAb,
+            ...faktorFields,
+          },
         })
       : await prisma.serviceCatalogItem.create({
           data: {
@@ -250,9 +282,26 @@ async function main() {
             description: item.description,
             category: item.category,
             toothRelevant: item.toothRelevant,
+            gueltigAb,
+            ...faktorFields,
           },
         });
     itemIdByKey.set(item.key, record.id);
+  }
+
+  // Zweiter Durchlauf: ausschlussMit auflösen, nachdem alle Positionen
+  // existieren (referenzierte Keys können später im Katalog stehen).
+  for (const item of CATALOG) {
+    if (!item.ausschlussMit?.length) continue;
+    const selfId = itemIdByKey.get(item.key);
+    if (!selfId) continue;
+    const excludedIds = item.ausschlussMit
+      .map((key) => itemIdByKey.get(key))
+      .filter((v): v is string => !!v);
+    await prisma.serviceCatalogItem.update({
+      where: { id: selfId },
+      data: { ausschlussMit: serializeDependsOn(excludedIds) },
+    });
   }
 
   console.log(`Katalog: ${itemIdByKey.size} Positionen.`);

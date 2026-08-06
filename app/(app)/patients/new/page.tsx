@@ -9,6 +9,7 @@ export default function NewPatientPage() {
     firstName: "",
     lastName: "",
     birthDate: "",
+    insuranceType: "GKV",
     insuranceName: "",
     insuranceNumber: "",
     notes: "",
@@ -78,6 +79,17 @@ export default function NewPatientPage() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
+            <label className="label">Kassenart</label>
+            <select
+              className="input"
+              value={form.insuranceType}
+              onChange={(e) => update("insuranceType", e.target.value)}
+            >
+              <option value="GKV">Gesetzlich (GKV)</option>
+              <option value="PKV">Privat (PKV)</option>
+            </select>
+          </div>
+          <div>
             <label className="label">Krankenkasse</label>
             <input
               className="input"
@@ -85,14 +97,14 @@ export default function NewPatientPage() {
               onChange={(e) => update("insuranceName", e.target.value)}
             />
           </div>
-          <div>
-            <label className="label">Versichertennummer</label>
-            <input
-              className="input"
-              value={form.insuranceNumber}
-              onChange={(e) => update("insuranceNumber", e.target.value)}
-            />
-          </div>
+        </div>
+        <div>
+          <label className="label">Versichertennummer</label>
+          <input
+            className="input"
+            value={form.insuranceNumber}
+            onChange={(e) => update("insuranceNumber", e.target.value)}
+          />
         </div>
         <div>
           <label className="label">Notizen (optional)</label>

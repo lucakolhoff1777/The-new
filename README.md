@@ -51,17 +51,40 @@ geprüft und freigegeben werden.
   ohne die Berichtsstruktur zu ändern. Nutzt die Web-Speech-API des Browsers
   (am zuverlässigsten in Chrome/Edge; ohne Unterstützung wird ein Hinweis
   statt des Buttons angezeigt).
+- **Abrechnungsregeln pro Position** (GOZ/GOÄ/BEMA/BEL-II):
+  - **Faktor & Begründungspflicht (§5 GOZ)**: Bei Positionen mit Faktorspanne
+    (GOZ/GOÄ) zeigt die Leistungserfassung ein Faktor-Feld. Wird der
+    Regelhöchstfaktor (i. d. R. 2,3) überschritten, erscheint automatisch ein
+    Pflichtfeld für die schriftliche Begründung. Der Server lehnt Berichte
+    ohne diese Begründung sowie Faktoren außerhalb des zulässigen Bereichs
+    (1,0–3,5) ab.
+  - **Ausschluss-Regeln**: Positionen, die laut Katalog nicht gemeinsam
+    abgerechnet werden dürfen (z. B. „Füllung, einflächig“ und „Füllung,
+    mehrflächig“ am selben Zahn), werden in der Checkliste live als Konflikt
+    markiert; der Server weist widersprüchliche Kombinationen zusätzlich
+    zurück.
+  - **Gültigkeitszeiträume**: Positionen können ein `gueltigAb`-Datum tragen
+    (z. B. die PAR-Positionen ab der Reform vom 1.7.2021).
+  - **Kassenart (GKV/PKV)** wird pro Patient erfasst.
+  - Diese Regeln sind serverseitig in `lib/serviceRules.ts` implementiert und
+    greifen unabhängig vom Client (Defense-in-Depth wie bei den
+    Abhängigkeitsketten).
 
 ### Leistungskatalog – wichtiger Hinweis
 
-`prisma/seed.ts` enthält einen **Beispielkatalog** typischer GOZ-/BEMA-
-Positionen ohne Punktwerte/Eurobeträge. Ziffern, die nicht eindeutig bekannt
-waren, sind bewusst mit „–“ statt einer geratenen Nummer versehen. Dieser
-Katalog ist **kein abrechnungsverbindliches Verzeichnis** – vor dem Einsatz
-zur echten Abrechnung müssen alle Ziffern gegen das aktuell gültige
-offizielle Gebührenverzeichnis (BZÄK/KZBV) geprüft, korrigiert und ergänzt
-werden (z. B. über `npx prisma studio` oder direkt in `prisma/seed.ts` +
-erneutem `npx prisma db seed`). Eine eigene Verwaltungsoberfläche für den
+`prisma/seed.ts` enthält einen **Beispielkatalog** typischer GOZ-/GOÄ-/BEMA-/
+BEL-II-Positionen ohne Punktwerte/Eurobeträge. Ziffern, die nicht eindeutig
+bekannt waren, sind bewusst mit „–“ statt einer geratenen Nummer versehen;
+`punktzahl`, `punktwertCent` und `festbetragCent` bleiben aus demselben Grund
+`null`. Dieser Katalog ist **kein abrechnungsverbindliches Verzeichnis** –
+vor dem Einsatz zur echten Abrechnung müssen alle Ziffern und Beträge gegen
+das aktuell gültige offizielle Gebührenverzeichnis (BZÄK/KZBV) geprüft,
+korrigiert und ergänzt werden (z. B. über `npx prisma studio` oder direkt in
+`prisma/seed.ts` + erneutem `npx prisma db seed`). Faktor-Regeln
+(`faktorMin`/`faktorMax`/`regelhoechstfaktor`/`begruendungspflichtAbFaktor`)
+sind für GOZ/GOÄ-Positionen mit den in der GOZ üblichen Standardwerten
+(1,0–3,5, Regelhöchstfaktor 2,3) hinterlegt und ebenfalls vor dem
+Produktiveinsatz zu verifizieren. Eine eigene Verwaltungsoberfläche für den
 Katalog gibt es aktuell noch nicht (siehe „Bekannte offene Punkte“).
 
 ## Setup

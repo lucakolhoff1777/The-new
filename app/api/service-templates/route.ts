@@ -26,6 +26,10 @@ export async function GET() {
     items: tpl.items.map((item) => ({
       ...item,
       dependsOn: parseDependsOn(item.dependsOn),
+      catalogItem: {
+        ...item.catalogItem,
+        ausschlussMit: parseDependsOn(item.catalogItem.ausschlussMit),
+      },
     })),
   }));
 

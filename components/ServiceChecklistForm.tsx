@@ -15,6 +15,11 @@ type CatalogItem = {
   description: string | null;
   category: string;
   toothRelevant: boolean;
+  faktorMin: number | null;
+  faktorMax: number | null;
+  regelhoechstfaktor: number | null;
+  begruendungspflichtAbFaktor: number | null;
+  ausschlussMit: string[];
 };
 
 type TemplateItem = {
@@ -36,6 +41,8 @@ type EntryState = {
   toothNumbers: string;
   quantity: number;
   note: string;
+  faktor: string;
+  begruendung: string;
 };
 
 export function ServiceChecklistForm({
@@ -80,7 +87,15 @@ export function ServiceChecklistForm({
     if (!selectedTemplate) return;
     const next: Record<string, EntryState> = {};
     for (const item of selectedTemplate.items) {
-      next[item.catalogItemId] = { performed: true, toothNumbers: "", quantity: 1, note: "" };
+      const defaultFaktor = item.catalogItem.regelhoechstfaktor;
+      next[item.catalogItemId] = {
+        performed: true,
+        toothNumbers: "",
+        quantity: 1,
+        note: "",
+        faktor: defaultFaktor != null ? String(defaultFaktor) : "",
+        begruendung: "",
+      };
     }
     setEntries(next);
     setExpandedTooth({});
@@ -118,6 +133,23 @@ export function ServiceChecklistForm({
     if (item.dependsOn.length === 0) return false;
     return !item.dependsOn.some((pid) => effective[pid]);
   }
+
+  // Positions that are mutually exclusive per Katalog (z. B. zwei
+  // Füllungsarten) dürfen nicht beide gleichzeitig erbracht sein.
+  const conflictingIds = useMemo(() => {
+    const set = new Set<string>();
+    if (!selectedTemplate) return set;
+    for (const item of selectedTemplate.items) {
+      if (!(effective[item.catalogItemId] ?? false)) continue;
+      for (const otherId of item.catalogItem.ausschlussMit) {
+        if (effective[otherId]) {
+          set.add(item.catalogItemId);
+          set.add(otherId);
+        }
+      }
+    }
+    return set;
+  }, [selectedTemplate, effective]);
 
   const totalCount = selectedTemplate?.items.length ?? 0;
   const performedCount = selectedTemplate
@@ -161,6 +193,12 @@ export function ServiceChecklistForm({
       setError("Bitte bestätigen Sie unten, dass Sie die Liste vollständig geprüft haben.");
       return;
     }
+    if (conflictingIds.size > 0) {
+      setError(
+        "Mindestens zwei erbrachte Positionen schließen sich laut Katalog gegenseitig aus. Bitte eine der beiden streichen."
+      );
+      return;
+    }
 
     setSubmitting(true);
 
@@ -179,6 +217,8 @@ export function ServiceChecklistForm({
           toothNumbers: e.toothNumbers || null,
           quantity: Number(e.quantity) || 1,
           note: e.note || null,
+          faktor: e.faktor.trim() !== "" ? Number(e.faktor) : null,
+          begruendung: e.begruendung || null,
         };
       }),
     };
@@ -353,11 +393,31 @@ export function ServiceChecklistForm({
                           </p>
                         )}
 
+                        {eff && conflictingIds.has(item.catalogItemId) && (
+                          <p className="ml-7 mt-1 rounded bg-amber-50 px-2 py-1 text-xs text-amber-800">
+                            Schließt sich laut Katalog aus mit: {titlesFor(item.catalogItem.ausschlussMit)}.
+                            Bitte eine der beiden Positionen streichen.
+                          </p>
+                        )}
+
                         {eff && !locked && (() => {
                           const showTooth = item.catalogItem.toothRelevant || !!expandedTooth[item.catalogItemId];
+                          const hasFaktor =
+                            item.catalogItem.faktorMin != null && item.catalogItem.faktorMax != null;
+                          const threshold =
+                            item.catalogItem.begruendungspflichtAbFaktor ?? item.catalogItem.regelhoechstfaktor;
+                          const faktorNum = entry.faktor.trim() !== "" ? Number(entry.faktor) : null;
+                          const needsBegruendung =
+                            hasFaktor && threshold != null && faktorNum != null && faktorNum > threshold;
                           return (
                             <div className="ml-7 mt-2">
-                              <div className={showTooth ? "grid grid-cols-3 gap-2" : "grid grid-cols-2 gap-2"}>
+                              <div
+                                className={
+                                  "grid gap-2" +
+                                  (showTooth ? " grid-cols-3" : " grid-cols-2") +
+                                  (hasFaktor ? " sm:grid-cols-4" : "")
+                                }
+                              >
                                 {showTooth && (
                                   <input
                                     className="input py-1 text-xs"
@@ -385,6 +445,18 @@ export function ServiceChecklistForm({
                                   value={entry.note}
                                   onChange={(e) => updateItem(item.catalogItemId, { note: e.target.value })}
                                 />
+                                {hasFaktor && (
+                                  <input
+                                    className="input py-1 text-xs"
+                                    type="number"
+                                    step={0.1}
+                                    min={item.catalogItem.faktorMin ?? undefined}
+                                    max={item.catalogItem.faktorMax ?? undefined}
+                                    placeholder="Faktor"
+                                    value={entry.faktor}
+                                    onChange={(e) => updateItem(item.catalogItemId, { faktor: e.target.value })}
+                                  />
+                                )}
                               </div>
                               {!showTooth && (
                                 <button
@@ -396,6 +468,21 @@ export function ServiceChecklistForm({
                                 >
                                   + Zahn/Region ergänzen
                                 </button>
+                              )}
+                              {needsBegruendung && (
+                                <div className="mt-2">
+                                  <label className="mb-1 block text-xs font-medium text-amber-700">
+                                    Begründung Pflicht (Faktor {entry.faktor} über Regelhöchstfaktor {threshold})
+                                  </label>
+                                  <textarea
+                                    className="input min-h-14 py-1 text-xs"
+                                    placeholder="Schriftliche Begründung für den erhöhten Faktor (§5 GOZ)"
+                                    value={entry.begruendung}
+                                    onChange={(e) =>
+                                      updateItem(item.catalogItemId, { begruendung: e.target.value })
+                                    }
+                                  />
+                                </div>
                               )}
                             </div>
                           );

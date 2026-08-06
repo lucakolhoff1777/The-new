@@ -8,6 +8,7 @@ const patientSchema = z.object({
   firstName: z.string().min(1, "Vorname ist erforderlich"),
   lastName: z.string().min(1, "Nachname ist erforderlich"),
   birthDate: z.string().optional().nullable(),
+  insuranceType: z.enum(["GKV", "PKV"]).optional().nullable(),
   insuranceName: z.string().optional().nullable(),
   insuranceNumber: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { firstName, lastName, birthDate, insuranceName, insuranceNumber, notes } = parsed.data;
+  const { firstName, lastName, birthDate, insuranceType, insuranceName, insuranceNumber, notes } = parsed.data;
 
   const patient = await prisma.patient.create({
     data: {
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
       firstName,
       lastName,
       birthDate: birthDate ? new Date(birthDate) : null,
+      insuranceType: insuranceType || null,
       insuranceName: insuranceName || null,
       insuranceNumber: insuranceNumber || null,
       notes: notes || null,
