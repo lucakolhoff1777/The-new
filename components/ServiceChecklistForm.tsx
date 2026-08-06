@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { computeEffectivePerformed } from "@/lib/serviceDependency";
+import { MicButton } from "@/components/MicButton";
 
 type PatientOption = { id: string; firstName: string; lastName: string };
 
@@ -410,13 +411,26 @@ export function ServiceChecklistForm({
       )}
 
       <div className="card">
-        <label className="label">Zusätzlicher Kontext (optional)</label>
+        <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+          <label className="label mb-0">Zusätzlicher Kontext (optional)</label>
+          <MicButton
+            onTranscript={(text) =>
+              setAdditionalContext((prev) => (prev ? `${prev} ${text}` : text))
+            }
+          />
+        </div>
         <textarea
           className="input min-h-20"
           placeholder="z. B. Empfänger, Anlass des Berichts, Besonderheiten"
           value={additionalContext}
           onChange={(e) => setAdditionalContext(e.target.value)}
         />
+        <p className="mt-1 text-xs text-slate-400">
+          Kurz reinsprechen genügt – die KI formuliert daraus einen ausführlicheren Abschnitt im
+          Bericht, ohne die übliche Struktur zu ändern. Die Spracherkennung läuft über den Browser
+          (Chrome empfohlen) und verarbeitet Audio ggf. über dessen Anbieter – bei Patientendaten
+          entsprechend vorsichtig verwenden.
+        </p>
       </div>
 
       <div className="card">

@@ -48,7 +48,12 @@ Behandlungsdatum: ${input.treatmentDate ?? "nicht angegeben"}
 Erfasste, tatsächlich erbrachte Leistungen dieser Sitzung (geprüfte Leistungserfassung der Praxis):
 ${input.serviceSummary}
 
-${input.additionalContext ? `Zusätzlicher Kontext:\n${input.additionalContext}\n` : ""}
+${
+    input.additionalContext
+      ? `Zusätzlicher Kontext (ggf. eine kurze, diktierte Notiz der Praxis - formuliere sie sinngemäß
+etwas ausführlicher aus, ohne neue Fakten hinzuzuerfinden):\n${input.additionalContext}\n`
+      : ""
+  }
 Erstelle daraus jetzt den vollständigen Bericht.`;
 }
 
@@ -67,6 +72,10 @@ Wichtige Regeln:
 - Schreibe im Fließtext bzw. mit klaren Absätzen, keine rohe Stichpunktliste, sofern es sich nicht um
   eine tabellarische Aufstellung handelt.
 - Gib ausschließlich den fertigen Berichtstext zurück, ohne einleitende Kommentare wie "Hier ist der Bericht:".
+- Der "Zusätzliche Kontext" ist oft eine kurze, ggf. diktierte Stichnotiz. Arbeite ihren Inhalt
+  sinngemäß und etwas ausführlicher in den Bericht ein, aber halte dich dabei an die oben
+  vorgegebene Gliederung/Struktur des Berichtstyps - die Kürze der Notiz rechtfertigt keine
+  Abweichung vom üblichen Aufbau.
 - Der Bericht ist ein Entwurf und wird vor Versand von einer approbierten Zahnärztin / einem approbierten
   Zahnarzt geprüft und freigegeben.`;
 

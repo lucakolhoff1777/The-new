@@ -40,6 +40,12 @@ geprüft und freigegeben werden.
 - Export als PDF
 - Auf der Berichtsseite bleibt die vollständige Leistungsliste inkl.
   gestrichener Positionen als Prüf-/Audit-Nachweis sichtbar
+- **Diktierfunktion** beim „Zusätzlichen Kontext“: kurz ins Mikrofon
+  sprechen (Button „Diktieren“), der Text erscheint direkt im Feld. Die KI
+  formuliert daraus beim Generieren einen etwas ausführlicheren Abschnitt,
+  ohne die Berichtsstruktur zu ändern. Nutzt die Web-Speech-API des Browsers
+  (am zuverlässigsten in Chrome/Edge; ohne Unterstützung wird ein Hinweis
+  statt des Buttons angezeigt).
 
 ### Leistungskatalog – wichtiger Hinweis
 
@@ -99,6 +105,13 @@ Patientendaten unbedingt beachten:
 - **Auftragsverarbeitung**: Für die Nutzung der Anthropic-API mit
   Patientendaten wird ein Auftragsverarbeitungsvertrag (AVV) mit Anthropic
   benötigt; ohne AVV keine echten Patientendaten an die API senden.
+- **Diktierfunktion**: Die Spracherkennung läuft über die Web-Speech-API des
+  Browsers. In Chrome/Edge wird das Audio dafür an Server des jeweiligen
+  Browser-Anbieters (i. d. R. Google) übertragen und dort transkribiert –
+  das ist ein separater Auftragsverarbeiter neben Anthropic. Ohne
+  entsprechende vertragliche Grundlage keine Patientennamen oder sonstige
+  identifizierende Angaben hineindiktieren; im Zweifel nur sachliche
+  Befund-/Behandlungsstichworte verwenden.
 - **Menschliche Kontrolle**: KI-generierte Berichte sind als Entwürfe zu
   behandeln (im UI entsprechend gekennzeichnet) und müssen vor Freigabe/
   Versand fachlich geprüft werden. Die Software ersetzt keine ärztliche
