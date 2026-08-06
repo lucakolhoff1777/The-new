@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { computeEffectivePerformed } from "@/lib/serviceDependency";
 
 type PatientOption = { id: string; firstName: string; lastName: string };
 
@@ -17,6 +18,7 @@ type CatalogItem = {
 type TemplateItem = {
   catalogItemId: string;
   position: number;
+  dependsOn: string[];
   catalogItem: CatalogItem;
 };
 
@@ -92,8 +94,31 @@ export function ServiceChecklistForm({
     return Array.from(byCategory.entries());
   }, [selectedTemplate]);
 
+  // Positions with a satisfied prerequisite follow their own checkbox;
+  // positions whose prerequisite was struck are forced un-performed and
+  // locked, since they could not logically have happened either.
+  const effective = useMemo(() => {
+    if (!selectedTemplate) return {};
+    const ownPerformed: Record<string, boolean> = {};
+    Object.entries(entries).forEach(([id, e]) => {
+      ownPerformed[id] = e.performed;
+    });
+    const dependencyItems = selectedTemplate.items.map((it) => ({
+      id: it.catalogItemId,
+      dependsOn: it.dependsOn,
+    }));
+    return computeEffectivePerformed(dependencyItems, ownPerformed);
+  }, [selectedTemplate, entries]);
+
+  function isLocked(item: TemplateItem): boolean {
+    if (item.dependsOn.length === 0) return false;
+    return !item.dependsOn.some((pid) => effective[pid]);
+  }
+
   const totalCount = selectedTemplate?.items.length ?? 0;
-  const performedCount = Object.values(entries).filter((e) => e.performed).length;
+  const performedCount = selectedTemplate
+    ? selectedTemplate.items.filter((it) => effective[it.catalogItemId]).length
+    : 0;
   const struckCount = totalCount - performedCount;
 
   function toggleItem(catalogItemId: string) {
@@ -106,6 +131,14 @@ export function ServiceChecklistForm({
 
   function updateItem(catalogItemId: string, patch: Partial<EntryState>) {
     setEntries((prev) => ({ ...prev, [catalogItemId]: { ...prev[catalogItemId], ...patch } }));
+  }
+
+  function titlesFor(ids: string[]): string {
+    if (!selectedTemplate) return "";
+    return ids
+      .map((id) => selectedTemplate.items.find((it) => it.catalogItemId === id)?.catalogItem.title)
+      .filter(Boolean)
+      .join(" oder ");
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -138,7 +171,7 @@ export function ServiceChecklistForm({
         const e = entries[item.catalogItemId];
         return {
           catalogItemId: item.catalogItemId,
-          performed: e.performed,
+          performed: effective[item.catalogItemId] ?? false,
           toothNumbers: e.toothNumbers || null,
           quantity: Number(e.quantity) || 1,
           note: e.note || null,
@@ -246,7 +279,9 @@ export function ServiceChecklistForm({
           <p className="mb-4 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-800">
             Alle Positionen sind standardmäßig als <strong>erbracht</strong> markiert. Streichen Sie
             gezielt, was der Arzt / die Ärztin bei diesem Termin <strong>nicht</strong> gemacht hat,
-            statt Einzelnes anzuhaken.
+            statt Einzelnes anzuhaken. Manche Positionen bauen aufeinander auf: Wird ein
+            vorausgehender Schritt gestrichen, werden abhängige Folgeschritte automatisch mit
+            gestrichen und gesperrt.
           </p>
 
           <div className="space-y-6">
@@ -259,23 +294,36 @@ export function ServiceChecklistForm({
                   {items.map((item) => {
                     const entry = entries[item.catalogItemId];
                     if (!entry) return null;
+                    const isBranch = item.dependsOn.length > 0;
+                    const locked = isLocked(item);
+                    const eff = effective[item.catalogItemId] ?? false;
                     const ref =
                       item.catalogItem.code !== "–"
                         ? `${item.catalogItem.system} ${item.catalogItem.code}`
                         : item.catalogItem.system;
                     return (
-                      <div key={item.catalogItemId} className="px-3 py-3">
-                        <label className="flex cursor-pointer items-start gap-3">
+                      <div
+                        key={item.catalogItemId}
+                        className={
+                          "px-3 py-3" + (isBranch ? " relative border-l-2 border-slate-100 pl-7" : "")
+                        }
+                      >
+                        <label
+                          className={
+                            "flex items-start gap-3" + (locked ? " cursor-not-allowed" : " cursor-pointer")
+                          }
+                        >
                           <input
                             type="checkbox"
-                            className="mt-1 h-4 w-4 rounded border-slate-300"
-                            checked={entry.performed}
+                            className="mt-1 h-4 w-4 rounded border-slate-300 disabled:opacity-40"
+                            checked={entry.performed && !locked}
+                            disabled={locked}
                             onChange={() => toggleItem(item.catalogItemId)}
                           />
                           <span className="flex-1">
                             <span
                               className={
-                                entry.performed
+                                eff
                                   ? "font-medium text-slate-900"
                                   : "font-medium text-slate-400 line-through decoration-2"
                               }
@@ -284,17 +332,24 @@ export function ServiceChecklistForm({
                             </span>{" "}
                             <span
                               className={
-                                entry.performed
-                                  ? "text-xs text-slate-400"
-                                  : "text-xs text-slate-300 line-through"
+                                eff ? "text-xs text-slate-400" : "text-xs text-slate-300 line-through"
                               }
                             >
                               ({ref})
                             </span>
                           </span>
+                          {locked && (
+                            <span className="shrink-0 text-xs font-medium text-slate-400">gesperrt</span>
+                          )}
                         </label>
 
-                        {entry.performed && (
+                        {locked && (
+                          <p className="ml-7 mt-1 text-xs italic text-slate-400">
+                            Setzt voraus: {titlesFor(item.dependsOn)}
+                          </p>
+                        )}
+
+                        {eff && !locked && (
                           <div className="ml-7 mt-2 grid grid-cols-3 gap-2">
                             <input
                               className="input py-1 text-xs"

@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateReportText } from "@/lib/anthropic";
 import { buildServiceSummary } from "@/lib/serviceSummary";
+import { computeEffectivePerformed, parseDependsOn } from "@/lib/serviceDependency";
 
 const entrySchema = z.object({
   catalogItemId: z.string().min(1),
@@ -91,11 +92,26 @@ export async function POST(req: Request) {
   });
   const catalogItemById = new Map(catalogItems.map((c) => [c.id, c]));
 
+  // Serverseitige Absicherung der Abhängigkeitsketten: unabhängig davon, was
+  // der Client als "performed" meldet, wird hier neu berechnet, ob eine
+  // Position angesichts ihrer Voraussetzungen tatsächlich stattgefunden
+  // haben kann. Ein manipulierter Request kann die Kaskade damit nicht
+  // umgehen.
+  const ownPerformedById: Record<string, boolean> = {};
+  entries.forEach((e) => {
+    ownPerformedById[e.catalogItemId] = e.performed;
+  });
+  const dependencyItems = template.items.map((i) => ({
+    id: i.catalogItemId,
+    dependsOn: parseDependsOn(i.dependsOn),
+  }));
+  const effectiveById = computeEffectivePerformed(dependencyItems, ownPerformedById);
+
   const entriesWithCatalog = entries.map((e) => {
     const catalogItem = catalogItemById.get(e.catalogItemId);
     if (!catalogItem) throw new Error("Unbekannte Katalogposition");
     return {
-      performed: e.performed,
+      performed: effectiveById[e.catalogItemId] ?? false,
       toothNumbers: e.toothNumbers ?? null,
       quantity: e.quantity,
       note: e.note ?? null,
@@ -145,7 +161,7 @@ export async function POST(req: Request) {
       serviceEntries: {
         create: entries.map((e, i) => ({
           catalogItemId: e.catalogItemId,
-          performed: e.performed,
+          performed: effectiveById[e.catalogItemId] ?? false,
           toothNumbers: e.toothNumbers || null,
           quantity: e.quantity,
           note: e.note || null,

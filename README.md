@@ -20,6 +20,20 @@ geprüft und freigegeben werden.
   Der Server erzwingt zusätzlich, dass zu jeder Position der Vorlage eine
   Entscheidung vorliegt und die Liste vor dem Absenden als vollständig
   geprüft bestätigt wurde – unvollständige Erfassungen werden abgelehnt.
+- **Logisch aufeinander aufbauende Behandlungsschritte**: Innerhalb einer
+  Vorlage können Positionen von anderen abhängen (z. B. Wurzelkanalfüllung
+  setzt Wurzelkanalaufbereitung voraus, die wiederum eine Trepanation
+  voraussetzt). Wird ein vorausgehender Schritt gestrichen, werden alle
+  davon abhängigen Folgeschritte automatisch mitgestrichen und in der
+  Oberfläche gesperrt (mit Begründung „Setzt voraus: …“) – sie könnten sonst
+  nicht stattgefunden haben. Diese Kaskade wird zusätzlich serverseitig neu
+  berechnet, damit ein manipulierter Request sie nicht umgehen kann (siehe
+  `lib/serviceDependency.ts`).
+- 12 Sitzungstyp-Vorlagen über das übliche Behandlungsspektrum hinweg:
+  Kontrolle, Erstuntersuchung, Füllungstherapie, PZR, Chirurgie,
+  Parodontalbehandlung, unterstützende Parodontitistherapie (UPT),
+  Endodontie, Prothetik, Individualprophylaxe (Kind/Jugendliche),
+  Notfall-/Schmerzbehandlung, Schienentherapie.
 - Aus der geprüften Leistungsliste generiert die KI den Berichtstext
   (Befund-/Behandlungsbericht oder Bericht an Krankenkasse)
 - Generierten Text bearbeiten, neu generieren, als Entwurf/final markieren

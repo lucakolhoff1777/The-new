@@ -126,6 +126,12 @@ model ServiceTemplateItem {
   catalogItemId  String
   catalogItem    ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
   position       Int                @default(0)
+  // Comma-separated catalogItemIds of OTHER items in the same template that
+  // must be effectively performed for this item to be possible at all
+  // (OR semantics — any one is enough). Lets a branch "aufeinander
+  // aufbauen": striking a prerequisite auto-strikes and locks everything
+  // that logically follows it. Null/empty = no dependency.
+  dependsOn      String?
 
   @@unique([templateId, catalogItemId])
   @@index([templateId])

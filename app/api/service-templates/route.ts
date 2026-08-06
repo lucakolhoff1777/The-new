@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { parseDependsOn } from "@/lib/serviceDependency";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -20,5 +21,13 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json({ templates });
+  const withParsedDeps = templates.map((tpl) => ({
+    ...tpl,
+    items: tpl.items.map((item) => ({
+      ...item,
+      dependsOn: parseDependsOn(item.dependsOn),
+    })),
+  }));
+
+  return NextResponse.json({ templates: withParsedDeps });
 }

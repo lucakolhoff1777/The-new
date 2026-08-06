@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { serializeDependsOn } from "../lib/serviceDependency";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +30,7 @@ const CATALOG: SeedItem[] = [
   { key: "anamnese", system: "SONSTIGES", code: "–", title: "Anamnese erhoben", description: "Allgemeine und zahnmedizinische Anamnese erhoben und dokumentiert", category: "Diagnostik & Beratung" },
   { key: "psi", system: "GOZ", code: "4005", title: "Parodontaler Screening Index (PSI)", description: "Erhebung des Parodontalen Screening Index", category: "Diagnostik & Beratung" },
   { key: "vitalitaet", system: "GOZ", code: "–", title: "Vitalitätsprüfung", description: "Sensibilitäts-/Vitalitätsprüfung eines oder mehrerer Zähne", category: "Diagnostik & Beratung" },
+  { key: "aufklaerung_dokumentiert", system: "SONSTIGES", code: "–", title: "Aufklärung dokumentiert", description: "Patient über Befund, Behandlungsalternativen und Risiken aufgeklärt; Einwilligung dokumentiert", category: "Diagnostik & Beratung" },
 
   { key: "rx_einzelzahn", system: "GOZ", code: "–", title: "Röntgen Einzelzahnaufnahme", description: "Zahnfilm, digitale Einzelzahnaufnahme", category: "Röntgen" },
   { key: "rx_uebersicht", system: "GOZ", code: "–", title: "Röntgen Übersichtsaufnahme (OPG)", description: "Orthopantomogramm / Panoramaschichtaufnahme", category: "Röntgen" },
@@ -58,59 +60,154 @@ const CATALOG: SeedItem[] = [
 
   { key: "pa_scaling", system: "BEMA", code: "–", title: "Scaling / Wurzelglättung", description: "Subgingivale Zahnstein-/Belagentfernung mit Wurzelglättung", category: "Parodontologie" },
   { key: "pa_nachkontrolle", system: "SONSTIGES", code: "–", title: "PA-Nachkontrolle", description: "Kontrolle des parodontalen Heilverlaufs", category: "Parodontologie" },
+  { key: "upt_reevaluation", system: "BEMA", code: "–", title: "Parodontaler Reevaluationsbefund", description: "Erneute Befunderhebung im Rahmen der Nachsorge (UPT)", category: "Parodontologie" },
+  { key: "upt_reinigung", system: "BEMA", code: "–", title: "Subgingivale Instrumentierung (UPT)", description: "Professionelle subgingivale Reinigung im Rahmen der Nachsorgesitzung", category: "Parodontologie" },
 
+  { key: "praeparation", system: "GOZ", code: "–", title: "Zahnpräparation", description: "Präparation eines Zahnes zur Aufnahme von Zahnersatz", category: "Prothetik" },
   { key: "abformung", system: "GOZ", code: "–", title: "Abformung", description: "Abformung eines oder beider Kiefer", category: "Prothetik" },
+  { key: "provisorium", system: "GOZ", code: "–", title: "Provisorische Versorgung", description: "Eingliederung eines Provisoriums bis zur definitiven Versorgung", category: "Prothetik" },
   { key: "eingliederung_ersatz", system: "GOZ", code: "–", title: "Eingliederung Zahnersatz", description: "Eingliederung von Zahnersatz/Zahnkrone", category: "Prothetik" },
 
-  { key: "aufklaerung_dokumentiert", system: "SONSTIGES", code: "–", title: "Aufklärung dokumentiert", description: "Patient über Befund, Behandlungsalternativen und Risiken aufgeklärt; Einwilligung dokumentiert", category: "Diagnostik & Beratung" },
+  { key: "ip_mundhygienestatus", system: "BEMA", code: "–", title: "Erhebung Mundhygienestatus", description: "Erhebung des Mundhygienestatus (Plaque-/Gingivitis-Index) bei Kindern/Jugendlichen", category: "Individualprophylaxe" },
+  { key: "ip_ernaehrungsberatung", system: "BEMA", code: "–", title: "Ernährungsberatung", description: "Aufklärung über zahngesunde Ernährung", category: "Individualprophylaxe" },
+  { key: "fissuren_versiegelung", system: "BEMA", code: "–", title: "Fissurenversiegelung", description: "Versiegelung kariesfreier Fissuren der bleibenden Molaren", category: "Individualprophylaxe" },
+
+  { key: "notfall_diagnostik", system: "SONSTIGES", code: "–", title: "Schmerzdiagnostik", description: "Diagnostik zur Lokalisation der akuten Schmerzursache", category: "Notfallbehandlung" },
+  { key: "notfall_akutmassnahme", system: "SONSTIGES", code: "–", title: "Akutmaßnahme zur Schmerzausschaltung", description: "Sofortmaßnahme zur Beseitigung akuter Schmerzen (z. B. Trepanation, Entlastung)", category: "Notfallbehandlung" },
+  { key: "notfall_medikation", system: "SONSTIGES", code: "–", title: "Medikamentöse Versorgung", description: "Verordnung/Abgabe von Schmerz- oder Notfallmedikation", category: "Notfallbehandlung" },
+
+  { key: "schiene_bissregistrierung", system: "GOZ", code: "–", title: "Bissregistrierung", description: "Registrierung der Kieferrelation", category: "Schienentherapie" },
+  { key: "schiene_eingliederung", system: "GOZ", code: "–", title: "Eingliederung Aufbissschiene", description: "Einsetzen und Anpassen der Aufbissschiene", category: "Schienentherapie" },
+  { key: "schiene_einschleifen", system: "SONSTIGES", code: "–", title: "Einschleifen/Kontrolle Schiene", description: "Okklusale Anpassung und Kontrolle der Schiene", category: "Schienentherapie" },
 ];
+
+type SeedTemplateItem = { key: string; dependsOn?: string[] };
 
 type SeedTemplate = {
   name: string;
   description: string;
-  itemKeys: string[];
+  items: SeedTemplateItem[];
 };
+
+function it(key: string, dependsOn?: string[]): SeedTemplateItem {
+  return { key, dependsOn };
+}
 
 const TEMPLATES: SeedTemplate[] = [
   {
     name: "Kontrolluntersuchung",
     description: "Standard-Recall-/Kontrolltermin",
-    itemKeys: ["unters_privat", "unters_gkv", "psi", "rx_einzelzahn", "beratung_privat", "aufklaerung_dokumentiert"],
+    items: [it("unters_privat"), it("unters_gkv"), it("psi"), it("rx_einzelzahn"), it("beratung_privat"), it("aufklaerung_dokumentiert")],
   },
   {
     name: "Erstuntersuchung / Neupatient",
     description: "Erster Termin bei neuem Patienten",
-    itemKeys: ["anamnese", "unters_privat", "unters_gkv", "rx_uebersicht", "rx_befundung", "psi", "beratung_privat", "aufklaerung_dokumentiert"],
+    items: [it("anamnese"), it("unters_privat"), it("unters_gkv"), it("rx_uebersicht"), it("rx_befundung"), it("psi"), it("beratung_privat"), it("aufklaerung_dokumentiert")],
   },
   {
     name: "Füllungstherapie",
     description: "Kariesbehandlung mit Füllung",
-    itemKeys: ["unters_privat", "aufklaerung_dokumentiert", "anaesthesie_infiltration", "kariesexkavation", "unterfuellung", "fuellung_einflaechig", "fuellung_mehrflaechig", "fuellung_politur"],
+    items: [
+      it("unters_privat"),
+      it("aufklaerung_dokumentiert"),
+      it("anaesthesie_infiltration"),
+      it("kariesexkavation"),
+      it("unterfuellung", ["kariesexkavation"]),
+      it("fuellung_einflaechig", ["kariesexkavation"]),
+      it("fuellung_mehrflaechig", ["kariesexkavation"]),
+      it("fuellung_politur", ["fuellung_einflaechig", "fuellung_mehrflaechig"]),
+    ],
   },
   {
     name: "Professionelle Zahnreinigung (PZR)",
     description: "Prophylaxesitzung",
-    itemKeys: ["psi", "zst_entfernung", "pzr", "fluoridierung", "mundhygiene_instruktion"],
+    items: [it("psi"), it("zst_entfernung"), it("pzr"), it("fluoridierung"), it("mundhygiene_instruktion")],
   },
   {
     name: "Chirurgischer Eingriff (Extraktion)",
     description: "Zahnentfernung",
-    itemKeys: ["unters_privat", "aufklaerung_dokumentiert", "anaesthesie_leitung", "anaesthesie_infiltration", "extraktion", "wundversorgung", "postop_anweisung"],
+    items: [
+      it("unters_privat"),
+      it("aufklaerung_dokumentiert"),
+      it("anaesthesie_leitung"),
+      it("anaesthesie_infiltration"),
+      it("extraktion"),
+      it("wundversorgung", ["extraktion"]),
+      it("postop_anweisung", ["extraktion"]),
+    ],
   },
   {
     name: "Parodontalbehandlung",
     description: "Systematische PA-Behandlung",
-    itemKeys: ["psi", "aufklaerung_dokumentiert", "anaesthesie_infiltration", "pa_scaling", "mundhygiene_instruktion", "pa_nachkontrolle"],
+    items: [it("psi"), it("aufklaerung_dokumentiert"), it("anaesthesie_infiltration"), it("pa_scaling"), it("mundhygiene_instruktion"), it("pa_nachkontrolle")],
+  },
+  {
+    name: "Unterstützende Parodontitistherapie (UPT)",
+    description: "Nachsorgesitzung im Rahmen der PAR-Behandlung",
+    items: [
+      it("psi"),
+      it("upt_reevaluation"),
+      it("upt_reinigung", ["upt_reevaluation"]),
+      it("mundhygiene_instruktion"),
+      it("fluoridierung"),
+      it("pa_nachkontrolle", ["upt_reinigung"]),
+    ],
   },
   {
     name: "Endodontische Behandlung (Wurzelkanal)",
-    description: "Wurzelkanalbehandlung",
-    itemKeys: ["unters_privat", "aufklaerung_dokumentiert", "rx_einzelzahn", "anaesthesie_leitung", "vitalitaet", "trepanation", "wurzelkanal_aufbereitung", "wurzelkanal_fuellung"],
+    description: "Wurzelkanalbehandlung — vier Schritte, jeder baut auf dem vorherigen auf",
+    items: [
+      it("unters_privat"),
+      it("aufklaerung_dokumentiert"),
+      it("rx_einzelzahn"),
+      it("anaesthesie_leitung"),
+      it("vitalitaet"),
+      it("trepanation", ["vitalitaet"]),
+      it("wurzelkanal_aufbereitung", ["trepanation"]),
+      it("wurzelkanal_fuellung", ["wurzelkanal_aufbereitung"]),
+    ],
   },
   {
     name: "Prothetische Versorgung",
     description: "Zahnersatz-Termin",
-    itemKeys: ["unters_privat", "aufklaerung_dokumentiert", "abformung", "eingliederung_ersatz"],
+    items: [
+      it("unters_privat"),
+      it("aufklaerung_dokumentiert"),
+      it("praeparation"),
+      it("abformung", ["praeparation"]),
+      it("provisorium", ["praeparation"]),
+      it("eingliederung_ersatz", ["abformung"]),
+    ],
+  },
+  {
+    name: "Individualprophylaxe (Kind/Jugendliche)",
+    description: "IP-Sitzung für Kinder und Jugendliche",
+    items: [it("aufklaerung_dokumentiert"), it("ip_mundhygienestatus"), it("ip_ernaehrungsberatung"), it("mundhygiene_instruktion"), it("fluoridierung"), it("fissuren_versiegelung")],
+  },
+  {
+    name: "Notfallbehandlung / Schmerzbehandlung",
+    description: "Akuttermin außerhalb der planmäßigen Behandlung",
+    items: [
+      it("unters_privat"),
+      it("unters_gkv"),
+      it("notfall_diagnostik"),
+      it("anaesthesie_infiltration"),
+      it("notfall_akutmassnahme", ["notfall_diagnostik"]),
+      it("notfall_medikation"),
+      it("aufklaerung_dokumentiert"),
+    ],
+  },
+  {
+    name: "Schienentherapie (Aufbissschiene)",
+    description: "Anfertigung und Eingliederung einer Aufbissschiene",
+    items: [
+      it("unters_privat"),
+      it("aufklaerung_dokumentiert"),
+      it("abformung"),
+      it("schiene_bissregistrierung", ["abformung"]),
+      it("schiene_eingliederung", ["schiene_bissregistrierung"]),
+      it("schiene_einschleifen", ["schiene_eingliederung"]),
+    ],
   },
 ];
 
@@ -148,15 +245,22 @@ async function main() {
       template = await prisma.serviceTemplate.create({
         data: { practiceId: null, name: tpl.name, description: tpl.description },
       });
+    } else {
+      await prisma.serviceTemplate.update({ where: { id: template.id }, data: { description: tpl.description } });
     }
 
-    for (let i = 0; i < tpl.itemKeys.length; i++) {
-      const catalogItemId = itemIdByKey.get(tpl.itemKeys[i]);
+    for (let i = 0; i < tpl.items.length; i++) {
+      const seedItem = tpl.items[i];
+      const catalogItemId = itemIdByKey.get(seedItem.key);
       if (!catalogItemId) continue;
+      const dependsOnIds = (seedItem.dependsOn ?? [])
+        .map((key) => itemIdByKey.get(key))
+        .filter((v): v is string => !!v);
+
       await prisma.serviceTemplateItem.upsert({
         where: { templateId_catalogItemId: { templateId: template.id, catalogItemId } },
-        update: { position: i },
-        create: { templateId: template.id, catalogItemId, position: i },
+        update: { position: i, dependsOn: serializeDependsOn(dependsOnIds) },
+        create: { templateId: template.id, catalogItemId, position: i, dependsOn: serializeDependsOn(dependsOnIds) },
       });
     }
   }
