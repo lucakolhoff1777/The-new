@@ -5,14 +5,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Abgeleitet vom Farbschema der Praxis-Website (zahnarzt-schenefeld.de):
+        // gedecktes Stahlblau #3d5d86 als Primärfarbe.
         brand: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          500: "#2563eb",
-          600: "#1d4ed8",
-          700: "#1e40af",
+          50: "#f2f5f8",
+          100: "#e2e8f0",
+          200: "#c3d0e0",
+          300: "#9aacc6",
+          400: "#6a85a8",
+          500: "#4f6c92",
+          600: "#3d5d86",
+          700: "#314a6b",
+          800: "#263a54",
         },
+      },
+      fontFamily: {
+        sans: ["var(--font-open-sans)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
     },
   },

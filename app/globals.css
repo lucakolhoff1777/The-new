@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-slate-50 font-sans text-[15px] font-normal text-slate-900;
+}
+
+h1 {
+  @apply font-light tracking-tight;
 }
 
 .card {

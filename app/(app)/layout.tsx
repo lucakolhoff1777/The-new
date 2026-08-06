@@ -10,21 +10,22 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-brand-800 bg-brand-600">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="font-semibold text-slate-900">
-              Zahnarzt Berichte
+            <Link href="/dashboard" className="flex items-baseline gap-2">
+              <span className="font-semibold tracking-tight text-white">
+                {session.user.practiceName}
+              </span>
+              <span className="text-xs font-light text-brand-200">Zahnarzt Berichte</span>
             </Link>
-            <nav className="flex gap-4 text-sm text-slate-600">
-              <Link href="/dashboard" className="hover:text-brand-600">Übersicht</Link>
-              <Link href="/patients" className="hover:text-brand-600">Patienten</Link>
+            <nav className="flex gap-4 text-sm text-brand-100">
+              <Link href="/dashboard" className="hover:text-white">Übersicht</Link>
+              <Link href="/patients" className="hover:text-white">Patienten</Link>
             </nav>
           </div>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-slate-500">
-              {session.user.practiceName} · {session.user.name}
-            </span>
+          <div className="flex items-center gap-4 text-sm text-brand-100">
+            <span>{session.user.name}</span>
             <SignOutButton />
           </div>
         </div>
