@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Practice {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  users     User[]
+  patients  Patient[]
+  reports   Report[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("staff") // "admin" | "staff"
+  practiceId   String
+  practice     Practice @relation(fields: [practiceId], references: [id])
+  reports      Report[]
+  createdAt    DateTime @default(now())
+}
+
+model Patient {
+  id              String   @id @default(cuid())
+  practiceId      String
+  practice        Practice @relation(fields: [practiceId], references: [id])
+  firstName       String
+  lastName        String
+  birthDate       DateTime?
+  insuranceName   String?
+  insuranceNumber String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  reports         Report[]
+
+  @@index([practiceId])
+}
+
+// SQLite has no native enum support; these are constrained to
+// "BEFUND" | "KRANKENKASSE" and "ENTWURF" | "FINAL" in application code.
+model Report {
+  id                String       @id @default(cuid())
+  practiceId        String
+  practice          Practice     @relation(fields: [practiceId], references: [id])
+  patientId         String
+  patient           Patient      @relation(fields: [patientId], references: [id])
+  authorId          String
+  author            User         @relation(fields: [authorId], references: [id])
+  type              String
+  status            String       @default("ENTWURF")
+  treatmentDate     DateTime?
+  bulletPoints      String
+  additionalContext String?
+  generatedText     String?
+  editedText        String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([practiceId])
+  @@index([patientId])
+}
