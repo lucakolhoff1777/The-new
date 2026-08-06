@@ -29,11 +29,16 @@ geprüft und freigegeben werden.
   nicht stattgefunden haben. Diese Kaskade wird zusätzlich serverseitig neu
   berechnet, damit ein manipulierter Request sie nicht umgehen kann (siehe
   `lib/serviceDependency.ts`).
-- 12 Sitzungstyp-Vorlagen über das übliche Behandlungsspektrum hinweg:
+- 11 Sitzungstyp-Vorlagen über das übliche Behandlungsspektrum hinweg:
   Kontrolle, Erstuntersuchung, Füllungstherapie, PZR, Chirurgie,
-  Parodontalbehandlung, unterstützende Parodontitistherapie (UPT),
-  Endodontie, Prothetik, Individualprophylaxe (Kind/Jugendliche),
+  systematische Parodontitisbehandlung (PAR, siehe unten), Endodontie,
+  Prothetik, Individualprophylaxe (Kind/Jugendliche),
   Notfall-/Schmerzbehandlung, Schienentherapie.
+- Die **PAR-Vorlage** bildet den vollständigen, seit 2021 gültigen
+  BEMA-Pfad der systematischen Parodontitisbehandlung ab (BEVa → BEVb →
+  ATG → MHU → AITa → AITb → CPTa/CPTb → UPTa → UPTb → UPTc → UPTd) als
+  durchgehende Abhängigkeitskette – ein reales Beispiel für „logisch
+  aufeinander aufbauende Behandlungsschritte“.
 - Aus der geprüften Leistungsliste generiert die KI den Berichtstext
   (Befund-/Behandlungsbericht oder Bericht an Krankenkasse)
 - Generierten Text bearbeiten, neu generieren, als Entwurf/final markieren
