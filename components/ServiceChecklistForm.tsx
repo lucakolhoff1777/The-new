@@ -13,6 +13,7 @@ type CatalogItem = {
   title: string;
   description: string | null;
   category: string;
+  toothRelevant: boolean;
 };
 
 type TemplateItem = {
@@ -52,6 +53,7 @@ export function ServiceChecklistForm({
   const [templates, setTemplates] = useState<Template[]>([]);
   const [templateId, setTemplateId] = useState<string>("");
   const [entries, setEntries] = useState<Record<string, EntryState>>({});
+  const [expandedTooth, setExpandedTooth] = useState<Record<string, boolean>>({});
   const [reviewConfirmed, setReviewConfirmed] = useState(false);
 
   const [loadingTemplates, setLoadingTemplates] = useState(true);
@@ -80,6 +82,7 @@ export function ServiceChecklistForm({
       next[item.catalogItemId] = { performed: true, toothNumbers: "", quantity: 1, note: "" };
     }
     setEntries(next);
+    setExpandedTooth({});
     setReviewConfirmed(false);
   }, [selectedTemplate]);
 
@@ -349,34 +352,53 @@ export function ServiceChecklistForm({
                           </p>
                         )}
 
-                        {eff && !locked && (
-                          <div className="ml-7 mt-2 grid grid-cols-3 gap-2">
-                            <input
-                              className="input py-1 text-xs"
-                              placeholder="Zahn/Region"
-                              value={entry.toothNumbers}
-                              onChange={(e) =>
-                                updateItem(item.catalogItemId, { toothNumbers: e.target.value })
-                              }
-                            />
-                            <input
-                              className="input py-1 text-xs"
-                              type="number"
-                              min={1}
-                              placeholder="Anzahl"
-                              value={entry.quantity}
-                              onChange={(e) =>
-                                updateItem(item.catalogItemId, { quantity: Number(e.target.value) })
-                              }
-                            />
-                            <input
-                              className="input py-1 text-xs"
-                              placeholder="Notiz (optional)"
-                              value={entry.note}
-                              onChange={(e) => updateItem(item.catalogItemId, { note: e.target.value })}
-                            />
-                          </div>
-                        )}
+                        {eff && !locked && (() => {
+                          const showTooth = item.catalogItem.toothRelevant || !!expandedTooth[item.catalogItemId];
+                          return (
+                            <div className="ml-7 mt-2">
+                              <div className={showTooth ? "grid grid-cols-3 gap-2" : "grid grid-cols-2 gap-2"}>
+                                {showTooth && (
+                                  <input
+                                    className="input py-1 text-xs"
+                                    placeholder="Zahn/Region"
+                                    autoFocus={!item.catalogItem.toothRelevant}
+                                    value={entry.toothNumbers}
+                                    onChange={(e) =>
+                                      updateItem(item.catalogItemId, { toothNumbers: e.target.value })
+                                    }
+                                  />
+                                )}
+                                <input
+                                  className="input py-1 text-xs"
+                                  type="number"
+                                  min={1}
+                                  placeholder="Anzahl"
+                                  value={entry.quantity}
+                                  onChange={(e) =>
+                                    updateItem(item.catalogItemId, { quantity: Number(e.target.value) })
+                                  }
+                                />
+                                <input
+                                  className="input py-1 text-xs"
+                                  placeholder="Notiz (optional)"
+                                  value={entry.note}
+                                  onChange={(e) => updateItem(item.catalogItemId, { note: e.target.value })}
+                                />
+                              </div>
+                              {!showTooth && (
+                                <button
+                                  type="button"
+                                  className="mt-1.5 text-xs text-brand-600 hover:underline"
+                                  onClick={() =>
+                                    setExpandedTooth((prev) => ({ ...prev, [item.catalogItemId]: true }))
+                                  }
+                                >
+                                  + Zahn/Region ergänzen
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     );
                   })}

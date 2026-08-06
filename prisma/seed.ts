@@ -20,65 +20,69 @@ type SeedItem = {
   title: string;
   description?: string;
   category: string;
+  // Ob "Zahn/Region" bei dieser Position sinnvoll ist (z. B. Füllung: ja,
+  // Aufklärungsgespräch: nein). Steuert nur die Standard-Sichtbarkeit des
+  // Feldes in der Erfassung, nicht dessen Verfügbarkeit.
+  toothRelevant: boolean;
 };
 
 const CATALOG: SeedItem[] = [
-  { key: "unters_privat", system: "GOZ", code: "0010", title: "Eingehende Untersuchung", description: "Eingehende Untersuchung zur Feststellung von Zahn-, Mund- und Kieferkrankheiten", category: "Diagnostik & Beratung" },
-  { key: "unters_gkv", system: "BEMA", code: "01", title: "Eingehende Untersuchung", description: "Eingehende Untersuchung zur Feststellung von Zahn-, Mund- und Kieferkrankheiten sowie Erhebung des Zahnstatus", category: "Diagnostik & Beratung" },
-  { key: "beratung_privat", system: "GOZ", code: "–", title: "Eingehende Beratung", description: "Eingehende Beratung, ggf. unter Einbeziehung eines Patientengesprächs zu Befund und Behandlungsplan", category: "Diagnostik & Beratung" },
-  { key: "beratung_gkv", system: "BEMA", code: "–", title: "Eingehende Beratung", description: "Eingehende Beratung", category: "Diagnostik & Beratung" },
-  { key: "anamnese", system: "SONSTIGES", code: "–", title: "Anamnese erhoben", description: "Allgemeine und zahnmedizinische Anamnese erhoben und dokumentiert", category: "Diagnostik & Beratung" },
-  { key: "psi", system: "GOZ", code: "4005", title: "Parodontaler Screening Index (PSI)", description: "Erhebung des Parodontalen Screening Index", category: "Diagnostik & Beratung" },
-  { key: "vitalitaet", system: "GOZ", code: "–", title: "Vitalitätsprüfung", description: "Sensibilitäts-/Vitalitätsprüfung eines oder mehrerer Zähne", category: "Diagnostik & Beratung" },
-  { key: "aufklaerung_dokumentiert", system: "SONSTIGES", code: "–", title: "Aufklärung dokumentiert", description: "Patient über Befund, Behandlungsalternativen und Risiken aufgeklärt; Einwilligung dokumentiert", category: "Diagnostik & Beratung" },
+  { key: "unters_privat", system: "GOZ", code: "0010", title: "Eingehende Untersuchung", description: "Eingehende Untersuchung zur Feststellung von Zahn-, Mund- und Kieferkrankheiten", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "unters_gkv", system: "BEMA", code: "01", title: "Eingehende Untersuchung", description: "Eingehende Untersuchung zur Feststellung von Zahn-, Mund- und Kieferkrankheiten sowie Erhebung des Zahnstatus", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "beratung_privat", system: "GOZ", code: "–", title: "Eingehende Beratung", description: "Eingehende Beratung, ggf. unter Einbeziehung eines Patientengesprächs zu Befund und Behandlungsplan", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "beratung_gkv", system: "BEMA", code: "–", title: "Eingehende Beratung", description: "Eingehende Beratung", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "anamnese", system: "SONSTIGES", code: "–", title: "Anamnese erhoben", description: "Allgemeine und zahnmedizinische Anamnese erhoben und dokumentiert", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "psi", system: "GOZ", code: "4005", title: "Parodontaler Screening Index (PSI)", description: "Erhebung des Parodontalen Screening Index", category: "Diagnostik & Beratung", toothRelevant: false },
+  { key: "vitalitaet", system: "GOZ", code: "–", title: "Vitalitätsprüfung", description: "Sensibilitäts-/Vitalitätsprüfung eines oder mehrerer Zähne", category: "Diagnostik & Beratung", toothRelevant: true },
+  { key: "aufklaerung_dokumentiert", system: "SONSTIGES", code: "–", title: "Aufklärung dokumentiert", description: "Patient über Befund, Behandlungsalternativen und Risiken aufgeklärt; Einwilligung dokumentiert", category: "Diagnostik & Beratung", toothRelevant: false },
 
-  { key: "rx_einzelzahn", system: "GOZ", code: "–", title: "Röntgen Einzelzahnaufnahme", description: "Zahnfilm, digitale Einzelzahnaufnahme", category: "Röntgen" },
-  { key: "rx_uebersicht", system: "GOZ", code: "–", title: "Röntgen Übersichtsaufnahme (OPG)", description: "Orthopantomogramm / Panoramaschichtaufnahme", category: "Röntgen" },
-  { key: "rx_befundung", system: "SONSTIGES", code: "–", title: "Röntgenbild befundet", description: "Röntgenaufnahme angefertigt und befundet", category: "Röntgen" },
+  { key: "rx_einzelzahn", system: "GOZ", code: "–", title: "Röntgen Einzelzahnaufnahme", description: "Zahnfilm, digitale Einzelzahnaufnahme", category: "Röntgen", toothRelevant: true },
+  { key: "rx_uebersicht", system: "GOZ", code: "–", title: "Röntgen Übersichtsaufnahme (OPG)", description: "Orthopantomogramm / Panoramaschichtaufnahme", category: "Röntgen", toothRelevant: false },
+  { key: "rx_befundung", system: "SONSTIGES", code: "–", title: "Röntgenbild befundet", description: "Röntgenaufnahme angefertigt und befundet", category: "Röntgen", toothRelevant: false },
 
-  { key: "anaesthesie_infiltration", system: "GOZ", code: "–", title: "Infiltrationsanästhesie", description: "Lokale Infiltrationsanästhesie", category: "Anästhesie" },
-  { key: "anaesthesie_leitung", system: "GOZ", code: "–", title: "Leitungsanästhesie", description: "Leitungsanästhesie", category: "Anästhesie" },
+  { key: "anaesthesie_infiltration", system: "GOZ", code: "–", title: "Infiltrationsanästhesie", description: "Lokale Infiltrationsanästhesie", category: "Anästhesie", toothRelevant: true },
+  { key: "anaesthesie_leitung", system: "GOZ", code: "–", title: "Leitungsanästhesie", description: "Leitungsanästhesie", category: "Anästhesie", toothRelevant: true },
 
-  { key: "zst_entfernung", system: "GOZ", code: "1000", title: "Entfernung harter Zahnbeläge", description: "Entfernung harter Zahnbeläge (Zahnstein), unabhängig vom Ausmaß", category: "Prophylaxe" },
-  { key: "pzr", system: "GOZ", code: "1040", title: "Professionelle Zahnreinigung", description: "Entfernung weicher Zahnbeläge, Politur und Fluoridierung sämtlicher Zähne", category: "Prophylaxe" },
-  { key: "mundhygiene_instruktion", system: "SONSTIGES", code: "–", title: "Mundhygieneinstruktion", description: "Anleitung zur Mundhygiene gegeben", category: "Prophylaxe" },
-  { key: "fluoridierung", system: "GOZ", code: "–", title: "Fluoridierung", description: "Lokale Fluoridierung", category: "Prophylaxe" },
+  { key: "zst_entfernung", system: "GOZ", code: "1000", title: "Entfernung harter Zahnbeläge", description: "Entfernung harter Zahnbeläge (Zahnstein), unabhängig vom Ausmaß", category: "Prophylaxe", toothRelevant: false },
+  { key: "pzr", system: "GOZ", code: "1040", title: "Professionelle Zahnreinigung", description: "Entfernung weicher Zahnbeläge, Politur und Fluoridierung sämtlicher Zähne", category: "Prophylaxe", toothRelevant: false },
+  { key: "mundhygiene_instruktion", system: "SONSTIGES", code: "–", title: "Mundhygieneinstruktion", description: "Anleitung zur Mundhygiene gegeben", category: "Prophylaxe", toothRelevant: false },
+  { key: "fluoridierung", system: "GOZ", code: "–", title: "Fluoridierung", description: "Lokale Fluoridierung", category: "Prophylaxe", toothRelevant: false },
 
-  { key: "kariesexkavation", system: "SONSTIGES", code: "–", title: "Kariesexkavation", description: "Entfernung kariösen Zahnschmelzes/-dentins", category: "Füllungstherapie" },
-  { key: "fuellung_einflaechig", system: "GOZ", code: "–", title: "Füllung, einflächig", description: "Kompositfüllung, einflächig", category: "Füllungstherapie" },
-  { key: "fuellung_mehrflaechig", system: "GOZ", code: "–", title: "Füllung, mehrflächig", description: "Kompositfüllung, mehrflächig", category: "Füllungstherapie" },
-  { key: "fuellung_politur", system: "SONSTIGES", code: "–", title: "Füllung poliert", description: "Politur/Ausarbeitung der gelegten Füllung", category: "Füllungstherapie" },
-  { key: "unterfuellung", system: "GOZ", code: "–", title: "Unterfüllung / Aufbaufüllung", description: "Unterfüllung bzw. Aufbaufüllung vor definitiver Versorgung", category: "Füllungstherapie" },
+  { key: "kariesexkavation", system: "SONSTIGES", code: "–", title: "Kariesexkavation", description: "Entfernung kariösen Zahnschmelzes/-dentins", category: "Füllungstherapie", toothRelevant: true },
+  { key: "fuellung_einflaechig", system: "GOZ", code: "–", title: "Füllung, einflächig", description: "Kompositfüllung, einflächig", category: "Füllungstherapie", toothRelevant: true },
+  { key: "fuellung_mehrflaechig", system: "GOZ", code: "–", title: "Füllung, mehrflächig", description: "Kompositfüllung, mehrflächig", category: "Füllungstherapie", toothRelevant: true },
+  { key: "fuellung_politur", system: "SONSTIGES", code: "–", title: "Füllung poliert", description: "Politur/Ausarbeitung der gelegten Füllung", category: "Füllungstherapie", toothRelevant: true },
+  { key: "unterfuellung", system: "GOZ", code: "–", title: "Unterfüllung / Aufbaufüllung", description: "Unterfüllung bzw. Aufbaufüllung vor definitiver Versorgung", category: "Füllungstherapie", toothRelevant: true },
 
-  { key: "wurzelkanal_aufbereitung", system: "GOZ", code: "–", title: "Wurzelkanalaufbereitung", description: "Aufbereitung eines Wurzelkanals", category: "Endodontie" },
-  { key: "wurzelkanal_fuellung", system: "GOZ", code: "–", title: "Wurzelkanalfüllung", description: "Medikamentöse Einlage und/oder Wurzelfüllung", category: "Endodontie" },
-  { key: "trepanation", system: "GOZ", code: "–", title: "Trepanation", description: "Eröffnung der Pulpakammer als Erstmaßnahme", category: "Endodontie" },
+  { key: "wurzelkanal_aufbereitung", system: "GOZ", code: "–", title: "Wurzelkanalaufbereitung", description: "Aufbereitung eines Wurzelkanals", category: "Endodontie", toothRelevant: true },
+  { key: "wurzelkanal_fuellung", system: "GOZ", code: "–", title: "Wurzelkanalfüllung", description: "Medikamentöse Einlage und/oder Wurzelfüllung", category: "Endodontie", toothRelevant: true },
+  { key: "trepanation", system: "GOZ", code: "–", title: "Trepanation", description: "Eröffnung der Pulpakammer als Erstmaßnahme", category: "Endodontie", toothRelevant: true },
 
-  { key: "extraktion", system: "GOZ", code: "–", title: "Zahnextraktion", description: "Entfernung eines Zahnes", category: "Chirurgie" },
-  { key: "wundversorgung", system: "SONSTIGES", code: "–", title: "Wundversorgung / Naht", description: "Blutstillung, ggf. Naht nach chirurgischem Eingriff", category: "Chirurgie" },
-  { key: "postop_anweisung", system: "SONSTIGES", code: "–", title: "Postoperative Anweisung", description: "Mündliche und/oder schriftliche Verhaltensanweisung nach dem Eingriff gegeben", category: "Chirurgie" },
+  { key: "extraktion", system: "GOZ", code: "–", title: "Zahnextraktion", description: "Entfernung eines Zahnes", category: "Chirurgie", toothRelevant: true },
+  { key: "wundversorgung", system: "SONSTIGES", code: "–", title: "Wundversorgung / Naht", description: "Blutstillung, ggf. Naht nach chirurgischem Eingriff", category: "Chirurgie", toothRelevant: true },
+  { key: "postop_anweisung", system: "SONSTIGES", code: "–", title: "Postoperative Anweisung", description: "Mündliche und/oder schriftliche Verhaltensanweisung nach dem Eingriff gegeben", category: "Chirurgie", toothRelevant: false },
 
-  { key: "pa_scaling", system: "BEMA", code: "–", title: "Scaling / Wurzelglättung", description: "Subgingivale Zahnstein-/Belagentfernung mit Wurzelglättung", category: "Parodontologie" },
-  { key: "pa_nachkontrolle", system: "SONSTIGES", code: "–", title: "PA-Nachkontrolle", description: "Kontrolle des parodontalen Heilverlaufs", category: "Parodontologie" },
-  { key: "upt_reevaluation", system: "BEMA", code: "–", title: "Parodontaler Reevaluationsbefund", description: "Erneute Befunderhebung im Rahmen der Nachsorge (UPT)", category: "Parodontologie" },
-  { key: "upt_reinigung", system: "BEMA", code: "–", title: "Subgingivale Instrumentierung (UPT)", description: "Professionelle subgingivale Reinigung im Rahmen der Nachsorgesitzung", category: "Parodontologie" },
+  { key: "pa_scaling", system: "BEMA", code: "–", title: "Scaling / Wurzelglättung", description: "Subgingivale Zahnstein-/Belagentfernung mit Wurzelglättung", category: "Parodontologie", toothRelevant: true },
+  { key: "pa_nachkontrolle", system: "SONSTIGES", code: "–", title: "PA-Nachkontrolle", description: "Kontrolle des parodontalen Heilverlaufs", category: "Parodontologie", toothRelevant: false },
+  { key: "upt_reevaluation", system: "BEMA", code: "–", title: "Parodontaler Reevaluationsbefund", description: "Erneute Befunderhebung im Rahmen der Nachsorge (UPT)", category: "Parodontologie", toothRelevant: false },
+  { key: "upt_reinigung", system: "BEMA", code: "–", title: "Subgingivale Instrumentierung (UPT)", description: "Professionelle subgingivale Reinigung im Rahmen der Nachsorgesitzung", category: "Parodontologie", toothRelevant: true },
 
-  { key: "praeparation", system: "GOZ", code: "–", title: "Zahnpräparation", description: "Präparation eines Zahnes zur Aufnahme von Zahnersatz", category: "Prothetik" },
-  { key: "abformung", system: "GOZ", code: "–", title: "Abformung", description: "Abformung eines oder beider Kiefer", category: "Prothetik" },
-  { key: "provisorium", system: "GOZ", code: "–", title: "Provisorische Versorgung", description: "Eingliederung eines Provisoriums bis zur definitiven Versorgung", category: "Prothetik" },
-  { key: "eingliederung_ersatz", system: "GOZ", code: "–", title: "Eingliederung Zahnersatz", description: "Eingliederung von Zahnersatz/Zahnkrone", category: "Prothetik" },
+  { key: "praeparation", system: "GOZ", code: "–", title: "Zahnpräparation", description: "Präparation eines Zahnes zur Aufnahme von Zahnersatz", category: "Prothetik", toothRelevant: true },
+  { key: "abformung", system: "GOZ", code: "–", title: "Abformung", description: "Abformung eines oder beider Kiefer", category: "Prothetik", toothRelevant: false },
+  { key: "provisorium", system: "GOZ", code: "–", title: "Provisorische Versorgung", description: "Eingliederung eines Provisoriums bis zur definitiven Versorgung", category: "Prothetik", toothRelevant: true },
+  { key: "eingliederung_ersatz", system: "GOZ", code: "–", title: "Eingliederung Zahnersatz", description: "Eingliederung von Zahnersatz/Zahnkrone", category: "Prothetik", toothRelevant: true },
 
-  { key: "ip_mundhygienestatus", system: "BEMA", code: "–", title: "Erhebung Mundhygienestatus", description: "Erhebung des Mundhygienestatus (Plaque-/Gingivitis-Index) bei Kindern/Jugendlichen", category: "Individualprophylaxe" },
-  { key: "ip_ernaehrungsberatung", system: "BEMA", code: "–", title: "Ernährungsberatung", description: "Aufklärung über zahngesunde Ernährung", category: "Individualprophylaxe" },
-  { key: "fissuren_versiegelung", system: "BEMA", code: "–", title: "Fissurenversiegelung", description: "Versiegelung kariesfreier Fissuren der bleibenden Molaren", category: "Individualprophylaxe" },
+  { key: "ip_mundhygienestatus", system: "BEMA", code: "–", title: "Erhebung Mundhygienestatus", description: "Erhebung des Mundhygienestatus (Plaque-/Gingivitis-Index) bei Kindern/Jugendlichen", category: "Individualprophylaxe", toothRelevant: false },
+  { key: "ip_ernaehrungsberatung", system: "BEMA", code: "–", title: "Ernährungsberatung", description: "Aufklärung über zahngesunde Ernährung", category: "Individualprophylaxe", toothRelevant: false },
+  { key: "fissuren_versiegelung", system: "BEMA", code: "–", title: "Fissurenversiegelung", description: "Versiegelung kariesfreier Fissuren der bleibenden Molaren", category: "Individualprophylaxe", toothRelevant: true },
 
-  { key: "notfall_diagnostik", system: "SONSTIGES", code: "–", title: "Schmerzdiagnostik", description: "Diagnostik zur Lokalisation der akuten Schmerzursache", category: "Notfallbehandlung" },
-  { key: "notfall_akutmassnahme", system: "SONSTIGES", code: "–", title: "Akutmaßnahme zur Schmerzausschaltung", description: "Sofortmaßnahme zur Beseitigung akuter Schmerzen (z. B. Trepanation, Entlastung)", category: "Notfallbehandlung" },
-  { key: "notfall_medikation", system: "SONSTIGES", code: "–", title: "Medikamentöse Versorgung", description: "Verordnung/Abgabe von Schmerz- oder Notfallmedikation", category: "Notfallbehandlung" },
+  { key: "notfall_diagnostik", system: "SONSTIGES", code: "–", title: "Schmerzdiagnostik", description: "Diagnostik zur Lokalisation der akuten Schmerzursache", category: "Notfallbehandlung", toothRelevant: true },
+  { key: "notfall_akutmassnahme", system: "SONSTIGES", code: "–", title: "Akutmaßnahme zur Schmerzausschaltung", description: "Sofortmaßnahme zur Beseitigung akuter Schmerzen (z. B. Trepanation, Entlastung)", category: "Notfallbehandlung", toothRelevant: true },
+  { key: "notfall_medikation", system: "SONSTIGES", code: "–", title: "Medikamentöse Versorgung", description: "Verordnung/Abgabe von Schmerz- oder Notfallmedikation", category: "Notfallbehandlung", toothRelevant: false },
 
-  { key: "schiene_bissregistrierung", system: "GOZ", code: "–", title: "Bissregistrierung", description: "Registrierung der Kieferrelation", category: "Schienentherapie" },
-  { key: "schiene_eingliederung", system: "GOZ", code: "–", title: "Eingliederung Aufbissschiene", description: "Einsetzen und Anpassen der Aufbissschiene", category: "Schienentherapie" },
-  { key: "schiene_einschleifen", system: "SONSTIGES", code: "–", title: "Einschleifen/Kontrolle Schiene", description: "Okklusale Anpassung und Kontrolle der Schiene", category: "Schienentherapie" },
+  { key: "schiene_bissregistrierung", system: "GOZ", code: "–", title: "Bissregistrierung", description: "Registrierung der Kieferrelation", category: "Schienentherapie", toothRelevant: false },
+  { key: "schiene_eingliederung", system: "GOZ", code: "–", title: "Eingliederung Aufbissschiene", description: "Einsetzen und Anpassen der Aufbissschiene", category: "Schienentherapie", toothRelevant: false },
+  { key: "schiene_einschleifen", system: "SONSTIGES", code: "–", title: "Einschleifen/Kontrolle Schiene", description: "Okklusale Anpassung und Kontrolle der Schiene", category: "Schienentherapie", toothRelevant: false },
 ];
 
 type SeedTemplateItem = { key: string; dependsOn?: string[] };
@@ -219,18 +223,22 @@ async function main() {
     const existing = await prisma.serviceCatalogItem.findFirst({
       where: { practiceId: null, system: item.system, code: item.code, title: item.title },
     });
-    const record =
-      existing ??
-      (await prisma.serviceCatalogItem.create({
-        data: {
-          practiceId: null,
-          system: item.system,
-          code: item.code,
-          title: item.title,
-          description: item.description,
-          category: item.category,
-        },
-      }));
+    const record = existing
+      ? await prisma.serviceCatalogItem.update({
+          where: { id: existing.id },
+          data: { description: item.description, category: item.category, toothRelevant: item.toothRelevant },
+        })
+      : await prisma.serviceCatalogItem.create({
+          data: {
+            practiceId: null,
+            system: item.system,
+            code: item.code,
+            title: item.title,
+            description: item.description,
+            category: item.category,
+            toothRelevant: item.toothRelevant,
+          },
+        });
     itemIdByKey.set(item.key, record.id);
   }
 

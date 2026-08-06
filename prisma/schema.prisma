@@ -93,6 +93,11 @@ model ServiceCatalogItem {
   title        String
   description  String?
   category     String
+  // Ob "Zahn/Region" bei dieser Position sinnvoll abfragbar ist (z. B. bei
+  // einer Füllung ja, bei "Eingehende Untersuchung" nein). Steuert nur, ob
+  // das Feld standardmäßig ein- oder ausgeblendet ist - es lässt sich in
+  // der Erfassung immer manuell einblenden.
+  toothRelevant Boolean            @default(true)
   createdAt    DateTime            @default(now())
   templateItems ServiceTemplateItem[]
   reportEntries ReportServiceEntry[]
