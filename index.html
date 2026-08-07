@@ -3,42 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VERDE Physiotherapie — Zurück in Bewegung</title>
-<meta name="description" content="VERDE Physiotherapie: moderne, individuelle Physiotherapie mit Herz und Präzision. Manuelle Therapie, Krankengymnastik, Sportphysiotherapie und mehr.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230b3d2e%22/><text x=%2250%22 y=%2266%22 font-size=%2258%22 text-anchor=%22middle%22 fill=%22%23c9a962%22 font-family=%22Georgia,serif%22>V</text></svg>">
+<title>Luca Kolhoff — Physiotherapie · CMD</title>
+<meta name="description" content="Luca Kolhoff: Privatpraxis für Sportphysiotherapie und Kieferbehandlung (CMD) unter einem Dach.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232C3424%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22%23DADED8%22 font-family=%22Georgia,serif%22>II</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<div class="preloader" id="preloader">
-  <span class="preloader-mark">VERDE</span>
+<!-- SPLASH · Signature mark animation -->
+<div id="splash" class="go" style="--T:6.4s" role="button" aria-label="Intro überspringen">
+  <div class="mk-stage">
+    <svg viewBox="0 0 560 360" fill="none" aria-label="Gespiegeltes L und K bilden die römische Zwei">
+      <defs>
+        <radialGradient id="mkctr" cx="50%" cy="46%" r="52%">
+          <stop offset="0%" stop-color="#DADED8" stop-opacity="0.13"/>
+          <stop offset="100%" stop-color="#DADED8" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse class="mk-glow" cx="280" cy="192" rx="118" ry="132" fill="url(#mkctr)"/>
+      <g stroke="#959581" stroke-width="1.3" fill="none" stroke-linecap="square">
+        <path class="mk-tick" d="M126 92 L126 66 L152 66"/>
+        <path class="mk-tick" d="M408 66 L434 66 L434 92"/>
+        <path class="mk-tick" d="M126 300 L126 326 L152 326"/>
+        <path class="mk-tick" d="M408 326 L434 326 L434 300"/>
+      </g>
+      <g class="mk-ii">
+        <g class="mk-l">
+          <g transform="translate(402,0) scale(-1,1)">
+            <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+          </g>
+        </g>
+        <g class="mk-k">
+          <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
+        </g>
+      </g>
+      <line class="mk-line" x1="234" y1="296" x2="326" y2="296" stroke="#959581" stroke-width="1.3"/>
+    </svg>
+    <div class="mk-sheen"></div>
+  </div>
+  <p class="mk-name">Luca Kolhoff</p>
+  <p class="mk-meta">Aus der römischen Zwei treten L &amp; K hervor</p>
+  <button class="splash-skip" id="splashSkip">Überspringen</button>
 </div>
-
-<div class="noise-overlay" aria-hidden="true"></div>
 
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="#top" class="logo">
-      <span class="logo-mark">V</span>
-      <span class="logo-text">VERDE<em>Physiotherapie</em></span>
+      <svg class="logo-mono" viewBox="0 0 130 100" aria-hidden="true">
+        <g font-family="Cormorant, serif" font-weight="500" font-size="72" fill="#DADED8">
+          <g transform="translate(72,0) scale(-1,1)"><text x="36" y="74" text-anchor="middle">L</text></g>
+          <text x="86" y="74" text-anchor="middle">K</text>
+        </g>
+      </svg>
+      <span class="logo-word">LUCA KOLHOFF<em>Physiotherapie · CMD</em></span>
     </a>
 
     <nav class="main-nav" id="mainNav">
       <ul>
-        <li><a href="#ueber" class="nav-link">Über uns</a></li>
-        <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
-        <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
-        <li><a href="#team" class="nav-link">Team</a></li>
-        <li><a href="#stimmen" class="nav-link">Stimmen</a></li>
+        <li><a href="#konzept" class="nav-link">Konzept</a></li>
+        <li><a href="#saeulen" class="nav-link">Säulen</a></li>
+        <li><a href="#pfad" class="nav-link">Ablauf</a></li>
+        <li><a href="#philosophie" class="nav-link">Philosophie</a></li>
+        <li><a href="#gruender" class="nav-link">Gründer</a></li>
         <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
       </ul>
     </nav>
 
     <div class="header-actions">
-      <a href="#kontakt" class="btn btn-primary btn-small">Termin vereinbaren</a>
+      <a href="#kontakt" class="btn btn-primary btn-small">Anfrage senden</a>
       <button class="hamburger" id="hamburger" aria-label="Menü öffnen" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -48,314 +83,310 @@
 
 <div class="mobile-menu" id="mobileMenu">
   <ul>
-    <li><a href="#ueber" class="nav-link">Über uns</a></li>
-    <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
-    <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
-    <li><a href="#team" class="nav-link">Team</a></li>
-    <li><a href="#stimmen" class="nav-link">Stimmen</a></li>
+    <li><a href="#konzept" class="nav-link">Konzept</a></li>
+    <li><a href="#saeulen" class="nav-link">Säulen</a></li>
+    <li><a href="#pfad" class="nav-link">Ablauf</a></li>
+    <li><a href="#philosophie" class="nav-link">Philosophie</a></li>
+    <li><a href="#gruender" class="nav-link">Gründer</a></li>
     <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
   </ul>
-  <a href="#kontakt" class="btn btn-primary">Termin vereinbaren</a>
+  <a href="#kontakt" class="btn btn-primary">Anfrage senden</a>
 </div>
 
 <main id="top">
 
-  <!-- HERO -->
+  <!-- HERO — full-bleed stage, centered mark -->
   <section class="hero">
     <div class="hero-bg" aria-hidden="true">
-      <div class="hero-mesh"></div>
-      <div class="hero-shape hero-shape-1" data-parallax="0.15"></div>
-      <div class="hero-shape hero-shape-2" data-parallax="0.3"></div>
-      <svg class="hero-lines" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M-100,650 C300,500 500,750 1300,550" />
-        <path d="M-100,720 C350,600 600,820 1300,650" />
+      <div class="hero-field"></div>
+      <div class="hero-grain"></div>
+    </div>
+
+    <div class="mark-stage reveal" data-reveal>
+      <svg viewBox="0 0 560 360" fill="none" aria-label="Monogramm — gespiegeltes L und K bilden die römische Zwei">
+        <defs>
+          <radialGradient id="heroctr" cx="50%" cy="46%" r="52%">
+            <stop offset="0%" stop-color="#DADED8" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="#DADED8" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="280" cy="182" rx="118" ry="140" fill="url(#heroctr)"/>
+        <g class="stage-ring-spin" style="transform-origin:280px 182px">
+          <circle class="stage-ring" cx="280" cy="182" r="156" stroke-dasharray="2 10"/>
+        </g>
+        <g stroke="#768064" stroke-width="1.2" fill="none" stroke-linecap="square">
+          <path d="M126 92 L126 66 L152 66"/>
+          <path d="M408 66 L434 66 L434 92"/>
+          <path d="M126 300 L126 326 L152 326"/>
+          <path d="M408 326 L434 326 L434 300"/>
+        </g>
+        <g transform="translate(402,0) scale(-1,1)">
+          <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+        </g>
+        <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
+        <line x1="234" y1="296" x2="326" y2="296" stroke="#959581" stroke-width="1.2"/>
       </svg>
     </div>
 
-    <div class="container hero-inner">
-      <p class="eyebrow reveal" data-reveal>Physiotherapie mit Präzision &amp; Ruhe</p>
-      <h1 class="hero-title">
-        <span class="reveal" data-reveal data-delay="80">Zurück in</span>
-        <span class="reveal reveal-italic" data-reveal data-delay="180">Bewegung.</span>
-      </h1>
-      <p class="hero-sub reveal" data-reveal data-delay="280">
-        Individuelle Therapiepläne, moderne Methoden und ein Team, das zuhört.
-        Wir bringen Sie nicht nur zurück auf die Beine — wir bringen Sie weiter.
-      </p>
-      <div class="hero-actions reveal" data-reveal data-delay="360">
-        <a href="#kontakt" class="btn btn-primary">Termin vereinbaren</a>
-        <a href="#leistungen" class="btn btn-ghost">Leistungen entdecken</a>
-      </div>
+    <div class="hero-name reveal" data-reveal data-delay="120">
+      <p class="name">Luca Kolhoff</p>
+      <p class="sub">Privatpraxis für Physiotherapie</p>
     </div>
 
-    <a href="#stats" class="scroll-cue" aria-label="Nach unten scrollen">
+    <h1 class="hero-headline reveal" data-reveal data-delay="220">Ein Haus. <span class="roman">Zwei</span> Disziplinen.</h1>
+    <p class="hero-sub reveal" data-reveal data-delay="300">
+      Sportphysiotherapie und Kieferbehandlung (CMD) unter einem Dach — 100&nbsp;% privat,
+      messbar durch Profi-Diagnostik, und schön genug, dass du kommst, bevor etwas wehtut.
+    </p>
+    <div class="hero-actions reveal" data-reveal data-delay="380">
+      <a href="#kontakt" class="btn btn-primary">Anfrage senden</a>
+      <a href="#saeulen" class="btn btn-ghost">Säulen entdecken</a>
+    </div>
+
+    <a href="#konzept" class="scroll-cue" aria-label="Nach unten scrollen">
       <span class="scroll-cue-line"></span>
       <span>Scrollen</span>
     </a>
   </section>
 
-  <!-- STATS -->
-  <section class="stats" id="stats">
-    <div class="container stats-grid">
-      <div class="stat-item reveal" data-reveal>
-        <span class="stat-number" data-count="14">0</span><span class="stat-plus">+</span>
-        <span class="stat-label">Jahre Erfahrung</span>
+  <!-- KONZEPT — construction of the mark -->
+  <section class="block" id="konzept">
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">i.</span>
+        <h2 class="reveal" data-reveal>Die Idee</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Gespiegeltes L, daneben das K — die langen Seiten stehen mit Abstand
+          parallel und formen die römische Zwei.
+        </p>
       </div>
-      <div class="stat-item reveal" data-reveal data-delay="80">
-        <span class="stat-number" data-count="3200">0</span><span class="stat-plus">+</span>
-        <span class="stat-label">Behandelte Patient:innen</span>
-      </div>
-      <div class="stat-item reveal" data-reveal data-delay="160">
-        <span class="stat-number" data-count="98">0</span><span class="stat-plus">%</span>
-        <span class="stat-label">Weiterempfehlung</span>
-      </div>
-      <div class="stat-item reveal" data-reveal data-delay="240">
-        <span class="stat-number" data-count="6">0</span>
-        <span class="stat-label">Kassenzulassungen</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ÜBER UNS -->
-  <section class="about" id="ueber">
-    <div class="container about-grid">
-      <div class="about-visual reveal" data-reveal>
-        <div class="about-card about-card-main">
-          <svg viewBox="0 0 200 200" class="about-illustration" aria-hidden="true">
-            <circle cx="100" cy="100" r="92" class="ring ring-1"/>
-            <circle cx="100" cy="100" r="68" class="ring ring-2"/>
-            <path d="M60,120 Q100,40 140,120" class="pulse-path"/>
+      <div class="idea-grid">
+        <div class="idea-card reveal" data-reveal>
+          <svg viewBox="0 0 200 200" aria-label="L gespiegelt">
+            <g transform="translate(200,0) scale(-1,1)">
+              <text x="100" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#959581">L</text>
+            </g>
           </svg>
+          <div class="idea-cap">1 · L gespiegelt</div>
         </div>
-        <div class="about-card about-card-badge">
-          <strong>Seit 2011</strong>
-          <span>Inhabergeführte Praxis</span>
+        <div class="idea-card reveal" data-reveal data-delay="80">
+          <svg viewBox="0 0 200 200" aria-label="K">
+            <text x="100" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#959581">K</text>
+          </svg>
+          <div class="idea-cap">2 · K daneben</div>
+        </div>
+        <div class="idea-card reveal" data-reveal data-delay="160">
+          <svg viewBox="0 0 280 200" aria-label="Ergebnis: L und K bilden die II">
+            <g transform="translate(238,0) scale(-1,1)">
+              <text x="119" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#DADED8">L</text>
+            </g>
+            <text x="190" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#DADED8">K</text>
+          </svg>
+          <div class="idea-cap">3 · II entsteht</div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="about-content">
-        <p class="eyebrow reveal" data-reveal>Über unsere Praxis</p>
-        <h2 class="reveal" data-reveal data-delay="80">
-          Therapie, die den <span class="italic">Menschen</span> sieht — nicht nur das Symptom.
-        </h2>
+  <!-- SÄULEN — Ein Haus, zwei Disziplinen -->
+  <section class="block" id="saeulen">
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">ii.</span>
+        <h2 class="reveal" data-reveal>Ein Haus. Zwei Disziplinen.</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Ein Patientenstrom kommt über den Sport, der andere über die
+          Zahnarztpraxis — beide treffen sich in einer Praxis.
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <article class="pillar-card reveal" data-reveal>
+          <div class="pillar-head">
+            <span class="pillar-roman">I</span>
+            <span class="pillar-name">Sport</span>
+          </div>
+          <p class="pillar-line">Athletik · Reha · Comeback</p>
+          <div class="pillar-services">
+            <div class="pillar-service"><span class="sv-name">Sportphysiotherapie</span><span class="sv-meta">60 Min · 120 €</span></div>
+            <div class="pillar-service"><span class="sv-name">Athletik-Check im Lab</span><span class="sv-meta">90 Min · 180 €</span></div>
+            <div class="pillar-service"><span class="sv-name">Return-to-Sport Paket</span><span class="sv-meta">10 × 60 Min · 990 €</span></div>
+          </div>
+          <p class="pillar-note">Direktzugang — auch ohne ärztliche Überweisung.</p>
+        </article>
+
+        <article class="pillar-card reveal" data-reveal data-delay="120">
+          <div class="pillar-head">
+            <span class="pillar-roman">II</span>
+            <span class="pillar-name">Kiefer</span>
+          </div>
+          <p class="pillar-line">CMD · in Kooperation mit deiner Zahnarztpraxis</p>
+          <div class="pillar-services">
+            <div class="pillar-service"><span class="sv-name">CMD-Ersttermin + Befund</span><span class="sv-meta">60 Min · 140 €</span></div>
+            <div class="pillar-service"><span class="sv-name">CMD-Folgebehandlung</span><span class="sv-meta">45 Min · 95 €</span></div>
+          </div>
+          <p class="pillar-note">Befund, Behandlung und Rückbericht — abgestimmt mit deiner Zahnarztpraxis.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PFAD — process -->
+  <section class="block" id="pfad">
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">iii.</span>
+        <h2 class="reveal" data-reveal>Der Ablauf</h2>
+        <p class="reveal" data-reveal data-delay="80">Zwei Wege, ein Prinzip: klar, dokumentiert, nachvollziehbar.</p>
+      </div>
+
+      <div class="paths-grid">
+        <div class="path-col reveal" data-reveal>
+          <div class="path-title"><span class="rn">I</span><h3>Sport</h3></div>
+          <div class="path-steps">
+            <div class="path-step">
+              <div class="ps-name">Direktzugang</div>
+              <div class="ps-desc">Terminvereinbarung ohne Umweg über eine ärztliche Überweisung.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Athletik-Check</div>
+              <div class="ps-desc">Kraftmessdiagnostik im Lab — dein Ausgangswert, schwarz auf weiß.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Individueller Plan</div>
+              <div class="ps-desc">Behandlung und Training, abgestimmt auf deine Sportart.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Return-to-Sport</div>
+              <div class="ps-desc">Freigabe erst, wenn die Zahlen stimmen — nicht das Bauchgefühl.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="path-col reveal" data-reveal data-delay="120">
+          <div class="path-title"><span class="rn">II</span><h3>Kiefer</h3></div>
+          <div class="path-steps">
+            <div class="path-step">
+              <div class="ps-name">Befundbogen</div>
+              <div class="ps-desc">Gemeinsame Erstaufnahme mit deiner Zahnarztpraxis.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Schiene</div>
+              <div class="ps-desc">Abgestimmt zwischen Zahnmedizin und Physiotherapie.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Physiotherapie</div>
+              <div class="ps-desc">CMD/CRAFTA-Behandlung von Kiefer, Nacken und Haltung.</div>
+            </div>
+            <div class="path-step">
+              <div class="ps-name">Rückbericht</div>
+              <div class="ps-desc">Ergebnis geht dokumentiert zurück an deine Zahnarztpraxis.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHIE — pinned scroll-parallax story -->
+  <section class="story block" id="philosophie" style="padding:0">
+    <div class="story-track" id="storyTrack">
+      <div class="story-stage">
+        <div class="story-panel is-active" data-panel="0">
+          <span class="story-eyebrow">iv. · Philosophie</span>
+          <p class="story-quote">„Schön genug, dass Menschen kommen, bevor etwas wehtut.“</p>
+        </div>
+        <div class="story-panel panel-facts" data-panel="1">
+          <span class="story-eyebrow">Konzept</span>
+          <div class="story-fact-list">
+            <div><span class="f-num">I + II</span><span class="f-label">Disziplinen unter einem Dach</span></div>
+            <div><span class="f-num">100%</span><span class="f-label">Privat — Zeit statt Kassentakt</span></div>
+            <div><span class="f-num">Ø 65</span><span class="f-label">Minuten Zeit pro Termin</span></div>
+          </div>
+        </div>
+        <div class="story-panel" data-panel="2">
+          <span class="story-eyebrow">Haltung</span>
+          <p class="story-quote">Ein Familienname als Qualitätsversprechen — messbar durch Profi-Diagnostik, nicht durch Bauchgefühl.</p>
+        </div>
+        <div class="story-panel panel-title" data-panel="3">
+          <div class="story-big">Luca Kolhoff<em>Physiotherapie · CMD</em></div>
+        </div>
+        <div class="story-progress" id="storyProgress"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRÜNDER -->
+  <section class="block" id="gruender">
+    <div class="container founder-grid">
+      <div class="founder-seal reveal" data-reveal>
+        <svg viewBox="0 0 300 300" fill="none" aria-label="Siegel — Luca Kolhoff">
+          <defs>
+            <path id="arcTop" d="M150,150 m-112,0 a112,112 0 1,1 224,0" />
+            <path id="arcBot" d="M150,150 m112,0 a112,112 0 1,1 -224,0" />
+          </defs>
+          <circle class="seal-ring" cx="150" cy="150" r="138"/>
+          <circle class="seal-ring seal-ring-thin" cx="150" cy="150" r="120"/>
+          <circle class="seal-ring seal-ring-spin" cx="150" cy="150" r="129" stroke-dasharray="2 9"/>
+          <text font-family="Jost, sans-serif" font-size="12.5" letter-spacing="5.5" fill="#B7BDAD">
+            <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LUCA · KOLHOFF</textPath>
+          </text>
+          <text font-family="Jost, sans-serif" font-size="12" letter-spacing="7" fill="#B7BDAD">
+            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">SPORT · CMD</textPath>
+          </text>
+          <rect x="22" y="146" width="6" height="6" transform="rotate(45 25 149)" fill="#768064"/>
+          <rect x="272" y="146" width="6" height="6" transform="rotate(45 275 149)" fill="#768064"/>
+          <g transform="translate(238,0) scale(-1,1)">
+            <text x="119" y="190" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="112" fill="#DADED8">L</text>
+          </g>
+          <text x="185" y="190" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="112" fill="#DADED8">K</text>
+        </svg>
+      </div>
+
+      <div class="founder-content">
+        <span class="num" style="font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--cedar)">v.</span>
+        <h2 class="reveal" data-reveal>Aufgebaut von Luca Kolhoff.</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Spezialisiert auf Manuelle Therapie, Sportphysiotherapie und CMD/CRAFTA —
+          mit dem Ziel, Sportphysiotherapie und Kieferbehandlung erstmals konsequent
+          unter einem Dach zu denken.
+        </p>
         <p class="reveal" data-reveal data-delay="160">
-          In unserer Praxis verbinden wir fundierte Schulmedizin mit moderner
-          Bewegungstherapie. Jeder Behandlungsplan wird individuell auf Ihre
-          Situation, Ihre Ziele und Ihren Alltag abgestimmt — ruhig, präzise
-          und auf Augenhöhe.
+          Die CMD-Behandlung entsteht in enger Abstimmung mit einer spezialisierten
+          Zahnarztpraxis: ein gemeinsamer Befund, eine gemeinsame Sprache, ein
+          Rückbericht.
         </p>
-        <ul class="about-list">
-          <li class="reveal" data-reveal data-delay="200">
-            <span class="check">✓</span> Zertifizierte Manualtherapeut:innen
-          </li>
-          <li class="reveal" data-reveal data-delay="260">
-            <span class="check">✓</span> Moderne Praxisräume &amp; Geräte
-          </li>
-          <li class="reveal" data-reveal data-delay="320">
-            <span class="check">✓</span> Termine innerhalb weniger Tage
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEISTUNGEN -->
-  <section class="services" id="leistungen">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal" data-reveal>Was wir tun</p>
-        <h2 class="reveal" data-reveal data-delay="80">Unsere Leistungen</h2>
-        <p class="section-sub reveal" data-reveal data-delay="140">
-          Von klassischer Krankengymnastik bis zur spezialisierten Sporttherapie —
-          alles aus einer Hand.
-        </p>
-      </div>
-
-      <div class="services-grid">
-        <article class="service-card reveal" data-reveal>
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><path d="M8 28c4-10 8-14 12-14s8 4 12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="8" r="3" stroke="currentColor" stroke-width="2"/></svg>
-          </span>
-          <h3>Manuelle Therapie</h3>
-          <p>Gezielte Mobilisation von Gelenken &amp; Weichteilen zur Schmerzlinderung und Funktionsverbesserung.</p>
-        </article>
-
-        <article class="service-card reveal" data-reveal data-delay="80">
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><path d="M6 20h6l4-10 6 20 4-10h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          <h3>Krankengymnastik</h3>
-          <p>Klassische physiotherapeutische Übungsbehandlung — individuell angepasst an Ihre Diagnose.</p>
-        </article>
-
-        <article class="service-card reveal" data-reveal data-delay="160">
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><circle cx="14" cy="10" r="3" stroke="currentColor" stroke-width="2"/><path d="M14 13v8l-6 12M14 21l6 4 4 8M14 21l7-3 5-9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Sportphysiotherapie</h3>
-          <p>Rehabilitation, Return-to-Sport-Konzepte und Prävention für ambitionierte &amp; leistungsorientierte Athlet:innen.</p>
-        </article>
-
-        <article class="service-card reveal" data-reveal>
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><path d="M6 20c0-8 6-14 14-14s14 6 14 14-6 14-14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 20c0-4 3-7 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Massagetherapie</h3>
-          <p>Klassische &amp; medizinische Massagen zur Lockerung der Muskulatur und Förderung der Durchblutung.</p>
-        </article>
-
-        <article class="service-card reveal" data-reveal data-delay="80">
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><path d="M8 12h24M8 20h24M8 28h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Lymphdrainage</h3>
-          <p>Manuelle Entstauungstherapie bei Ödemen — sanft, wirksam und ärztlich verordnet.</p>
-        </article>
-
-        <article class="service-card reveal" data-reveal data-delay="160">
-          <span class="service-icon">
-            <svg viewBox="0 0 40 40" fill="none"><path d="M6 20h5l3-8 5 16 5-16 3 8h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          <h3>Elektrotherapie</h3>
-          <p>Gezielte Reizstrom- und Ultraschalltherapie zur Schmerzreduktion und Heilungsunterstützung.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABLAUF -->
-  <section class="process" id="ablauf">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal" data-reveal>So arbeiten wir</p>
-        <h2 class="reveal" data-reveal data-delay="80">Ihr Weg zu uns</h2>
-      </div>
-
-      <div class="process-track">
-        <div class="process-line" aria-hidden="true"><span class="process-line-fill"></span></div>
-
-        <div class="process-step reveal" data-reveal>
-          <span class="process-num">01</span>
-          <h3>Erstgespräch</h3>
-          <p>Wir hören zu, analysieren Ihre Beschwerden und Ihre Ziele.</p>
-        </div>
-        <div class="process-step reveal" data-reveal data-delay="120">
-          <span class="process-num">02</span>
-          <h3>Befund &amp; Plan</h3>
-          <p>Individueller Therapieplan auf Basis fundierter Diagnostik.</p>
-        </div>
-        <div class="process-step reveal" data-reveal data-delay="240">
-          <span class="process-num">03</span>
-          <h3>Behandlung</h3>
-          <p>Regelmäßige Sitzungen, laufend angepasst an Ihren Fortschritt.</p>
-        </div>
-        <div class="process-step reveal" data-reveal data-delay="360">
-          <span class="process-num">04</span>
-          <h3>Nachsorge</h3>
-          <p>Übungen &amp; Empfehlungen für nachhaltige Beschwerdefreiheit.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEAM -->
-  <section class="team" id="team">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal" data-reveal>Die Menschen hinter VERDE</p>
-        <h2 class="reveal" data-reveal data-delay="80">Unser Team</h2>
-      </div>
-
-      <div class="team-grid">
-        <article class="team-card reveal" data-reveal>
-          <div class="team-avatar"><span>A</span><span>M</span></div>
-          <h3>Anna Meier</h3>
-          <p class="team-role">Praxisleitung, Manuelle Therapie</p>
-        </article>
-        <article class="team-card reveal" data-reveal data-delay="80">
-          <div class="team-avatar"><span>J</span><span>K</span></div>
-          <h3>Jonas Klein</h3>
-          <p class="team-role">Sportphysiotherapie</p>
-        </article>
-        <article class="team-card reveal" data-reveal data-delay="160">
-          <div class="team-avatar"><span>L</span><span>B</span></div>
-          <h3>Lea Braun</h3>
-          <p class="team-role">Lymphdrainage &amp; Massage</p>
-        </article>
-        <article class="team-card reveal" data-reveal data-delay="240">
-          <div class="team-avatar"><span>T</span><span>W</span></div>
-          <h3>Tom Weber</h3>
-          <p class="team-role">Krankengymnastik</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="testimonials" id="stimmen">
-    <div class="container">
-      <div class="section-head section-head-light">
-        <p class="eyebrow eyebrow-light reveal" data-reveal>Was Patient:innen sagen</p>
-        <h2 class="reveal" data-reveal data-delay="80">Stimmen aus der Praxis</h2>
-      </div>
-
-      <div class="testimonial-slider reveal" data-reveal data-delay="120">
-        <div class="testimonial-track" id="testimonialTrack">
-          <blockquote class="testimonial-slide is-active">
-            <p>„Endlich eine Praxis, die sich Zeit nimmt. Nach drei Sitzungen war mein Rücken beschwerdefrei — kompetent und menschlich.“</p>
-            <cite>— Sabine R.</cite>
-          </blockquote>
-          <blockquote class="testimonial-slide">
-            <p>„Als Läufer brauche ich Therapeut:innen, die den Sport verstehen. Genau das habe ich hier gefunden.“</p>
-            <cite>— Marco D.</cite>
-          </blockquote>
-          <blockquote class="testimonial-slide">
-            <p>„Sehr moderne Praxis, klare Kommunikation, immer pünktlich. Kann ich uneingeschränkt empfehlen.“</p>
-            <cite>— Julia H.</cite>
-          </blockquote>
-        </div>
-        <div class="testimonial-dots" id="testimonialDots"></div>
+        <p class="founder-name reveal" data-reveal data-delay="220">— Luca Kolhoff</p>
       </div>
     </div>
   </section>
 
   <!-- KONTAKT -->
-  <section class="contact" id="kontakt">
+  <section class="block contact-shell" id="kontakt" style="border-top:none">
     <div class="container contact-grid">
       <div class="contact-info reveal" data-reveal>
-        <p class="eyebrow">Kontakt</p>
-        <h2>Lassen Sie uns sprechen.</h2>
+        <span class="sec-eyebrow">vi. · Kontakt</span>
+        <h2>Sprich mit uns.</h2>
         <p class="contact-lead">
-          Schreiben Sie uns oder rufen Sie an — wir melden uns in der Regel
-          innerhalb eines Werktages.
+          Ob Sport oder Kiefer — schreib uns kurz, worum es geht. Wir melden uns
+          in der Regel innerhalb eines Werktages.
         </p>
 
         <ul class="contact-details">
           <li>
-            <span class="contact-label">Adresse</span>
-            <span>Musterstraße 12, 10115 Berlin</span>
-          </li>
-          <li>
             <span class="contact-label">Telefon</span>
-            <a href="tel:+493012345678">+49 30 123 456 78</a>
+            <a href="tel:+491700000000">Auf Anfrage</a>
           </li>
           <li>
             <span class="contact-label">E-Mail</span>
-            <a href="mailto:praxis@verde-physio.de">praxis@verde-physio.de</a>
+            <a href="mailto:praxis@luca-kolhoff.de">praxis@luca-kolhoff.de</a>
           </li>
           <li>
-            <span class="contact-label">Öffnungszeiten</span>
-            <span>Mo–Fr 08:00–19:00 · Sa 09:00–13:00</span>
+            <span class="contact-label">Ausrichtung</span>
+            <span>Sportphysiotherapie · CMD</span>
           </li>
         </ul>
-
-        <div class="contact-map" aria-hidden="true">
-          <svg viewBox="0 0 300 160">
-            <path d="M0,120 L60,110 L100,130 L160,90 L220,100 L300,60" class="map-line"/>
-            <path d="M0,90 L80,70 L140,100 L200,50 L300,90" class="map-line map-line-2"/>
-            <circle cx="180" cy="72" r="6" class="map-pin"/>
-          </svg>
-        </div>
       </div>
 
       <form class="contact-form reveal" data-reveal data-delay="120" id="contactForm">
@@ -375,7 +406,7 @@
         </div>
         <div class="field">
           <textarea id="message" name="message" rows="4" required placeholder=" "></textarea>
-          <label for="message">Ihr Anliegen</label>
+          <label for="message">Worum geht's — Sport oder Kiefer?</label>
         </div>
         <button type="submit" class="btn btn-primary btn-full">
           <span class="btn-label">Nachricht senden</span>
@@ -390,30 +421,26 @@
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="logo-mark">V</span>
-      <span class="logo-text">VERDE<em>Physiotherapie</em></span>
-      <p>Zurück in Bewegung — mit Präzision, Ruhe und Erfahrung.</p>
+      <div class="footer-mark">II</div>
+      <p>Luca Kolhoff — Sportphysiotherapie und Kieferbehandlung (CMD) unter einem Dach.</p>
     </div>
 
     <nav class="footer-nav">
-      <a href="#ueber">Über uns</a>
-      <a href="#leistungen">Leistungen</a>
-      <a href="#team">Team</a>
+      <a href="#konzept">Konzept</a>
+      <a href="#saeulen">Säulen</a>
+      <a href="#gruender">Gründer</a>
       <a href="#kontakt">Kontakt</a>
       <a href="#">Impressum</a>
       <a href="#">Datenschutz</a>
     </nav>
 
-    <div class="footer-social">
-      <a href="#" aria-label="Instagram">IG</a>
-      <a href="#" aria-label="Facebook">FB</a>
-      <a href="#" aria-label="LinkedIn">IN</a>
-    </div>
+    <nav class="footer-nav">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+    </nav>
   </div>
   <div class="footer-bottom">
-    <div class="container">
-      <span>© <span id="year"></span> VERDE Physiotherapie. Alle Rechte vorbehalten.</span>
-    </div>
+    <span>© <span id="year"></span> Luca Kolhoff · L &amp; K zur römischen Zwei</span>
   </div>
 </footer>
 

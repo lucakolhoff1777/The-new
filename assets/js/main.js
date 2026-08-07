@@ -3,11 +3,22 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Preloader */
-  window.addEventListener("load", () => {
-    const preloader = document.getElementById("preloader");
-    setTimeout(() => preloader.classList.add("is-hidden"), 500);
-  });
+  /* Splash — signature mark animation */
+  const splash = document.getElementById("splash");
+  const splashSkip = document.getElementById("splashSkip");
+  let splashTimer = null;
+
+  function hideSplash() {
+    clearTimeout(splashTimer);
+    splash.classList.add("is-hidden");
+  }
+  if (prefersReducedMotion) {
+    hideSplash();
+  } else {
+    splashTimer = setTimeout(hideSplash, 7000);
+  }
+  splashSkip.addEventListener("click", hideSplash);
+  splash.addEventListener("click", (e) => { if (e.target === splash) hideSplash(); });
 
   /* Header scroll state + active nav link */
   const header = document.getElementById("siteHeader");
@@ -91,114 +102,39 @@
     revealEls.forEach((el) => revealObserver.observe(el));
   }
 
-  /* Process line fill */
-  const processTrack = document.querySelector(".process-track");
-  if (processTrack) {
-    const trackObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    trackObserver.observe(processTrack);
-  }
+  /* Philosophie — pinned scroll-parallax story */
+  const storyTrack = document.getElementById("storyTrack");
+  if (storyTrack && !prefersReducedMotion) {
+    const panels = Array.from(storyTrack.querySelectorAll(".story-panel"));
+    const progressWrap = document.getElementById("storyProgress");
+    panels.forEach((_, i) => {
+      const dot = document.createElement("span");
+      if (i === 0) dot.classList.add("is-active");
+      progressWrap.appendChild(dot);
+    });
+    const dots = Array.from(progressWrap.children);
 
-  /* Count-up stats */
-  const counters = document.querySelectorAll("[data-count]");
-  function animateCounter(el) {
-    const target = parseInt(el.getAttribute("data-count"), 10);
-    if (prefersReducedMotion) {
-      el.textContent = target;
-      return;
-    }
-    const duration = 1600;
-    const start = performance.now();
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(target * eased);
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-  const counterObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.6 }
-  );
-  counters.forEach((el) => counterObserver.observe(el));
-
-  /* Hero parallax */
-  const parallaxEls = document.querySelectorAll("[data-parallax]");
-  if (!prefersReducedMotion && parallaxEls.length) {
     let ticking = false;
-    function updateParallax() {
-      const y = window.scrollY;
-      parallaxEls.forEach((el) => {
-        const speed = parseFloat(el.getAttribute("data-parallax"));
-        el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
-      });
+    function updateStory() {
+      const rect = storyTrack.getBoundingClientRect();
+      const total = storyTrack.offsetHeight - window.innerHeight;
+      const progress = Math.min(1, Math.max(0, -rect.top / total));
+      const idx = Math.min(panels.length - 1, Math.floor(progress * panels.length));
+      panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
       ticking = false;
     }
     document.addEventListener(
       "scroll",
       () => {
         if (!ticking) {
-          requestAnimationFrame(updateParallax);
+          requestAnimationFrame(updateStory);
           ticking = true;
         }
       },
       { passive: true }
     );
-  }
-
-  /* Testimonial slider */
-  const track = document.getElementById("testimonialTrack");
-  const dotsWrap = document.getElementById("testimonialDots");
-  if (track && dotsWrap) {
-    const slides = Array.from(track.querySelectorAll(".testimonial-slide"));
-    let activeIndex = 0;
-    let timer;
-
-    slides.forEach((_, i) => {
-      const dot = document.createElement("button");
-      dot.setAttribute("aria-label", `Bewertung ${i + 1} anzeigen`);
-      if (i === 0) dot.classList.add("is-active");
-      dot.addEventListener("click", () => goTo(i));
-      dotsWrap.appendChild(dot);
-    });
-    const dots = Array.from(dotsWrap.children);
-
-    function goTo(index) {
-      slides[activeIndex].classList.remove("is-active");
-      dots[activeIndex].classList.remove("is-active");
-      activeIndex = (index + slides.length) % slides.length;
-      slides[activeIndex].classList.add("is-active");
-      dots[activeIndex].classList.add("is-active");
-    }
-
-    function nextSlide() { goTo(activeIndex + 1); }
-
-    function startAutoplay() {
-      if (prefersReducedMotion) return;
-      timer = setInterval(nextSlide, 6000);
-    }
-    function stopAutoplay() { clearInterval(timer); }
-
-    track.addEventListener("mouseenter", stopAutoplay);
-    track.addEventListener("mouseleave", startAutoplay);
-    startAutoplay();
+    updateStory();
   }
 
   /* Contact form (client-side only demo submit) */
