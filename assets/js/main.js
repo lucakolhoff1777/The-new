@@ -3,26 +3,65 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Splash — signature mark animation */
-  const splash = document.getElementById("splash");
-  const splashSkip = document.getElementById("splashSkip");
-  const heroMark = document.getElementById("heroMark");
-  let splashTimer = null;
+  /* -----------------------------------------------------------------------
+     Intro: the wordmark settles, the inline chip widens, then that chip
+     opens out to a full-bleed image — the hero is already waiting beneath it.
+     ----------------------------------------------------------------------- */
+  const intro = document.getElementById("intro");
+  const introChip = document.getElementById("introChip");
+  const introExpand = document.getElementById("introExpand");
+  const introSkip = document.getElementById("introSkip");
+  const timers = [];
 
-  function hideSplash() {
-    clearTimeout(splashTimer);
-    splash.classList.add("is-hidden");
-    if (heroMark) heroMark.classList.add("go");
+  function finishIntro() {
+    timers.forEach(clearTimeout);
+    timers.length = 0;
+    intro.classList.add("is-done");
+    introExpand.classList.add("is-gone");
+    document.body.style.removeProperty("overflow");
   }
+
+  function openChip() {
+    // Clip the full-screen image to exactly where the chip sits, then release it.
+    const r = introChip.getBoundingClientRect();
+    const top = r.top;
+    const right = window.innerWidth - r.right;
+    const bottom = window.innerHeight - r.bottom;
+    const left = r.left;
+    introExpand.style.clipPath = `inset(${top}px ${right}px ${bottom}px ${left}px round 8px)`;
+    introExpand.classList.add("is-armed");
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        introExpand.style.clipPath = "";
+        introExpand.classList.add("is-open");
+        // the words leave, the moss ground stays until the image has covered it
+        intro.classList.add("is-opening");
+      });
+    });
+
+    // once the image fills the viewport the overlay is safe to drop outright
+    timers.push(setTimeout(() => intro.classList.add("is-covered"), 1200));
+    timers.push(setTimeout(finishIntro, 1500));
+  }
+
+  function runIntro() {
+    document.body.style.overflow = "hidden";
+    intro.classList.add("is-running");
+    timers.push(setTimeout(() => intro.classList.add("is-widening"), 1150));
+    timers.push(setTimeout(openChip, 2350));
+  }
+
   if (prefersReducedMotion) {
-    hideSplash();
+    finishIntro();
   } else {
-    splashTimer = setTimeout(hideSplash, 7000);
+    runIntro();
   }
-  splashSkip.addEventListener("click", hideSplash);
-  splash.addEventListener("click", (e) => { if (e.target === splash) hideSplash(); });
+  introSkip.addEventListener("click", finishIntro);
 
-  /* Header scroll state + active nav link */
+  /* -----------------------------------------------------------------------
+     Header state + active section
+     ----------------------------------------------------------------------- */
   const header = document.getElementById("siteHeader");
   const sections = document.querySelectorAll("main section[id]");
   const navLinks = document.querySelectorAll(".nav-link");
@@ -31,12 +70,11 @@
   function onScroll() {
     const y = window.scrollY;
     header.classList.toggle("is-scrolled", y > 40);
-    backToTop.classList.toggle("is-visible", y > 600);
+    backToTop.classList.toggle("is-visible", y > 700);
 
     let current = "";
     sections.forEach((section) => {
-      const top = section.offsetTop - 120;
-      if (y >= top) current = section.id;
+      if (y >= section.offsetTop - 130) current = section.id;
     });
     navLinks.forEach((link) => {
       link.classList.toggle("is-active", link.getAttribute("href") === `#${current}`);
@@ -49,7 +87,9 @@
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
   });
 
-  /* Mobile menu */
+  /* -----------------------------------------------------------------------
+     Mobile menu
+     ----------------------------------------------------------------------- */
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobileMenu");
 
@@ -64,9 +104,11 @@
     hamburger.setAttribute("aria-expanded", String(isOpen));
     mobileMenu.classList.toggle("is-open", isOpen);
   });
-  mobileMenu.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("click", closeMenu));
+  mobileMenu.querySelectorAll(".nav-link").forEach((l) => l.addEventListener("click", closeMenu));
 
-  /* Smooth scroll with header offset for all in-page anchors */
+  /* -----------------------------------------------------------------------
+     In-page anchors, offset for the fixed header
+     ----------------------------------------------------------------------- */
   document.querySelectorAll('a[href^="#"]').forEach((link) => {
     link.addEventListener("click", (e) => {
       const id = link.getAttribute("href");
@@ -74,13 +116,14 @@
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      const headerH = header.offsetHeight;
-      const top = target.getBoundingClientRect().top + window.scrollY - headerH + 1;
+      const top = target.getBoundingClientRect().top + window.scrollY - header.offsetHeight + 1;
       window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
     });
   });
 
-  /* Scroll reveal */
+  /* -----------------------------------------------------------------------
+     Scroll reveal
+     ----------------------------------------------------------------------- */
   const revealEls = document.querySelectorAll("[data-reveal]");
   revealEls.forEach((el) => {
     const delay = el.getAttribute("data-delay");
@@ -101,10 +144,21 @@
       },
       { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
     );
-    revealEls.forEach((el) => revealObserver.observe(el));
+    revealEls.forEach((el) => {
+      // Anything already on screen at load is shown outright — the observer's
+      // negative bottom margin would otherwise skip elements pinned near the fold.
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        el.classList.add("is-visible");
+      } else {
+        revealObserver.observe(el);
+      }
+    });
   }
 
-  /* Philosophie — pinned scroll-parallax story */
+  /* -----------------------------------------------------------------------
+     Philosophie: pinned panels driven by scroll position
+     ----------------------------------------------------------------------- */
   const storyTrack = document.getElementById("storyTrack");
   if (storyTrack && !prefersReducedMotion) {
     const panels = Array.from(storyTrack.querySelectorAll(".story-panel"));
@@ -115,6 +169,7 @@
       progressWrap.appendChild(dot);
     });
     const dots = Array.from(progressWrap.children);
+    const storyBg = storyTrack.querySelector(".story-bg img");
 
     let ticking = false;
     function updateStory() {
@@ -124,6 +179,7 @@
       const idx = Math.min(panels.length - 1, Math.floor(progress * panels.length));
       panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
       dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      if (storyBg) storyBg.style.transform = `scale(${1.06 + progress * 0.08})`;
       ticking = false;
     }
     document.addEventListener(
@@ -139,7 +195,9 @@
     updateStory();
   }
 
-  /* Contact form (client-side only demo submit) */
+  /* -----------------------------------------------------------------------
+     Contact form (front-end only in this build)
+     ----------------------------------------------------------------------- */
   const form = document.getElementById("contactForm");
   const formNote = document.getElementById("formNote");
   if (form) {
@@ -156,7 +214,6 @@
     });
   }
 
-  /* Footer year */
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
