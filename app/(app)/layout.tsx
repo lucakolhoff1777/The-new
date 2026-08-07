@@ -22,10 +22,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <nav className="flex gap-4 text-sm text-brand-100">
               <Link href="/dashboard" className="hover:text-white">Übersicht</Link>
               <Link href="/patients" className="hover:text-white">Patienten</Link>
+              <Link href="/reports" className="hover:text-white">Berichte</Link>
             </nav>
           </div>
           <div className="flex items-center gap-4 text-sm text-brand-100">
             <span>{session.user.name}</span>
+            <Link href="/settings/security" className="hover:text-white">Sicherheit</Link>
             <SignOutButton />
           </div>
         </div>

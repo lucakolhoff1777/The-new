@@ -66,9 +66,36 @@ geprüft und freigegeben werden.
   - **Gültigkeitszeiträume**: Positionen können ein `gueltigAb`-Datum tragen
     (z. B. die PAR-Positionen ab der Reform vom 1.7.2021).
   - **Kassenart (GKV/PKV)** wird pro Patient erfasst.
+  - **Gültigkeitszeiträume werden geprüft**: Liegt das gewählte
+    Behandlungsdatum vor `gueltigAb` bzw. nach `gueltigBis` einer Position
+    (z. B. eine PAR-Position vor dem 1.7.2021), lehnt der Server den Bericht
+    mit einer entsprechenden Fehlermeldung ab.
+  - **Frequenzlimits werden geprüft**: Positionen mit hinterlegtem
+    `frequenzlimitAnzahl`/`frequenzlimitZeitraumTage` (z. B. „PZR max. 2x pro
+    Jahr“ als Praxisbeispiel im Katalog) werden gegen bereits erfasste
+    Berichte desselben Patienten geprüft; wird das Limit im Zeitraum
+    überschritten, wird der Bericht abgelehnt.
+  - **Kassenart-Vorbelegung**: Enthält eine Vorlage dieselbe Leistung doppelt
+    als GOZ- und BEMA-Position (z. B. „Eingehende Untersuchung“), wird anhand
+    der am Patienten hinterlegten Kassenart (GKV/PKV) automatisch nur die
+    passende Position vorbelegt, statt beide als erbracht zu markieren.
   - Diese Regeln sind serverseitig in `lib/serviceRules.ts` implementiert und
     greifen unabhängig vom Client (Defense-in-Depth wie bei den
     Abhängigkeitsketten).
+- **Berichtsübersicht** (`/reports`): durchsuchbare, nach Status filterbare
+  Liste aller Berichte der Praxis, zusätzlich zur „Zuletzt erstellt“-Ansicht
+  im Dashboard.
+- **Änderungsverlauf bei Berichten**: Vor jedem Überschreiben des bearbeiteten
+  Texts wird die bisherige Version als Revision gespeichert (mit Zeitstempel
+  und bearbeitender Person) und lässt sich auf der Berichtsseite einsehen und
+  bei Bedarf wieder in den Editor laden – Bearbeitungen an der
+  Gesundheitsdokumentation gehen dadurch nicht mehr kommentarlos verloren.
+- **Zwei-Faktor-Authentifizierung (2FA)**: optional pro Konto unter
+  „Sicherheit“ einrichtbar (TOTP, kompatibel mit gängigen Authenticator-Apps
+  wie Google Authenticator/Authy). Ist 2FA aktiv, verlangt der Login
+  zusätzlich zum Passwort einen 6-stelligen Code.
+- **Rate-Limiting** auf Login und Registrierung gegen Brute-Force-Versuche
+  (siehe „Bekannte offene Punkte“ zu den Grenzen der aktuellen Umsetzung).
 
 ### Leistungskatalog – wichtiger Hinweis
 
@@ -154,13 +181,23 @@ Patientendaten unbedingt beachten:
   Advisories, die erst mit einem Upgrade auf `next@16` (inkl. Anpassung der
   Route-Handler-Signaturen) vollständig behoben sind. Vor dem produktiven
   Einsatz sollte dieses Upgrade separat geplant werden.
-- Kein automatisiertes Test-Suite vorhanden (manueller Rauchtest:
-  Registrierung, Login, Patient anlegen, Leistungserfassung inkl.
-  Vollständigkeits- und Bestätigungsprüfung sowie Bericht-Fehlerfall wurden
-  geprüft).
+- **Automatisierte Tests**: `npm test` (Vitest) deckt die reine Geschäftslogik
+  ab (Abhängigkeitskaskaden, Faktor-/Ausschluss-/Gültigkeitsregeln,
+  Rate-Limiter). API-Routen und UI werden weiterhin nur manuell/per
+  Playwright-Rauchtest geprüft, nicht automatisiert in CI – ein
+  DB-gestütztes Integrationstest-Setup wäre ein sinnvoller nächster Schritt.
+- **Rate-Limiting ist In-Memory** (`lib/rateLimit.ts`) und läuft daher pro
+  Serverprozess; bei mehreren Instanzen (z. B. mehrere Serverless-Kaltstarts)
+  ist der Schutz nicht global konsistent. Für den Produktivbetrieb sollte ein
+  geteilter Store (z. B. Redis) verwendet werden.
+- **2FA-Wiederherstellung**: Es gibt aktuell keine Backup-Codes für den Fall,
+  dass der Zugriff auf die Authenticator-App verloren geht – ein Admin müsste
+  `totpEnabled`/`totpSecret` direkt in der Datenbank zurücksetzen.
 - Leistungskatalog und Sitzungstyp-Vorlagen können aktuell nur über
   `prisma/seed.ts` bzw. `npx prisma studio` gepflegt werden, nicht über die
   Weboberfläche. Eine Verwaltungsseite dafür wäre ein sinnvoller nächster
   Ausbauschritt.
 - GOZ-/BEMA-Ziffern im Beispielkatalog sind, wie oben beschrieben, vor dem
-  echten Abrechnungseinsatz zu verifizieren.
+  echten Abrechnungseinsatz zu verifizieren; die Frequenzlimit-Beispielwerte
+  (PZR, Zahnsteinentfernung) sind Praxisbeispiele zur Veranschaulichung der
+  Prüfung, keine verbindlichen Vorgaben.

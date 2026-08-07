@@ -27,6 +27,12 @@ model User {
   practiceId   String
   practice     Practice @relation(fields: [practiceId], references: [id])
   reports      Report[]
+  // TOTP-Zweitfaktor (RFC 6238). totpSecret wird beim Einrichten gesetzt,
+  // aber erst nach erfolgreicher Verifikation ist totpEnabled=true und der
+  // Login verlangt zusätzlich zum Passwort einen gültigen Code.
+  totpSecret      String?
+  totpEnabled     Boolean  @default(false)
+  reportRevisions ReportRevision[]
   createdAt    DateTime @default(now())
 }
 
@@ -74,11 +80,27 @@ model Report {
   additionalContext String?
   generatedText     String?
   editedText        String?
+  revisions         ReportRevision[]
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
   @@index([practiceId])
   @@index([patientId])
+}
+
+// Snapshot des Berichtstexts, bevor er durch eine Bearbeitung überschrieben
+// wird - macht Änderungen an der Gesundheitsdokumentation nachvollziehbar,
+// statt sie kommentarlos zu überschreiben.
+model ReportRevision {
+  id         String   @id @default(cuid())
+  reportId   String
+  report     Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  text       String
+  editedById String
+  editedBy   User     @relation(fields: [editedById], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([reportId])
 }
 
 // Beispielkatalog von Leistungspositionen (GOZ/BEMA/GOÄ/BEL II). Enthält

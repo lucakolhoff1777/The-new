@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { generateReportText } from "@/lib/anthropic";
 import { buildServiceSummary } from "@/lib/serviceSummary";
 import { computeEffectivePerformed, parseDependsOn } from "@/lib/serviceDependency";
-import { validateFaktor, findExclusionConflicts } from "@/lib/serviceRules";
+import { validateFaktor, findExclusionConflicts, validateGueltigkeit } from "@/lib/serviceRules";
 
 const entrySchema = z.object({
   catalogItemId: z.string().min(1),
@@ -122,6 +122,8 @@ export async function POST(req: Request) {
     };
   });
 
+  const treatmentDateObj = treatmentDate ? new Date(treatmentDate) : null;
+
   // Faktor-Regeln (§5 GOZ-Logik): Faktor muss im erlaubten Bereich liegen,
   // und ab dem Regelhöchstfaktor ist eine schriftliche Begründung Pflicht.
   for (const e of entries) {
@@ -129,6 +131,23 @@ export async function POST(req: Request) {
     const catalogItem = catalogItemById.get(e.catalogItemId);
     if (!catalogItem) continue;
     const error = validateFaktor(e.faktor, e.begruendung, catalogItem, catalogItem.title);
+    if (error) {
+      return NextResponse.json({ error }, { status: 400 });
+    }
+  }
+
+  // Gültigkeitszeitraum: das Behandlungsdatum muss innerhalb des
+  // gueltigAb/gueltigBis-Fensters der Katalogposition liegen (z. B. keine
+  // PAR-Position vor der Reform vom 1.7.2021).
+  for (const e of entries) {
+    if (!(effectiveById[e.catalogItemId] ?? false)) continue;
+    const catalogItem = catalogItemById.get(e.catalogItemId);
+    if (!catalogItem) continue;
+    const error = validateGueltigkeit(
+      treatmentDateObj,
+      { gueltigAb: catalogItem.gueltigAb, gueltigBis: catalogItem.gueltigBis },
+      catalogItem.title
+    );
     if (error) {
       return NextResponse.json({ error }, { status: 400 });
     }
@@ -154,6 +173,41 @@ export async function POST(req: Request) {
     );
   }
 
+  // Frequenzlimit: manche Positionen dürfen je Patient nur eine begrenzte
+  // Anzahl innerhalb eines Zeitraums abgerechnet werden (z. B. PZR 2x pro
+  // Jahr). Prüft gegen bereits erfasste ReportServiceEntry-Einträge
+  // desselben Patienten.
+  if (treatmentDateObj) {
+    for (const e of entries) {
+      if (!(effectiveById[e.catalogItemId] ?? false)) continue;
+      const catalogItem = catalogItemById.get(e.catalogItemId);
+      if (!catalogItem?.frequenzlimitAnzahl || !catalogItem.frequenzlimitZeitraumTage) continue;
+
+      const windowStart = new Date(
+        treatmentDateObj.getTime() - catalogItem.frequenzlimitZeitraumTage * 24 * 60 * 60 * 1000
+      );
+      const priorCount = await prisma.reportServiceEntry.count({
+        where: {
+          catalogItemId: catalogItem.id,
+          performed: true,
+          report: {
+            patientId,
+            practiceId: session.user.practiceId,
+            treatmentDate: { gte: windowStart, lt: treatmentDateObj },
+          },
+        },
+      });
+      if (priorCount >= catalogItem.frequenzlimitAnzahl) {
+        return NextResponse.json(
+          {
+            error: `"${catalogItem.title}" wurde für diesen Patienten in den letzten ${catalogItem.frequenzlimitZeitraumTage} Tagen bereits ${priorCount}x abgerechnet (Limit: ${catalogItem.frequenzlimitAnzahl}x).`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+  }
+
   const serviceSummary = buildServiceSummary(entriesWithCatalog);
 
   let generatedText: string;
@@ -169,7 +223,7 @@ export async function POST(req: Request) {
         insuranceName: patient.insuranceName,
         insuranceNumber: patient.insuranceNumber,
       },
-      treatmentDate: treatmentDate ? new Date(treatmentDate).toLocaleDateString("de-DE") : null,
+      treatmentDate: treatmentDateObj ? treatmentDateObj.toLocaleDateString("de-DE") : null,
       serviceSummary,
       additionalContext: additionalContext || null,
     });
@@ -187,7 +241,7 @@ export async function POST(req: Request) {
       patientId,
       authorId: session.user.id,
       type,
-      treatmentDate: treatmentDate ? new Date(treatmentDate) : null,
+      treatmentDate: treatmentDateObj,
       serviceTemplateId: template.id,
       serviceSummary,
       reviewConfirmed: true,

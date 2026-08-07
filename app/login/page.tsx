@@ -9,6 +9,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [needsTotp, setNeedsTotp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,12 +22,26 @@ export default function LoginPage() {
     const result = await signIn("credentials", {
       email,
       password,
+      token: needsTotp ? token : undefined,
       redirect: false,
     });
 
     setLoading(false);
 
     if (result?.error) {
+      if (result.error === "2FA_REQUIRED") {
+        setNeedsTotp(true);
+        setError(null);
+        return;
+      }
+      if (result.error === "2FA_INVALID") {
+        setError("Der 2FA-Code ist ungültig oder abgelaufen.");
+        return;
+      }
+      if (result.error.startsWith("Zu viele")) {
+        setError(result.error);
+        return;
+      }
       setError("E-Mail oder Passwort ist falsch.");
       return;
     }
@@ -51,7 +67,8 @@ export default function LoginPage() {
               id="email"
               type="email"
               required
-              className="input"
+              disabled={needsTotp}
+              className="input disabled:opacity-60"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -62,13 +79,31 @@ export default function LoginPage() {
               id="password"
               type="password"
               required
-              className="input"
+              disabled={needsTotp}
+              className="input disabled:opacity-60"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {needsTotp && (
+            <div>
+              <label className="label" htmlFor="token">2FA-Code</label>
+              <input
+                id="token"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                autoFocus
+                required
+                placeholder="6-stelliger Code aus Ihrer Authenticator-App"
+                className="input"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+              />
+            </div>
+          )}
           <button type="submit" disabled={loading} className="btn-primary w-full">
-            {loading ? "Anmelden…" : "Anmelden"}
+            {loading ? "Anmelden…" : needsTotp ? "Code bestätigen" : "Anmelden"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-slate-500">

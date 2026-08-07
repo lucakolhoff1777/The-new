@@ -71,4 +71,31 @@ export function findExclusionConflicts(
   return conflicts;
 }
 
+export interface GueltigkeitRules {
+  gueltigAb: Date | null;
+  gueltigBis: Date | null;
+}
+
+/**
+ * Prüft, ob das Behandlungsdatum innerhalb des Gültigkeitszeitraums einer
+ * Katalogposition liegt (z. B. PAR-Positionen erst ab der Reform vom
+ * 1.7.2021). Ohne Behandlungsdatum wird nicht geprüft.
+ */
+export function validateGueltigkeit(
+  treatmentDate: Date | null,
+  rules: GueltigkeitRules,
+  itemLabel: string
+): string | null {
+  if (!treatmentDate) return null;
+
+  if (rules.gueltigAb && treatmentDate < rules.gueltigAb) {
+    return `"${itemLabel}" ist erst ab dem ${rules.gueltigAb.toLocaleDateString("de-DE")} gültig - das gewählte Behandlungsdatum liegt davor.`;
+  }
+  if (rules.gueltigBis && treatmentDate > rules.gueltigBis) {
+    return `"${itemLabel}" war nur bis zum ${rules.gueltigBis.toLocaleDateString("de-DE")} gültig - das gewählte Behandlungsdatum liegt danach.`;
+  }
+
+  return null;
+}
+
 export { parseDependsOn as parseIdList };

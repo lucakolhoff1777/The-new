@@ -31,6 +31,12 @@ type SeedItem = {
   // ISO-Datum, ab dem diese Position gültig ist (z. B. Reformdatum). Ohne
   // Angabe wird kein Gültigkeitszeitraum hinterlegt.
   gueltigAb?: string;
+  // Wie oft diese Position je Patient innerhalb von frequenzlimitZeitraumTage
+  // abgerechnet werden darf. Beispielhafte Praxispolicen zur
+  // Veranschaulichung der Prüfung, keine verbindlichen Vorgaben - vor
+  // Produktiveinsatz gegen die tatsächlich geltenden Regeln prüfen.
+  frequenzlimitAnzahl?: number;
+  frequenzlimitZeitraumTage?: number;
 };
 
 // §5 GOZ: Faktor 1,0-3,5, Regelhöchstfaktor 2,3, ab dem eine schriftliche
@@ -61,8 +67,8 @@ const CATALOG: SeedItem[] = [
   { key: "anaesthesie_infiltration", system: "GOZ", code: "–", title: "Infiltrationsanästhesie", description: "Lokale Infiltrationsanästhesie", category: "Anästhesie", toothRelevant: true },
   { key: "anaesthesie_leitung", system: "GOZ", code: "–", title: "Leitungsanästhesie", description: "Leitungsanästhesie", category: "Anästhesie", toothRelevant: true },
 
-  { key: "zst_entfernung", system: "GOZ", code: "1000", title: "Entfernung harter Zahnbeläge", description: "Entfernung harter Zahnbeläge (Zahnstein), unabhängig vom Ausmaß", category: "Prophylaxe", toothRelevant: false },
-  { key: "pzr", system: "GOZ", code: "1040", title: "Professionelle Zahnreinigung", description: "Entfernung weicher Zahnbeläge, Politur und Fluoridierung sämtlicher Zähne", category: "Prophylaxe", toothRelevant: false },
+  { key: "zst_entfernung", system: "GOZ", code: "1000", title: "Entfernung harter Zahnbeläge", description: "Entfernung harter Zahnbeläge (Zahnstein), unabhängig vom Ausmaß", category: "Prophylaxe", toothRelevant: false, frequenzlimitAnzahl: 1, frequenzlimitZeitraumTage: 365 },
+  { key: "pzr", system: "GOZ", code: "1040", title: "Professionelle Zahnreinigung", description: "Entfernung weicher Zahnbeläge, Politur und Fluoridierung sämtlicher Zähne", category: "Prophylaxe", toothRelevant: false, frequenzlimitAnzahl: 2, frequenzlimitZeitraumTage: 365 },
   { key: "mundhygiene_instruktion", system: "SONSTIGES", code: "–", title: "Mundhygieneinstruktion", description: "Anleitung zur Mundhygiene gegeben", category: "Prophylaxe", toothRelevant: false },
   { key: "fluoridierung", system: "GOZ", code: "–", title: "Fluoridierung", description: "Lokale Fluoridierung", category: "Prophylaxe", toothRelevant: false },
 
@@ -258,6 +264,8 @@ async function main() {
     const faktorFields =
       item.system === "GOZ" || item.system === "GOAE" ? STANDARD_FAKTOR : {};
     const gueltigAb = item.gueltigAb ? new Date(item.gueltigAb) : null;
+    const frequenzlimitAnzahl = item.frequenzlimitAnzahl ?? null;
+    const frequenzlimitZeitraumTage = item.frequenzlimitZeitraumTage ?? null;
 
     const existing = await prisma.serviceCatalogItem.findFirst({
       where: { practiceId: null, system: item.system, code: item.code, title: item.title },
@@ -270,6 +278,8 @@ async function main() {
             category: item.category,
             toothRelevant: item.toothRelevant,
             gueltigAb,
+            frequenzlimitAnzahl,
+            frequenzlimitZeitraumTage,
             ...faktorFields,
           },
         })
@@ -283,6 +293,8 @@ async function main() {
             category: item.category,
             toothRelevant: item.toothRelevant,
             gueltigAb,
+            frequenzlimitAnzahl,
+            frequenzlimitZeitraumTage,
             ...faktorFields,
           },
         });

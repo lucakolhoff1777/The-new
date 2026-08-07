@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { computeEffectivePerformed } from "@/lib/serviceDependency";
 import { MicButton } from "@/components/MicButton";
 
-type PatientOption = { id: string; firstName: string; lastName: string };
+type PatientOption = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  insuranceType: string | null;
+};
 
 type CatalogItem = {
   id: string;
@@ -20,7 +25,34 @@ type CatalogItem = {
   regelhoechstfaktor: number | null;
   begruendungspflichtAbFaktor: number | null;
   ausschlussMit: string[];
+  gueltigAb: string | null;
+  gueltigBis: string | null;
 };
+
+// Manche Vorlagen enthalten dieselbe Leistung doppelt als GOZ- und
+// BEMA-Position (z. B. "Eingehende Untersuchung"), damit je nach Kassenart
+// die passende gewählt werden kann. Ohne Vorbelegung wären standardmäßig
+// beide als erbracht markiert, was fachlich falsch wäre (nur eine der
+// beiden wird tatsächlich abgerechnet). Ist die Kassenart des Patienten
+// bekannt, wird daher nur die dazu passende Dublette vorbelegt.
+function defaultPerformedFor(
+  item: TemplateItem,
+  allItems: TemplateItem[],
+  kassenart: string | null
+): boolean {
+  if (!kassenart) return true;
+  const counterpart = allItems.find(
+    (other) =>
+      other.catalogItemId !== item.catalogItemId &&
+      other.catalogItem.title === item.catalogItem.title &&
+      ((item.catalogItem.system === "GOZ" && other.catalogItem.system === "BEMA") ||
+        (item.catalogItem.system === "BEMA" && other.catalogItem.system === "GOZ"))
+  );
+  if (!counterpart) return true;
+  if (item.catalogItem.system === "GOZ") return kassenart === "PKV";
+  if (item.catalogItem.system === "BEMA") return kassenart === "GKV";
+  return true;
+}
 
 type TemplateItem = {
   catalogItemId: string;
@@ -83,13 +115,18 @@ export function ServiceChecklistForm({
     [templates, templateId]
   );
 
+  const kassenart = useMemo(
+    () => patients.find((p) => p.id === patientId)?.insuranceType ?? null,
+    [patients, patientId]
+  );
+
   useEffect(() => {
     if (!selectedTemplate) return;
     const next: Record<string, EntryState> = {};
     for (const item of selectedTemplate.items) {
       const defaultFaktor = item.catalogItem.regelhoechstfaktor;
       next[item.catalogItemId] = {
-        performed: true,
+        performed: defaultPerformedFor(item, selectedTemplate.items, kassenart),
         toothNumbers: "",
         quantity: 1,
         note: "",
@@ -100,7 +137,7 @@ export function ServiceChecklistForm({
     setEntries(next);
     setExpandedTooth({});
     setReviewConfirmed(false);
-  }, [selectedTemplate]);
+  }, [selectedTemplate, kassenart]);
 
   const grouped = useMemo(() => {
     if (!selectedTemplate) return [];

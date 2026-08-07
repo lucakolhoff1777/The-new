@@ -29,6 +29,8 @@ interface ReportData {
   createdAt: string;
 }
 
+type Revision = { id: string; text: string; createdAt: string; editedBy: { name: string } };
+
 export function ReportEditor({ report }: { report: ReportData }) {
   const router = useRouter();
   const [text, setText] = useState(report.editedText ?? report.generatedText ?? "");
@@ -37,6 +39,23 @@ export function ReportEditor({ report }: { report: ReportData }) {
   const [regenerating, setRegenerating] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [revisions, setRevisions] = useState<Revision[] | null>(null);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  async function toggleHistory() {
+    if (showHistory) {
+      setShowHistory(false);
+      return;
+    }
+    setShowHistory(true);
+    if (revisions !== null) return;
+    setLoadingHistory(true);
+    const res = await fetch(`/api/reports/${report.id}/revisions`);
+    const data = await res.json();
+    setLoadingHistory(false);
+    if (res.ok) setRevisions(data.revisions);
+  }
 
   async function save(newStatus?: "ENTWURF" | "FINAL") {
     setSaving(true);
@@ -155,7 +174,47 @@ export function ReportEditor({ report }: { report: ReportData }) {
         <a href={`/api/reports/${report.id}/pdf`} className="btn-secondary">
           Als PDF herunterladen
         </a>
+        <button type="button" onClick={toggleHistory} className="btn-secondary">
+          {showHistory ? "Verlauf ausblenden" : "Änderungsverlauf anzeigen"}
+        </button>
       </div>
+
+      {showHistory && (
+        <div className="card mt-4">
+          <h2 className="mb-3 font-medium text-slate-900">Änderungsverlauf</h2>
+          {loadingHistory && <p className="text-sm text-slate-500">Lädt…</p>}
+          {!loadingHistory && revisions?.length === 0 && (
+            <p className="text-sm text-slate-500">
+              Noch keine früheren Versionen – dieser Bericht wurde seit der Erstellung nicht
+              bearbeitet.
+            </p>
+          )}
+          {!loadingHistory && revisions && revisions.length > 0 && (
+            <div className="space-y-3">
+              {revisions.map((rev) => (
+                <details key={rev.id} className="rounded-lg border border-slate-200 p-3">
+                  <summary className="cursor-pointer text-sm font-medium text-slate-700">
+                    Version vom {new Date(rev.createdAt).toLocaleString("de-DE")} · vor
+                    Bearbeitung durch {rev.editedBy.name}
+                  </summary>
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-slate-600">{rev.text}</p>
+                  <button
+                    type="button"
+                    className="mt-2 text-sm font-medium text-brand-600 hover:underline"
+                    onClick={() => {
+                      setText(rev.text);
+                      setMessage("Frühere Version in den Editor geladen – bitte prüfen und speichern.");
+                    }}
+                    disabled={status === "FINAL"}
+                  >
+                    Diese Version in den Editor laden
+                  </button>
+                </details>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="card mt-8">
         <div className="mb-3 flex items-center justify-between">

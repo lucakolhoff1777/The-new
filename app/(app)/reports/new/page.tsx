@@ -13,7 +13,7 @@ export default async function NewReportPage({
   const patients = await prisma.patient.findMany({
     where: { practiceId: session!.user.practiceId },
     orderBy: { lastName: "asc" },
-    select: { id: true, firstName: true, lastName: true },
+    select: { id: true, firstName: true, lastName: true, insuranceType: true },
   });
 
   return (

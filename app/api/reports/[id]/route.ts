@@ -40,6 +40,22 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   });
   if (!existing) return NextResponse.json({ error: "Bericht nicht gefunden" }, { status: 404 });
 
+  // Vor dem Überschreiben den bisherigen Text als Revision sichern, damit
+  // Bearbeitungen an der Gesundheitsdokumentation nachvollziehbar bleiben.
+  const previousText = existing.editedText ?? existing.generatedText;
+  const textChanging =
+    parsed.data.editedText !== undefined && parsed.data.editedText !== previousText;
+
+  if (textChanging && previousText) {
+    await prisma.reportRevision.create({
+      data: {
+        reportId: existing.id,
+        text: previousText,
+        editedById: session.user.id,
+      },
+    });
+  }
+
   const report = await prisma.report.update({
     where: { id: params.id },
     data: parsed.data,
