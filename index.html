@@ -63,7 +63,6 @@
 
     <nav class="main-nav" id="mainNav">
       <ul>
-        <li><a href="#konzept" class="nav-link">Konzept</a></li>
         <li><a href="#saeulen" class="nav-link">Säulen</a></li>
         <li><a href="#pfad" class="nav-link">Ablauf</a></li>
         <li><a href="#philosophie" class="nav-link">Philosophie</a></li>
@@ -83,7 +82,6 @@
 
 <div class="mobile-menu" id="mobileMenu">
   <ul>
-    <li><a href="#konzept" class="nav-link">Konzept</a></li>
     <li><a href="#saeulen" class="nav-link">Säulen</a></li>
     <li><a href="#pfad" class="nav-link">Ablauf</a></li>
     <li><a href="#philosophie" class="nav-link">Philosophie</a></li>
@@ -102,7 +100,7 @@
       <div class="hero-grain"></div>
     </div>
 
-    <div class="mark-stage reveal" data-reveal>
+    <div class="mark-stage reveal" data-reveal id="heroMark" style="--T:2.6s">
       <svg viewBox="0 0 560 360" fill="none" aria-label="Monogramm — gespiegeltes L und K bilden die römische Zwei">
         <defs>
           <radialGradient id="heroctr" cx="50%" cy="46%" r="52%">
@@ -110,21 +108,27 @@
             <stop offset="100%" stop-color="#DADED8" stop-opacity="0"/>
           </radialGradient>
         </defs>
-        <ellipse cx="280" cy="182" rx="118" ry="140" fill="url(#heroctr)"/>
+        <ellipse class="mk-glow" cx="280" cy="182" rx="118" ry="140" fill="url(#heroctr)"/>
         <g class="stage-ring-spin" style="transform-origin:280px 182px">
           <circle class="stage-ring" cx="280" cy="182" r="156" stroke-dasharray="2 10"/>
         </g>
         <g stroke="#768064" stroke-width="1.2" fill="none" stroke-linecap="square">
-          <path d="M126 92 L126 66 L152 66"/>
-          <path d="M408 66 L434 66 L434 92"/>
-          <path d="M126 300 L126 326 L152 326"/>
-          <path d="M408 326 L434 326 L434 300"/>
+          <path class="mk-tick" d="M126 92 L126 66 L152 66"/>
+          <path class="mk-tick" d="M408 66 L434 66 L434 92"/>
+          <path class="mk-tick" d="M126 300 L126 326 L152 326"/>
+          <path class="mk-tick" d="M408 326 L434 326 L434 300"/>
         </g>
-        <g transform="translate(402,0) scale(-1,1)">
-          <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+        <g class="mk-ii">
+          <g class="mk-l">
+            <g transform="translate(402,0) scale(-1,1)">
+              <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+            </g>
+          </g>
+          <g class="mk-k">
+            <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
+          </g>
         </g>
-        <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
-        <line x1="234" y1="296" x2="326" y2="296" stroke="#959581" stroke-width="1.2"/>
+        <line class="mk-line" x1="234" y1="296" x2="326" y2="296" stroke="#959581" stroke-width="1.2"/>
       </svg>
     </div>
 
@@ -143,57 +147,17 @@
       <a href="#saeulen" class="btn btn-ghost">Säulen entdecken</a>
     </div>
 
-    <a href="#konzept" class="scroll-cue" aria-label="Nach unten scrollen">
+    <a href="#saeulen" class="scroll-cue" aria-label="Nach unten scrollen">
       <span class="scroll-cue-line"></span>
       <span>Scrollen</span>
     </a>
-  </section>
-
-  <!-- KONZEPT — construction of the mark -->
-  <section class="block" id="konzept">
-    <div class="container">
-      <div class="sec-head">
-        <span class="num">i.</span>
-        <h2 class="reveal" data-reveal>Die Idee</h2>
-        <p class="reveal" data-reveal data-delay="80">
-          Gespiegeltes L, daneben das K — die langen Seiten stehen mit Abstand
-          parallel und formen die römische Zwei.
-        </p>
-      </div>
-
-      <div class="idea-grid">
-        <div class="idea-card reveal" data-reveal>
-          <svg viewBox="0 0 200 200" aria-label="L gespiegelt">
-            <g transform="translate(200,0) scale(-1,1)">
-              <text x="100" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#959581">L</text>
-            </g>
-          </svg>
-          <div class="idea-cap">1 · L gespiegelt</div>
-        </div>
-        <div class="idea-card reveal" data-reveal data-delay="80">
-          <svg viewBox="0 0 200 200" aria-label="K">
-            <text x="100" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#959581">K</text>
-          </svg>
-          <div class="idea-cap">2 · K daneben</div>
-        </div>
-        <div class="idea-card reveal" data-reveal data-delay="160">
-          <svg viewBox="0 0 280 200" aria-label="Ergebnis: L und K bilden die II">
-            <g transform="translate(238,0) scale(-1,1)">
-              <text x="119" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#DADED8">L</text>
-            </g>
-            <text x="190" y="158" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="170" fill="#DADED8">K</text>
-          </svg>
-          <div class="idea-cap">3 · II entsteht</div>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- SÄULEN — Ein Haus, zwei Disziplinen -->
   <section class="block" id="saeulen">
     <div class="container">
       <div class="sec-head">
-        <span class="num">ii.</span>
+        <span class="num">i.</span>
         <h2 class="reveal" data-reveal>Ein Haus. Zwei Disziplinen.</h2>
         <p class="reveal" data-reveal data-delay="80">
           Ein Patientenstrom kommt über den Sport, der andere über die
@@ -236,7 +200,7 @@
   <section class="block" id="pfad">
     <div class="container">
       <div class="sec-head">
-        <span class="num">iii.</span>
+        <span class="num">ii.</span>
         <h2 class="reveal" data-reveal>Der Ablauf</h2>
         <p class="reveal" data-reveal data-delay="80">Zwei Wege, ein Prinzip: klar, dokumentiert, nachvollziehbar.</p>
       </div>
@@ -294,7 +258,7 @@
     <div class="story-track" id="storyTrack">
       <div class="story-stage">
         <div class="story-panel is-active" data-panel="0">
-          <span class="story-eyebrow">iv. · Philosophie</span>
+          <span class="story-eyebrow">iii. · Philosophie</span>
           <p class="story-quote">„Schön genug, dass Menschen kommen, bevor etwas wehtut.“</p>
         </div>
         <div class="story-panel panel-facts" data-panel="1">
@@ -319,43 +283,21 @@
 
   <!-- GRÜNDER -->
   <section class="block" id="gruender">
-    <div class="container founder-grid">
-      <div class="founder-seal reveal" data-reveal>
-        <svg viewBox="0 0 300 300" fill="none" aria-label="Siegel — Luca Kolhoff">
-          <defs>
-            <path id="arcTop" d="M150,150 m-112,0 a112,112 0 1,1 224,0" />
-            <path id="arcBot" d="M150,150 m112,0 a112,112 0 1,1 -224,0" />
-          </defs>
-          <circle class="seal-ring" cx="150" cy="150" r="138"/>
-          <circle class="seal-ring seal-ring-thin" cx="150" cy="150" r="120"/>
-          <circle class="seal-ring seal-ring-spin" cx="150" cy="150" r="129" stroke-dasharray="2 9"/>
-          <text font-family="Jost, sans-serif" font-size="12.5" letter-spacing="5.5" fill="#B7BDAD">
-            <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LUCA · KOLHOFF</textPath>
-          </text>
-          <text font-family="Jost, sans-serif" font-size="12" letter-spacing="7" fill="#B7BDAD">
-            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">SPORT · CMD</textPath>
-          </text>
-          <rect x="22" y="146" width="6" height="6" transform="rotate(45 25 149)" fill="#768064"/>
-          <rect x="272" y="146" width="6" height="6" transform="rotate(45 275 149)" fill="#768064"/>
-          <g transform="translate(238,0) scale(-1,1)">
-            <text x="119" y="190" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="112" fill="#DADED8">L</text>
-          </g>
-          <text x="185" y="190" text-anchor="middle" font-family="Cormorant, serif" font-weight="600" font-size="112" fill="#DADED8">K</text>
-        </svg>
-      </div>
-
-      <div class="founder-content">
-        <span class="num" style="font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--cedar)">v.</span>
+    <div class="container">
+      <div class="founder-copy">
+        <span class="num" style="font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--cedar);display:block;margin-bottom:18px">iv.</span>
         <h2 class="reveal" data-reveal>Aufgebaut von Luca Kolhoff.</h2>
         <p class="reveal" data-reveal data-delay="80">
-          Spezialisiert auf Manuelle Therapie, Sportphysiotherapie und CMD/CRAFTA —
-          mit dem Ziel, Sportphysiotherapie und Kieferbehandlung erstmals konsequent
-          unter einem Dach zu denken.
+          Seit der Gründung steht die Praxis für dieselbe Idee: Sportphysiotherapie
+          und Kieferbehandlung nicht nebeneinander, sondern unter einem Dach zu
+          denken. Luca Kolhoff hat sich auf Manuelle Therapie, Sportphysiotherapie
+          und CMD/CRAFTA spezialisiert und begleitet seither Sportler:innen zurück
+          in Bewegung und CMD-Patient:innen zurück in den Alltag.
         </p>
         <p class="reveal" data-reveal data-delay="160">
-          Die CMD-Behandlung entsteht in enger Abstimmung mit einer spezialisierten
-          Zahnarztpraxis: ein gemeinsamer Befund, eine gemeinsame Sprache, ein
-          Rückbericht.
+          Die CMD-Behandlung läuft in enger, eingespielter Abstimmung mit einer
+          spezialisierten Zahnarztpraxis: ein gemeinsamer Befund, eine gemeinsame
+          Sprache, ein Rückbericht nach jeder Behandlung.
         </p>
         <p class="founder-name reveal" data-reveal data-delay="220">— Luca Kolhoff</p>
       </div>
@@ -366,7 +308,7 @@
   <section class="block contact-shell" id="kontakt" style="border-top:none">
     <div class="container contact-grid">
       <div class="contact-info reveal" data-reveal>
-        <span class="sec-eyebrow">vi. · Kontakt</span>
+        <span class="sec-eyebrow">v. · Kontakt</span>
         <h2>Sprich mit uns.</h2>
         <p class="contact-lead">
           Ob Sport oder Kiefer — schreib uns kurz, worum es geht. Wir melden uns
@@ -426,7 +368,6 @@
     </div>
 
     <nav class="footer-nav">
-      <a href="#konzept">Konzept</a>
       <a href="#saeulen">Säulen</a>
       <a href="#gruender">Gründer</a>
       <a href="#kontakt">Kontakt</a>

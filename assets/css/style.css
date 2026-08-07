@@ -246,15 +246,6 @@ section.block { padding: 110px 0; border-top: 1px solid var(--olive); }
 .on-light .sec-head p, .on-light .sec-head .num { color: var(--ink-soft); }
 
 /* -------------------------------------------------------------------------
-   Konzept — construction of the mark
-   ------------------------------------------------------------------------- */
-
-.idea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.idea-card { background: var(--moss); border: 1px solid var(--olive); aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; position: relative; padding: 30px; transition: border-color .4s ease; }
-.idea-card:hover { border-color: var(--cedar); }
-.idea-cap { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; font-size: 10.5px; letter-spacing: .3em; text-transform: uppercase; color: var(--cedar); }
-
-/* -------------------------------------------------------------------------
    Pillars — Ein Haus, zwei Disziplinen
    ------------------------------------------------------------------------- */
 
@@ -318,14 +309,10 @@ section.block { padding: 110px 0; border-top: 1px solid var(--olive); }
    Founder
    ------------------------------------------------------------------------- */
 
-.founder-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: center; }
-.founder-seal { position: relative; }
-.seal-ring { fill: none; stroke: var(--olive); stroke-width: 1; }
-.seal-ring-thin { stroke-width: .6; opacity: .7; }
-.seal-ring-spin { stroke-dasharray: 2 9; opacity: .75; animation: spinSlow 46s linear infinite; transform-box: fill-box; transform-origin: center; }
-.founder-content h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.7rem, 3.2vw, 2.4rem); color: var(--aloe); margin-bottom: 22px; text-wrap: balance; }
-.founder-content p { color: var(--cedar-soft); font-size: 1rem; max-width: 520px; margin-bottom: 18px; }
-.founder-content .founder-name { font-family: var(--font-display); font-style: italic; font-size: 1.1rem; color: var(--aloe); margin-top: 8px; }
+.founder-copy { max-width: 640px; }
+.founder-copy h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.7rem, 3.2vw, 2.4rem); color: var(--aloe); margin-bottom: 22px; text-wrap: balance; }
+.founder-copy p { color: var(--cedar-soft); font-size: 1rem; margin-bottom: 18px; }
+.founder-copy .founder-name { font-family: var(--font-display); font-style: italic; font-size: 1.1rem; color: var(--aloe); margin-top: 8px; }
 
 /* -------------------------------------------------------------------------
    Contact
@@ -388,8 +375,7 @@ section.block { padding: 110px 0; border-top: 1px solid var(--olive); }
    ------------------------------------------------------------------------- */
 
 @media (max-width: 980px) {
-  .pillars-grid, .paths-grid, .founder-grid, .contact-grid { grid-template-columns: 1fr; gap: 50px; }
-  .idea-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+  .pillars-grid, .paths-grid, .contact-grid { grid-template-columns: 1fr; gap: 50px; }
   .story-fact-list { gap: 28px; }
   .footer-inner { grid-template-columns: 1fr; }
 }

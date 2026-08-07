@@ -6,11 +6,13 @@
   /* Splash — signature mark animation */
   const splash = document.getElementById("splash");
   const splashSkip = document.getElementById("splashSkip");
+  const heroMark = document.getElementById("heroMark");
   let splashTimer = null;
 
   function hideSplash() {
     clearTimeout(splashTimer);
     splash.classList.add("is-hidden");
+    if (heroMark) heroMark.classList.add("go");
   }
   if (prefersReducedMotion) {
     hideSplash();
