@@ -16,6 +16,11 @@ const CARDS = [
     title: "Katalog",
     description: "Punktzahlen und Festbeträge der Leistungspositionen eintragen.",
   },
+  {
+    href: "/settings/lexikon",
+    title: "Leistungslexikon",
+    description: "Nachschlagewerk zu gängigen Selbstzahlerleistungen – nicht patientenbezogen.",
+  },
 ];
 
 export default function SettingsPage() {

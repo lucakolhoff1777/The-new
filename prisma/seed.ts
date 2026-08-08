@@ -256,6 +256,96 @@ const TEMPLATES: SeedTemplate[] = [
   },
 ];
 
+/**
+ * Rein informatives Nachschlagewerk zu gängigen Selbstzahlerleistungen
+ * (IGEL), NICHT patientenbezogen und ohne jede Vorschlags-/
+ * Empfehlungslogik - siehe Kommentar am LexikonEntry-Modell. Die Einträge
+ * beschreiben allgemein bekannte, gängige Abgrenzungen zwischen GKV- und
+ * Selbstzahlerleistungen, bewusst vorsichtig formuliert ("i. d. R.", "je
+ * nach Kasse"), da die genaue Ausgestaltung je Kasse/Bundesland variiert
+ * und regelmäßig gegen den aktuellen Leistungskatalog geprüft werden muss.
+ */
+const LEXIKON: { category: string; title: string; gkvEinordnung: string; selbstzahlerOption: string }[] = [
+  {
+    category: "Prophylaxe",
+    title: "Professionelle Zahnreinigung (PZR)",
+    gkvEinordnung:
+      "Bei den meisten gesetzlichen Kassen keine reguläre Regelleistung für Erwachsene; manche Kassen bezuschussen sie anteilig als freiwillige Satzungsleistung - abhängig von der jeweiligen Kasse.",
+    selbstzahlerOption:
+      "Regelmäßige PZR (häufig 1-4x jährlich je nach individuellem Kariesrisiko/Parodontalstatus) wird oft als Selbstzahlerleistung angeboten; die sinnvolle Frequenz ist eine fachliche Einschätzung im Einzelfall.",
+  },
+  {
+    category: "Prophylaxe",
+    title: "Fluoridierung bei Erwachsenen",
+    gkvEinordnung:
+      "Bei Kindern/Jugendlichen im Rahmen der Individualprophylaxe (IP) Kassenleistung; bei Erwachsenen i. d. R. keine reguläre GKV-Leistung.",
+    selbstzahlerOption:
+      "Kann bei erhöhter Kariesanfälligkeit oder freiliegenden Zahnhälsen im Einzelfall erwogen werden.",
+  },
+  {
+    category: "Füllungstherapie",
+    title: "Zahnfarbene Füllung im Seitenzahnbereich",
+    gkvEinordnung:
+      "Im Seitenzahnbereich übernimmt die GKV i. d. R. die Kosten einer einfachen Füllung vollständig; eine zahnfarbene Kompositfüllung ist dort meist eine Mehrkostenvereinbarung - die Kasse zahlt den Betrag der einfachen Ausführung, die Differenz trägt der Patient.",
+    selbstzahlerOption:
+      "Zahnfarbene Versorgung aus ästhetischen oder werkstoffkundlichen Gründen.",
+  },
+  {
+    category: "Prothetik",
+    title: "Zahnersatz (Kronen/Brücken/Prothesen)",
+    gkvEinordnung:
+      "Die GKV zahlt einen Festzuschuss zur sogenannten Regelversorgung (i. d. R. 60-75 % je nach Bonusheft-Nachweis); die Regelversorgung selbst ist meist einfach ausgeführt.",
+    selbstzahlerOption:
+      "Höherwertige/ästhetischere Versorgungen (z. B. Vollkeramik) über die Regelversorgung hinaus - der Festzuschuss wird angerechnet, die Mehrkosten trägt der Patient.",
+  },
+  {
+    category: "Prothetik",
+    title: "Zahnimplantate",
+    gkvEinordnung:
+      "Implantate sind nur in eng begrenzten medizinischen Ausnahmefällen eine reguläre GKV-Leistung; ansonsten wird lediglich der Festzuschuss zur Regelversorgung angerechnet.",
+    selbstzahlerOption:
+      "Implantatgetragener Zahnersatz als Alternative zu herausnehmbarem Zahnersatz - Indikation und Eignung erfordern fachliche Diagnostik im Einzelfall.",
+  },
+  {
+    category: "Parodontologie",
+    title: "Unterstützende Parodontitistherapie (UPT) nach Abschluss der Regelbehandlung",
+    gkvEinordnung:
+      "Die UPT ist seit der PAR-Reform 2021 für einen begrenzten Zeitraum nach der systematischen Behandlung GKV-Leistung; danach endet der reguläre Leistungsanspruch.",
+    selbstzahlerOption:
+      "Fortführung der unterstützenden Nachsorge über den GKV-Zeitraum hinaus, wenn parodontal weiterhin erhöhter Betreuungsbedarf besteht.",
+  },
+  {
+    category: "Schienentherapie",
+    title: "Aufbissschiene bei Bruxismus/CMD",
+    gkvEinordnung:
+      "Eine einfache Knirscherschiene ist i. d. R. GKV-Leistung; aufwendigere, funktionsanalytisch angepasste Schienen sind meist Selbstzahlerleistung.",
+    selbstzahlerOption:
+      "Individuell nach Funktionsanalyse angepasste Schiene, wenn die einfache Ausführung nicht ausreichend Beschwerdelinderung bringt.",
+  },
+  {
+    category: "Diagnostik",
+    title: "Digitale Volumentomographie (DVT)",
+    gkvEinordnung:
+      "DVT ist für die meisten zahnärztlichen Fragestellungen keine reguläre GKV-Leistung, da eine zweidimensionale Röntgenaufnahme meist als ausreichend gilt.",
+    selbstzahlerOption:
+      "Dreidimensionale Diagnostik z. B. vor Implantationen oder bei komplexen anatomischen Fragestellungen.",
+  },
+  {
+    category: "Ästhetik",
+    title: "Bleaching / Zahnaufhellung",
+    gkvEinordnung: "Rein kosmetische Zahnaufhellung ist keine GKV-Leistung.",
+    selbstzahlerOption:
+      "Aufhellung auf Patientenwunsch aus ästhetischen Gründen, unabhängig vom zahnmedizinischen Befund.",
+  },
+  {
+    category: "Individualprophylaxe",
+    title: "Fissurenversiegelung bei Erwachsenen",
+    gkvEinordnung:
+      "Fissurenversiegelung der bleibenden Molaren ist bis zum 18. Lebensjahr GKV-Leistung; bei Erwachsenen i. d. R. nicht mehr.",
+    selbstzahlerOption: "Versiegelung tiefer Fissuren bei Erwachsenen mit erhöhtem Kariesrisiko.",
+  },
+];
+
 async function main() {
   console.log("Seede globalen Leistungskatalog…");
 
@@ -348,6 +438,22 @@ async function main() {
   }
 
   console.log(`Vorlagen: ${TEMPLATES.length}.`);
+
+  console.log("Seede Leistungslexikon…");
+  for (let i = 0; i < LEXIKON.length; i++) {
+    const entry = LEXIKON[i];
+    const existing = await prisma.lexikonEntry.findFirst({ where: { title: entry.title } });
+    if (existing) {
+      await prisma.lexikonEntry.update({
+        where: { id: existing.id },
+        data: { ...entry, position: i },
+      });
+    } else {
+      await prisma.lexikonEntry.create({ data: { ...entry, position: i } });
+    }
+  }
+  console.log(`Lexikon: ${LEXIKON.length} Einträge.`);
+
   console.log("Fertig.");
 }
 

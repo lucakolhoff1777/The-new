@@ -114,6 +114,50 @@ geprüft und freigegeben werden.
   Zwei-Faktor-Authentifizierung, die praxiseigenen Punktwerte (GOZ/BEMA) sowie
   Punktzahl/Festbetrag je Katalogposition – kein direkter Datenbankzugriff
   mehr nötig, um diese Werte zu pflegen.
+- **Leistungslexikon** (`/settings/lexikon`): reines Nachschlagewerk zu
+  gängigen Selbstzahlerleistungen (IGEL) je Kategorie – für jede Position
+  eine sachliche Einordnung, was die GKV typischerweise abdeckt bzw. wo die
+  üblichen Grenzen liegen, und welche Selbstzahler-Option grundsätzlich in
+  Betracht kommt. Bewusst **nicht patientenbezogen und ohne jede
+  Vorschlags-/Empfehlungslogik** – kein "für Patient X empfohlen"-Flow,
+  keine Verknüpfung zu Report oder Patient. Zweck ist reines
+  Hintergrundwissen für das Beratungsgespräch; die fachliche Einschätzung im
+  Einzelfall bleibt vollständig bei der behandelnden Person (§1 GOZ /
+  Musterberufsordnung). Ein automatisiertes Vorschlagssystem für
+  Zusatzleistungen wurde bewusst **nicht** gebaut, siehe „Warum keine
+  automatisierten Zusatzverkaufs-/Empfehlungsfunktionen“ unten.
+
+## Warum keine automatisierten Zusatzverkaufs-/Empfehlungsfunktionen
+
+Eine naheliegende Idee wäre, aus den erfassten Daten automatisch passende
+Selbstzahlerleistungen (IGEL) für den jeweiligen Patienten vorzuschlagen –
+z. B. "bei dieser Diagnose/Leistung wird oft X empfohlen". Das ist bewusst
+**nicht** umgesetzt, aus mehreren Gründen:
+
+- Nach der Musterberufsordnung der Zahnärzte und §1 GOZ muss die Empfehlung
+  einer IGEL-Leistung eine **individuelle klinische Einschätzung im
+  konkreten Fall** sein, getroffen im persönlichen Gespräch durch die
+  behandelnde Person. Ein System, das aus Mustern einen Vorschlag
+  generiert, ersetzt diese Einzelfallprüfung durch eine Regel.
+- Der IGEL-Monitor (gemeinsame Einrichtung von GKV-Spitzenverband und
+  Bundesärztekammer) sowie Verbraucherzentralen kritisieren
+  software-/systemgestützte IGEL-Vorschläge in Praxisverwaltungssystemen
+  seit Jahren als Umsatzsteuerung, die als Patientenwohl getarnt ist – die
+  standesrechtliche/rechtliche Bewertung hängt an der **Funktion** eines
+  Features (steuert es Richtung Umsatz?), nicht an der Absicht dahinter.
+- Ein Vorschlagsmodul würde außerdem der eigentlichen Positionierung dieses
+  Systems widersprechen (siehe unten): kein Abrechnungsoptimierer, sondern
+  ein Lückenlosigkeits- und Dokumentationswerkzeug.
+
+Stattdessen gibt es zwei bewusst zurückhaltendere Bausteine, die dasselbe
+zugrunde liegende Bedürfnis – Patient:innen über sinnvolle Optionen jenseits
+der oft nur begrenzten/kurzfristigen Kassenleistung informieren zu können –
+ohne automatisierte Empfehlungslogik abdecken: die GKV-/Privat-Badges
+(rein informativ, patienten- und positionsbezogen, aber ohne jede
+Kauf-/Behandlungsempfehlung) und das Leistungslexikon (rein
+kategorienbezogenes Nachschlagewerk, siehe oben) – die eigentliche
+fachliche und kommunikative Arbeit im Beratungsgespräch bleibt in beiden
+Fällen vollständig beim Menschen.
 
 ## Für Software-Partner: API-Integration statt PVS-Ersatz
 

@@ -236,3 +236,27 @@ model ReportServiceEntry {
 
   @@index([reportId])
 }
+
+// Rein informatives Nachschlagewerk zu gängigen Selbstzahlerleistungen
+// (IGEL) je Behandlungskategorie - bewusst NICHT patientenbezogen und ohne
+// jede Empfehlungs-/Vorschlagslogik. Zweck: der Praxis im
+// Beratungsgespräch sachliche Hintergrundinfos an die Hand geben, welche
+// Optionen über die Kassenleistung hinaus grundsätzlich existieren und wo
+// deren Grenzen liegen - die fachliche Einschätzung im Einzelfall bleibt
+// vollständig bei der behandelnden Person. Kein Bezug zu Report/Patient/
+// ServiceCatalogItem, damit hieraus technisch kein "für Patient X
+// vorgeschlagen"-Flow entstehen kann.
+model LexikonEntry {
+  id                  String   @id @default(cuid())
+  category            String
+  title               String
+  // Sachliche, knappe Einordnung: was deckt die GKV hier typischerweise ab
+  // bzw. wo liegen die üblichen Grenzen (Häufigkeit, Ausführung, Material).
+  gkvEinordnung        String
+  // Sachliche, knappe Beschreibung der Selbstzahler-Option und wann sie
+  // in Betracht gezogen werden könnte - bewusst ohne Werbesprache.
+  selbstzahlerOption   String
+  position             Int      @default(0)
+
+  @@index([category])
+}
