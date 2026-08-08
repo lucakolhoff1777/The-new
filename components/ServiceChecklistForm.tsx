@@ -323,7 +323,7 @@ export function ServiceChecklistForm({
       )}
 
       <div className="card space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Patient</label>
             <select className="input" value={patientId} onChange={(e) => setPatientId(e.target.value)}>
@@ -345,7 +345,7 @@ export function ServiceChecklistForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Sitzungstyp / Leistungskomplex</label>
             <select
@@ -377,14 +377,14 @@ export function ServiceChecklistForm({
 
       {selectedTemplate && (
         <div className="card">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="font-medium text-slate-900">{selectedTemplate.name}</h2>
               {selectedTemplate.description && (
                 <p className="text-sm text-slate-500">{selectedTemplate.description}</p>
               )}
             </div>
-            <div className="text-right">
+            <div className="sm:text-right">
               <p className="text-sm text-slate-500">
                 {performedCount} erbracht · {struckCount} gestrichen von {totalCount}
               </p>
@@ -524,9 +524,9 @@ export function ServiceChecklistForm({
                               )}
                               <div
                                 className={
-                                  "grid gap-2" +
-                                  (showTooth ? " grid-cols-3" : " grid-cols-2") +
-                                  (hasFaktor ? " sm:grid-cols-4" : "")
+                                  "grid grid-cols-2 gap-2" +
+                                  (showTooth || hasFaktor ? " sm:grid-cols-3" : "") +
+                                  (showTooth && hasFaktor ? " lg:grid-cols-4" : "")
                                 }
                               >
                                 {showTooth && (

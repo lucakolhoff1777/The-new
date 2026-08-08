@@ -48,7 +48,7 @@ export default function NewPatientPage() {
       <h1 className="mb-6 text-xl font-semibold text-slate-900">Neuer Patient</h1>
       <form onSubmit={handleSubmit} className="card space-y-4">
         {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Vorname</label>
             <input
@@ -77,7 +77,7 @@ export default function NewPatientPage() {
             onChange={(e) => update("birthDate", e.target.value)}
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Kassenart</label>
             <select

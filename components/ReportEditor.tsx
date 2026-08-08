@@ -138,7 +138,7 @@ export function ReportEditor({
 
   return (
     <div>
-      <div className="mb-6 flex items-start justify-between">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">
             {REPORT_TYPE_LABELS[report.type]}
@@ -250,7 +250,7 @@ export function ReportEditor({
       )}
 
       <div className="card mt-8">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-medium text-slate-900">
             Erfasste Leistungen{report.serviceTemplateName ? ` – ${report.serviceTemplateName}` : ""}
           </h2>
@@ -291,7 +291,7 @@ export function ReportEditor({
               ? estimateAmountCent(entry.catalogItem, entry.faktor, entry.quantity, practicePunktwerte)
               : null;
             return (
-              <div key={entry.id} className="flex items-start justify-between px-3 py-2 text-sm">
+              <div key={entry.id} className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 px-3 py-2 text-sm">
                 <div>
                   <span
                     className={

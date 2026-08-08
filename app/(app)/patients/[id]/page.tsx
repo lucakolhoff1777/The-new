@@ -22,7 +22,7 @@ export default async function PatientDetailPage({ params }: { params: { id: stri
 
   return (
     <div>
-      <div className="mb-6 flex items-start justify-between">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">
             {patient.firstName} {patient.lastName}
