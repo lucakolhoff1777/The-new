@@ -165,10 +165,11 @@ cp .env.example .env
 
 `.env` ausfüllen:
 
-- `DATABASE_URL` – für lokale Entwicklung reicht die SQLite-Datei
-  (`file:./dev.db`). Für den Produktivbetrieb wird eine echte Datenbank
-  (z. B. PostgreSQL) empfohlen; dazu in `prisma/schema.prisma` den
-  `provider` anpassen.
+- `DATABASE_URL` – PostgreSQL-Connection-String. Für lokale Entwicklung
+  reicht ein lokaler Postgres-Server oder ein kostenloses Projekt bei z. B.
+  [neon.tech](https://neon.tech) oder Vercel Postgres. (Bis zu diesem Punkt
+  im Projekt lief die Entwicklung auf SQLite; für den Vercel-Deploy wurde auf
+  PostgreSQL umgestellt, da Vercels Dateisystem nicht dauerhaft ist.)
 - `NEXTAUTH_SECRET` – zufälligen Wert generieren, z. B. mit
   `openssl rand -base64 32`.
 - `ANTHROPIC_API_KEY` – API-Key von [console.anthropic.com](https://console.anthropic.com),
