@@ -27,7 +27,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </div>
           <div className="flex items-center gap-4 text-sm text-brand-100">
             <span>{session.user.name}</span>
-            <Link href="/settings/security" className="hover:text-white">Sicherheit</Link>
+            <Link href="/settings" className="hover:text-white">Einstellungen</Link>
             <SignOutButton />
           </div>
         </div>

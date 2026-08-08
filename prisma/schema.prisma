@@ -16,6 +16,16 @@ model Practice {
   reports          Report[]
   serviceCatalog   ServiceCatalogItem[]
   serviceTemplates ServiceTemplate[]
+
+  // Punktwerte zur Berechnung geschätzter Rechnungsbeträge (Punktzahl ×
+  // Punktwert × Faktor). In Cent, mit Nachkommastellen, da die amtlichen
+  // Punktwerte selbst Bruchteile eines Cents sind. GOZ ist bundeseinheitlich
+  // gesetzlich fixiert (aktuell 5,62421 Cent) und wird bei Neuanlage einer
+  // Praxis vorbelegt; BEMA verhandelt jede KZV regional mit den
+  // Krankenkassen ihres Bundeslands, es gibt keinen bundeseinheitlichen
+  // Wert - die Praxis muss ihn selbst eintragen.
+  gozPunktwertCent  Float?
+  bemaPunktwertCent Float?
 }
 
 // Partner-Zugang für Drittsysteme (andere Praxisverwaltungssysteme), die
@@ -141,10 +151,12 @@ model ServiceCatalogItem {
   toothRelevant Boolean            @default(true)
 
   // Abrechnungsdetails - bewusst optional/unbefüllt im Beispielkatalog
-  // (siehe Kommentar oben), aber vom Modell her vorgesehen:
-  punktzahl                   Float?    // GOZ/GOÄ
-  punktwertCent                Int?     // aktueller Punktwert in Cent
-  festbetragCent                Int?    // BEMA/BEL II Festbetrag in Cent
+  // (siehe Kommentar oben), aber vom Modell her vorgesehen. Der Punktwert
+  // (Cent pro Punkt) steht bewusst NICHT hier, sondern auf Practice, da er
+  // system-/regionweit gilt und nicht je Katalogposition unterschiedlich
+  // ist - siehe Practice.gozPunktwertCent/bemaPunktwertCent.
+  punktzahl                   Float?    // GOZ/GOÄ/BEMA, amtliche Punktzahl der Ziffer
+  festbetragCent                Int?    // BEMA/BEL II Festbetrag in Cent (Pauschale statt Punktzahl×Punktwert)
   faktorMin                     Float?  // GOZ/GOÄ, i. d. R. 1.0
   faktorMax                     Float?  // GOZ/GOÄ, i. d. R. 3.5
   regelhoechstfaktor            Float?  // GOZ i. d. R. 2.3

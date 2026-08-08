@@ -96,6 +96,24 @@ geprüft und freigegeben werden.
   zusätzlich zum Passwort einen 6-stelligen Code.
 - **Rate-Limiting** auf Login und Registrierung gegen Brute-Force-Versuche
   (siehe „Bekannte offene Punkte“ zu den Grenzen der aktuellen Umsetzung).
+- **Geschätzter Rechnungsbetrag & GKV-/Privat-Kennzeichnung**: Jede Position
+  in der Leistungserfassung und auf der Berichtsseite zeigt ein Label, ob es
+  sich um eine GKV-Leistung (BEMA), eine Privatleistung/IGEL (GOZ/GOÄ),
+  Laborkosten (BEL-II) oder eine nicht separat abrechenbare Position handelt
+  (`lib/billing.ts`, `kassenLabel`) – rein informativ, ohne Handlungsempfehlung.
+  Sind unter „Einstellungen → Abrechnung“ ein GOZ- und/oder BEMA-Punktwert der
+  Praxis sowie unter „Einstellungen → Katalog“ Punktzahl/Festbetrag der
+  jeweiligen Position hinterlegt, wird zusätzlich ein **geschätzter
+  Rechnungsbetrag** je Position und als Gesamtsumme angezeigt (inkl. Faktor bei
+  GOZ/GOÄ). Ausdrücklich **keine verbindliche Rechnung** – nur eine
+  Kalkulationshilfe auf Basis der von der Praxis selbst eingetragenen Werte.
+  Bewusst **keine Optimierungs- oder Empfehlungslogik**: Die Behandlung bleibt
+  allein medizinisch begründet (§1 GOZ / Musterberufsordnung), das System
+  schlägt keine Leistungen zur Umsatzsteigerung vor.
+- **Einstellungen** (`/settings`): eigene Weboberfläche für
+  Zwei-Faktor-Authentifizierung, die praxiseigenen Punktwerte (GOZ/BEMA) sowie
+  Punktzahl/Festbetrag je Katalogposition – kein direkter Datenbankzugriff
+  mehr nötig, um diese Werte zu pflegen.
 
 ## Für Software-Partner: API-Integration statt PVS-Ersatz
 
@@ -144,17 +162,23 @@ das sollte vor jeder kommerziellen Vermarktung eingeplant werden.
 `prisma/seed.ts` enthält einen **Beispielkatalog** typischer GOZ-/GOÄ-/BEMA-/
 BEL-II-Positionen ohne Punktwerte/Eurobeträge. Ziffern, die nicht eindeutig
 bekannt waren, sind bewusst mit „–“ statt einer geratenen Nummer versehen;
-`punktzahl`, `punktwertCent` und `festbetragCent` bleiben aus demselben Grund
-`null`. Dieser Katalog ist **kein abrechnungsverbindliches Verzeichnis** –
-vor dem Einsatz zur echten Abrechnung müssen alle Ziffern und Beträge gegen
-das aktuell gültige offizielle Gebührenverzeichnis (BZÄK/KZBV) geprüft,
-korrigiert und ergänzt werden (z. B. über `npx prisma studio` oder direkt in
-`prisma/seed.ts` + erneutem `npx prisma db seed`). Faktor-Regeln
+`punktzahl` und `festbetragCent` bleiben aus demselben Grund `null`. Dieser
+Katalog ist **kein abrechnungsverbindliches Verzeichnis** – vor dem Einsatz
+zur echten Abrechnung müssen alle Ziffern und Beträge gegen das aktuell
+gültige offizielle Gebührenverzeichnis (BZÄK/KZBV) geprüft, korrigiert und
+ergänzt werden. Dafür gibt es zwei Wege: über die Weboberfläche unter
+„Einstellungen → Katalog“ (Punktzahl/Festbetrag je Position) bzw.
+„Einstellungen → Abrechnung“ (praxiseigener GOZ-/BEMA-Punktwert), oder direkt
+in `prisma/seed.ts` + erneutem `npx prisma db seed`. Der GOZ-Punktwert ist
+bundesweit gesetzlich fixiert (5,62421 Cent seit der GOZ-Reform 2012) und
+daher als Standardwert für neu registrierte Praxen vorbelegt; der
+BEMA-Punktwert wird dagegen regional zwischen KZV und Krankenkassen
+verhandelt und muss von jeder Praxis selbst eingetragen werden – das System
+rät hier bewusst nicht. Faktor-Regeln
 (`faktorMin`/`faktorMax`/`regelhoechstfaktor`/`begruendungspflichtAbFaktor`)
 sind für GOZ/GOÄ-Positionen mit den in der GOZ üblichen Standardwerten
 (1,0–3,5, Regelhöchstfaktor 2,3) hinterlegt und ebenfalls vor dem
-Produktiveinsatz zu verifizieren. Eine eigene Verwaltungsoberfläche für den
-Katalog gibt es aktuell noch nicht (siehe „Bekannte offene Punkte“).
+Produktiveinsatz zu verifizieren.
 
 ## Setup
 
@@ -236,14 +260,19 @@ Patientendaten unbedingt beachten:
 - **2FA-Wiederherstellung**: Es gibt aktuell keine Backup-Codes für den Fall,
   dass der Zugriff auf die Authenticator-App verloren geht – ein Admin müsste
   `totpEnabled`/`totpSecret` direkt in der Datenbank zurücksetzen.
-- Leistungskatalog und Sitzungstyp-Vorlagen können aktuell nur über
-  `prisma/seed.ts` bzw. `npx prisma studio` gepflegt werden, nicht über die
-  Weboberfläche. Eine Verwaltungsseite dafür wäre ein sinnvoller nächster
-  Ausbauschritt.
+- Punktzahl/Festbetrag je Katalogposition und die praxiseigenen Punktwerte
+  lassen sich unter „Einstellungen“ pflegen; Katalogpositionen selbst neu
+  anlegen/entfernen sowie Sitzungstyp-Vorlagen und Abhängigkeitsketten
+  bearbeiten geht weiterhin nur über `prisma/seed.ts` bzw.
+  `npx prisma studio`, nicht über die Weboberfläche.
 - GOZ-/BEMA-Ziffern im Beispielkatalog sind, wie oben beschrieben, vor dem
   echten Abrechnungseinsatz zu verifizieren; die Frequenzlimit-Beispielwerte
   (PZR, Zahnsteinentfernung) sind Praxisbeispiele zur Veranschaulichung der
   Prüfung, keine verbindlichen Vorgaben.
+- Punktzahl/Festbetrag im Katalog sind aktuell **global** (praxisübergreifend
+  geteilte Referenzdaten), da mehrere Praxen denselben mitgelieferten
+  Beispielkatalog nutzen; eine praxisspezifische Überschreibung einzelner
+  Werte gibt es noch nicht.
 - **Partner-API**: Es gibt noch keine Admin-Oberfläche zur Verwaltung von
   API-Clients (nur das CLI-Skript `npm run api:create-client`), kein
   Key-Rotation-/Widerruf-Endpunkt und kein Nutzungs-/Abrechnungs-Dashboard

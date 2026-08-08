@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited, recordAttempt } from "@/lib/rateLimit";
+import { STANDARD_GOZ_PUNKTWERT_CENT } from "@/lib/billing";
 
 const registerSchema = z.object({
   practiceName: z.string().min(2, "Praxisname ist zu kurz"),
@@ -51,6 +52,10 @@ export async function POST(req: Request) {
   await prisma.practice.create({
     data: {
       name: practiceName,
+      // GOZ-Punktwert ist bundeseinheitlich fixiert und wird vorbelegt; der
+      // BEMA-Punktwert ist regional unterschiedlich und muss von der Praxis
+      // selbst unter "Einstellungen > Abrechnung" eingetragen werden.
+      gozPunktwertCent: STANDARD_GOZ_PUNKTWERT_CENT,
       users: {
         create: {
           name,

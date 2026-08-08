@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { REPORT_TYPE_LABELS } from "@/lib/reportLabels";
+import { estimateAmountCent, kassenLabel } from "@/lib/billing";
+
+function formatEuro(cents: number): string {
+  return (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
 
 interface ServiceEntryData {
   id: string;
@@ -10,7 +15,15 @@ interface ServiceEntryData {
   toothNumbers: string | null;
   quantity: number;
   note: string | null;
-  catalogItem: { system: string; code: string; title: string; category: string };
+  faktor: number | null;
+  catalogItem: {
+    system: string;
+    code: string;
+    title: string;
+    category: string;
+    punktzahl: number | null;
+    festbetragCent: number | null;
+  };
 }
 
 interface ReportData {
@@ -31,7 +44,13 @@ interface ReportData {
 
 type Revision = { id: string; text: string; createdAt: string; editedBy: { name: string } };
 
-export function ReportEditor({ report }: { report: ReportData }) {
+export function ReportEditor({
+  report,
+  practicePunktwerte,
+}: {
+  report: ReportData;
+  practicePunktwerte: { gozPunktwertCent: number | null; bemaPunktwertCent: number | null };
+}) {
   const router = useRouter();
   const [text, setText] = useState(report.editedText ?? report.generatedText ?? "");
   const [status, setStatus] = useState(report.status);
@@ -79,6 +98,20 @@ export function ReportEditor({ report }: { report: ReportData }) {
     setMessage("Gespeichert.");
     router.refresh();
   }
+
+  const totalEstimatedCent = useMemo(() => {
+    let sum = 0;
+    let any = false;
+    for (const entry of report.serviceEntries) {
+      if (!entry.performed) continue;
+      const amount = estimateAmountCent(entry.catalogItem, entry.faktor, entry.quantity, practicePunktwerte);
+      if (amount != null) {
+        sum += amount;
+        any = true;
+      }
+    }
+    return any ? sum : null;
+  }, [report.serviceEntries, practicePunktwerte]);
 
   async function regenerate() {
     setRegenerating(true);
@@ -221,18 +254,42 @@ export function ReportEditor({ report }: { report: ReportData }) {
           <h2 className="font-medium text-slate-900">
             Erfasste Leistungen{report.serviceTemplateName ? ` – ${report.serviceTemplateName}` : ""}
           </h2>
-          {report.reviewConfirmed && (
-            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-              Vollständig geprüft
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {totalEstimatedCent != null && (
+              <span className="text-sm font-medium text-slate-700">
+                ≈ {formatEuro(totalEstimatedCent)} geschätzt
+              </span>
+            )}
+            {report.reviewConfirmed && (
+              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                Vollständig geprüft
+              </span>
+            )}
+          </div>
         </div>
+        {totalEstimatedCent != null && (
+          <p className="mb-3 text-xs text-slate-400">
+            Geschätzter Gesamtbetrag der erbrachten Positionen – keine verbindliche Rechnung.
+          </p>
+        )}
         <div className="divide-y divide-slate-100 rounded-lg border border-slate-100">
           {report.serviceEntries.map((entry) => {
             const ref =
               entry.catalogItem.code !== "–"
                 ? `${entry.catalogItem.system} ${entry.catalogItem.code}`
                 : entry.catalogItem.system;
+            const badge = kassenLabel(entry.catalogItem.system);
+            const badgeClass =
+              badge.tone === "gkv"
+                ? "bg-blue-50 text-blue-700"
+                : badge.tone === "privat"
+                  ? "bg-purple-50 text-purple-700"
+                  : badge.tone === "labor"
+                    ? "bg-amber-50 text-amber-700"
+                    : "bg-slate-100 text-slate-500";
+            const amountCent = entry.performed
+              ? estimateAmountCent(entry.catalogItem, entry.faktor, entry.quantity, practicePunktwerte)
+              : null;
             return (
               <div key={entry.id} className="flex items-start justify-between px-3 py-2 text-sm">
                 <div>
@@ -245,7 +302,14 @@ export function ReportEditor({ report }: { report: ReportData }) {
                   >
                     {entry.catalogItem.title}
                   </span>{" "}
-                  <span className="text-xs text-slate-400">({ref})</span>
+                  <span className="text-xs text-slate-400">({ref})</span>{" "}
+                  {entry.performed && (
+                    <span
+                      className={"rounded-full px-2 py-0.5 text-[11px] font-medium " + badgeClass}
+                    >
+                      {badge.text}
+                    </span>
+                  )}
                   {entry.performed && (entry.toothNumbers || entry.quantity !== 1 || entry.note) && (
                     <p className="mt-0.5 text-xs text-slate-500">
                       {entry.toothNumbers && `Zahn/Region: ${entry.toothNumbers}`}
@@ -256,9 +320,12 @@ export function ReportEditor({ report }: { report: ReportData }) {
                     </p>
                   )}
                 </div>
-                {!entry.performed && (
-                  <span className="shrink-0 text-xs text-slate-400">nicht erbracht</span>
-                )}
+                <div className="flex shrink-0 flex-col items-end gap-0.5">
+                  {!entry.performed && <span className="text-xs text-slate-400">nicht erbracht</span>}
+                  {amountCent != null && (
+                    <span className="text-xs font-medium text-slate-600">{formatEuro(amountCent)}</span>
+                  )}
+                </div>
               </div>
             );
           })}

@@ -3,7 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { computeEffectivePerformed } from "@/lib/serviceDependency";
+import { estimateAmountCent, kassenLabel } from "@/lib/billing";
 import { MicButton } from "@/components/MicButton";
+
+function formatEuro(cents: number): string {
+  return (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
 
 type PatientOption = {
   id: string;
@@ -27,6 +32,8 @@ type CatalogItem = {
   ausschlussMit: string[];
   gueltigAb: string | null;
   gueltigBis: string | null;
+  punktzahl: number | null;
+  festbetragCent: number | null;
 };
 
 // Manche Vorlagen enthalten dieselbe Leistung doppelt als GOZ- und
@@ -80,9 +87,11 @@ type EntryState = {
 export function ServiceChecklistForm({
   patients,
   initialPatientId,
+  practicePunktwerte,
 }: {
   patients: PatientOption[];
   initialPatientId?: string;
+  practicePunktwerte: { gozPunktwertCent: number | null; bemaPunktwertCent: number | null };
 }) {
   const router = useRouter();
   const [patientId, setPatientId] = useState(initialPatientId ?? patients[0]?.id ?? "");
@@ -193,6 +202,29 @@ export function ServiceChecklistForm({
     ? selectedTemplate.items.filter((it) => effective[it.catalogItemId]).length
     : 0;
   const struckCount = totalCount - performedCount;
+
+  const totalEstimatedCent = useMemo(() => {
+    if (!selectedTemplate) return null;
+    let sum = 0;
+    let any = false;
+    for (const item of selectedTemplate.items) {
+      if (!effective[item.catalogItemId]) continue;
+      const entry = entries[item.catalogItemId];
+      if (!entry) continue;
+      const faktorNum = entry.faktor.trim() !== "" ? Number(entry.faktor) : null;
+      const amount = estimateAmountCent(
+        item.catalogItem,
+        faktorNum,
+        Number(entry.quantity) || 1,
+        practicePunktwerte
+      );
+      if (amount != null) {
+        sum += amount;
+        any = true;
+      }
+    }
+    return any ? sum : null;
+  }, [selectedTemplate, effective, entries, practicePunktwerte]);
 
   function toggleItem(catalogItemId: string) {
     setEntries((prev) => ({
@@ -352,9 +384,16 @@ export function ServiceChecklistForm({
                 <p className="text-sm text-slate-500">{selectedTemplate.description}</p>
               )}
             </div>
-            <p className="text-sm text-slate-500">
-              {performedCount} erbracht · {struckCount} gestrichen von {totalCount}
-            </p>
+            <div className="text-right">
+              <p className="text-sm text-slate-500">
+                {performedCount} erbracht · {struckCount} gestrichen von {totalCount}
+              </p>
+              {totalEstimatedCent != null && (
+                <p className="text-sm font-medium text-slate-700">
+                  ≈ {formatEuro(totalEstimatedCent)} geschätzt
+                </p>
+              )}
+            </div>
           </div>
 
           <p className="mb-4 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-800">
@@ -364,6 +403,12 @@ export function ServiceChecklistForm({
             vorausgehender Schritt gestrichen, werden abhängige Folgeschritte automatisch mit
             gestrichen und gesperrt.
           </p>
+          {totalEstimatedCent != null && (
+            <p className="mb-4 -mt-2 text-xs text-slate-400">
+              Geschätzter Gesamtbetrag der erbrachten Positionen – keine verbindliche Rechnung,
+              abhängig von hinterlegtem Punktwert und ggf. Labor-/Praxiskosten.
+            </p>
+          )}
 
           <div className="space-y-6">
             {grouped.map(([category, items]) => (
@@ -382,6 +427,15 @@ export function ServiceChecklistForm({
                       item.catalogItem.code !== "–"
                         ? `${item.catalogItem.system} ${item.catalogItem.code}`
                         : item.catalogItem.system;
+                    const badge = kassenLabel(item.catalogItem.system);
+                    const badgeClass =
+                      badge.tone === "gkv"
+                        ? "bg-blue-50 text-blue-700"
+                        : badge.tone === "privat"
+                          ? "bg-purple-50 text-purple-700"
+                          : badge.tone === "labor"
+                            ? "bg-amber-50 text-amber-700"
+                            : "bg-slate-100 text-slate-500";
                     return (
                       <div
                         key={item.catalogItemId}
@@ -417,7 +471,16 @@ export function ServiceChecklistForm({
                               }
                             >
                               ({ref})
-                            </span>
+                            </span>{" "}
+                            {eff && (
+                              <span
+                                className={
+                                  "rounded-full px-2 py-0.5 text-[11px] font-medium " + badgeClass
+                                }
+                              >
+                                {badge.text}
+                              </span>
+                            )}
                           </span>
                           {locked && (
                             <span className="shrink-0 text-xs font-medium text-slate-400">gesperrt</span>
@@ -446,8 +509,19 @@ export function ServiceChecklistForm({
                           const faktorNum = entry.faktor.trim() !== "" ? Number(entry.faktor) : null;
                           const needsBegruendung =
                             hasFaktor && threshold != null && faktorNum != null && faktorNum > threshold;
+                          const itemAmountCent = estimateAmountCent(
+                            item.catalogItem,
+                            faktorNum,
+                            Number(entry.quantity) || 1,
+                            practicePunktwerte
+                          );
                           return (
                             <div className="ml-7 mt-2">
+                              {itemAmountCent != null && (
+                                <p className="mb-1 text-xs text-slate-500">
+                                  ≈ {formatEuro(itemAmountCent)} geschätzt
+                                </p>
+                              )}
                               <div
                                 className={
                                   "grid gap-2" +

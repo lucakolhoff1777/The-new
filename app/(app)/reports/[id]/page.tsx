@@ -7,18 +7,24 @@ import { ReportEditor } from "@/components/ReportEditor";
 export default async function ReportDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
-  const report = await prisma.report.findFirst({
-    where: { id: params.id, practiceId: session!.user.practiceId },
-    include: {
-      patient: true,
-      author: { select: { name: true } },
-      serviceTemplate: { select: { name: true } },
-      serviceEntries: {
-        orderBy: { position: "asc" },
-        include: { catalogItem: true },
+  const [report, practice] = await Promise.all([
+    prisma.report.findFirst({
+      where: { id: params.id, practiceId: session!.user.practiceId },
+      include: {
+        patient: true,
+        author: { select: { name: true } },
+        serviceTemplate: { select: { name: true } },
+        serviceEntries: {
+          orderBy: { position: "asc" },
+          include: { catalogItem: true },
+        },
       },
-    },
-  });
+    }),
+    prisma.practice.findUnique({
+      where: { id: session!.user.practiceId },
+      select: { gozPunktwertCent: true, bemaPunktwertCent: true },
+    }),
+  ]);
 
   if (!report) notFound();
 
@@ -40,17 +46,24 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
             toothNumbers: entry.toothNumbers,
             quantity: entry.quantity,
             note: entry.note,
+            faktor: entry.faktor,
             catalogItem: {
               system: entry.catalogItem.system,
               code: entry.catalogItem.code,
               title: entry.catalogItem.title,
               category: entry.catalogItem.category,
+              punktzahl: entry.catalogItem.punktzahl,
+              festbetragCent: entry.catalogItem.festbetragCent,
             },
           })),
           additionalContext: report.additionalContext,
           patient: { firstName: report.patient.firstName, lastName: report.patient.lastName },
           author: { name: report.author.name },
           createdAt: report.createdAt.toLocaleDateString("de-DE"),
+        }}
+        practicePunktwerte={{
+          gozPunktwertCent: practice?.gozPunktwertCent ?? null,
+          bemaPunktwertCent: practice?.bemaPunktwertCent ?? null,
         }}
       />
     </div>
