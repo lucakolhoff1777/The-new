@@ -18,6 +18,21 @@ model Practice {
   serviceTemplates ServiceTemplate[]
 }
 
+// Partner-Zugang für Drittsysteme (andere Praxisverwaltungssysteme), die
+// unsere Validierungs-/KI-Berichts-Engine per API einbinden, statt unsere
+// komplette App zu nutzen. Bewusst zustandslos gegenüber Patientendaten des
+// Partners - wir persistieren dessen Patienten-/Behandlungsdaten nicht,
+// nur Metadaten zum API-Client selbst.
+model ApiClient {
+  id           String    @id @default(cuid())
+  name         String // Partnername, z. B. "Charly PVS Systems GmbH"
+  apiKeyHash   String    @unique
+  apiKeyPrefix String // erste Zeichen des Keys zur Anzeige/Identifikation, ohne den vollen Key zu speichern
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique

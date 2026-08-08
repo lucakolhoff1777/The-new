@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: Zahnarzt Berichte – Partner-API
+  version: "1.0"
+  description: >
+    Zustandslose API für Praxisverwaltungssysteme (PVS) und andere
+    Drittsysteme, um die Leistungserfassungs-Validierung und die
+    KI-Berichtsgenerierung dieses Projekts als Service zu nutzen, ohne die
+    komplette Anwendung zu übernehmen. Es werden keine Patienten- oder
+    Praxisdaten des Partners gespeichert - jeder Request wird unabhängig
+    verarbeitet.
+
+    Dies ist die technische Grundlage für eine Partnerintegration. Für den
+    echten GKV-Abrechnungsweg (KZV-Anbindung), TI/gematik-Anbindung und eine
+    formale MDR-/DSGVO-/AI-Act-Konformitätsbewertung ist zusätzlich zur
+    hier beschriebenen API ein separater, nicht-technischer
+    Zulassungsprozess nötig (siehe README, Abschnitt "Für Software-Partner").
+servers:
+  - url: https://{host}/api/v1
+    variables:
+      host:
+        default: localhost:3000
+security:
+  - ApiKeyAuth: []
+paths:
+  /catalog:
+    get:
+      summary: Referenzkatalog und Sitzungstyp-Vorlagen abrufen
+      responses:
+        "200":
+          description: Katalog und Vorlagen
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  catalog:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CatalogItem"
+                  templates:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Template"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /validate:
+    post:
+      summary: >
+        Leistungseinträge gegen Faktor-, Ausschluss-, Gültigkeits- und
+        Frequenzlimit-Regeln prüfen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateRequest"
+      responses:
+        "200":
+          description: Validierungsergebnis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /reports/generate:
+    post:
+      summary: KI-Berichtstext aus geprüften Leistungsdaten erzeugen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateReportRequest"
+      responses:
+        "200":
+          description: Generierter Berichtstext
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  serviceSummary:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "502":
+          description: KI-Generierung fehlgeschlagen, bitte erneut versuchen.
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      description: 'Authorization: Bearer <API-Key> (ausgestellt via "npm run api:create-client")'
+  responses:
+    Unauthorized:
+      description: Fehlender/ungültiger API-Key
+    BadRequest:
+      description: Ungültige Eingabe
+    RateLimited:
+      description: Rate limit überschritten (60 Anfragen/Minute je API-Key)
+  schemas:
+    CatalogItem:
+      type: object
+      properties:
+        id: { type: string }
+        system: { type: string, enum: [GOZ, BEMA, GOAE, BEL_II, SONSTIGES] }
+        code: { type: string }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        category: { type: string }
+        toothRelevant: { type: boolean }
+        faktorMin: { type: number, nullable: true }
+        faktorMax: { type: number, nullable: true }
+        regelhoechstfaktor: { type: number, nullable: true }
+        begruendungspflichtAbFaktor: { type: number, nullable: true }
+        ausschlussMit: { type: array, items: { type: string } }
+        frequenzlimitAnzahl: { type: integer, nullable: true }
+        frequenzlimitZeitraumTage: { type: integer, nullable: true }
+        gueltigAb: { type: string, format: date-time, nullable: true }
+        gueltigBis: { type: string, format: date-time, nullable: true }
+    Template:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              catalogItemId: { type: string }
+              position: { type: integer }
+              dependsOn: { type: array, items: { type: string } }
+    ValidateEntry:
+      type: object
+      required: [id, title, performed]
+      properties:
+        id:
+          type: string
+          description: Vom Partner vergebene, im Request eindeutige ID (z. B. eigene Ziffer-ID).
+        title: { type: string }
+        performed: { type: boolean }
+        faktor: { type: number, nullable: true }
+        begruendung: { type: string, nullable: true }
+        faktorMin: { type: number, nullable: true }
+        faktorMax: { type: number, nullable: true }
+        regelhoechstfaktor: { type: number, nullable: true }
+        begruendungspflichtAbFaktor: { type: number, nullable: true }
+        ausschlussMit:
+          type: array
+          items: { type: string }
+          description: IDs anderer Entries in diesem Request, mit denen sich diese Position ausschließt.
+        gueltigAb: { type: string, format: date, nullable: true }
+        gueltigBis: { type: string, format: date, nullable: true }
+        frequenzlimitAnzahl: { type: integer, nullable: true }
+        frequenzlimitZeitraumTage: { type: integer, nullable: true }
+        priorCount:
+          type: integer
+          nullable: true
+          description: >
+            Anzahl bereits erfolgter Abrechnungen dieser Position im
+            relevanten Zeitraum - da keine Patientendaten gespeichert
+            werden, muss der Partner diesen Wert selbst mitgeben.
+    ValidateRequest:
+      type: object
+      required: [entries]
+      properties:
+        treatmentDate: { type: string, format: date, nullable: true }
+        entries:
+          type: array
+          items: { $ref: "#/components/schemas/ValidateEntry" }
+    ValidateResponse:
+      type: object
+      properties:
+        valid: { type: boolean }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              entryId: { type: string }
+              message: { type: string }
+    ReportEntry:
+      type: object
+      required: [system, code, title, performed]
+      properties:
+        system: { type: string }
+        code: { type: string }
+        title: { type: string }
+        performed: { type: boolean }
+        toothNumbers: { type: string, nullable: true }
+        quantity: { type: integer, default: 1 }
+        note: { type: string, nullable: true }
+    GenerateReportRequest:
+      type: object
+      required: [reportType, practiceName, authorName, patient, entries]
+      properties:
+        reportType: { type: string, enum: [BEFUND, KRANKENKASSE] }
+        practiceName: { type: string }
+        authorName: { type: string }
+        patient:
+          type: object
+          required: [firstName, lastName]
+          properties:
+            firstName: { type: string }
+            lastName: { type: string }
+            birthDate: { type: string, nullable: true }
+            insuranceName: { type: string, nullable: true }
+            insuranceNumber: { type: string, nullable: true }
+        treatmentDate: { type: string, format: date, nullable: true }
+        entries:
+          type: array
+          items: { $ref: "#/components/schemas/ReportEntry" }
+        additionalContext: { type: string, nullable: true }

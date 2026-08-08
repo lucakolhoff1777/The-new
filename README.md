@@ -97,6 +97,48 @@ geprüft und freigegeben werden.
 - **Rate-Limiting** auf Login und Registrierung gegen Brute-Force-Versuche
   (siehe „Bekannte offene Punkte“ zu den Grenzen der aktuellen Umsetzung).
 
+## Für Software-Partner: API-Integration statt PVS-Ersatz
+
+Der deutsche Zahnarzt-PVS-Markt (Charly, Dampsoft, CGM Z1, evident,
+Update/Data Care u. a.) ist etabliert, zertifiziert und stark besetzt – dort
+als komplette Neuentwicklung anzutreten wäre wenig aussichtsreich. Die
+realistische Nische: **dieses System als Zusatzmodul an bestehende PVS-Systeme
+andocken**, statt sie zu ersetzen. Die Abrechnungshoheit (KZV-Anbindung)
+bleibt beim etablierten System; dieses Projekt liefert die
+Opt-out-Lückenlosigkeits-Logik und die KI-Berichtsgenerierung als Service.
+
+Dafür gibt es eine **Partner-API** (`/api/v1/...`, API-Key-Authentifizierung,
+60 Anfragen/Minute je Key):
+
+- `GET /api/v1/catalog` – Referenzkatalog & Vorlagen zum Abgleich
+- `POST /api/v1/validate` – Faktor-/Ausschluss-/Gültigkeits-/
+  Frequenzlimit-Prüfung für vom Partner gelieferte Positionsdaten
+- `POST /api/v1/reports/generate` – KI-Berichtstext aus geprüften
+  Leistungsdaten
+
+Bewusst **zustandslos**: Patienten-/Praxisdaten des Partners werden nicht
+gespeichert, jeder Request wird unabhängig verarbeitet – das reduziert den
+DSGVO-Haftungsradius erheblich. Details, curl-Beispiele und die
+maschinenlesbare Spezifikation: [`docs/API.md`](docs/API.md) /
+[`openapi.yaml`](openapi.yaml). API-Keys werden über
+`npm run api:create-client -- "Partnername GmbH"` vergeben (bewusst kein
+Self-Service, da Partnerintegrationen ein Vertriebsprozess sind).
+
+**Was diese API technisch liefert vs. was für echte Marktreife zusätzlich
+nötig ist** (siehe auch „Bekannte offene Punkte“):
+
+| Bereit (Code) | Braucht externen Prozess (kein Code) |
+| --- | --- |
+| Validierungs-Engine als API | KZV-/PVS-Zertifizierung für GKV-Abrechnung |
+| KI-Berichtsgenerierung als API | TI-/gematik-Zulassung (KIM, ePA, SMC-B) |
+| API-Key-Auth, Rate-Limiting | Formale MDR-Einstufung |
+| Zustandslos (kein Partner-Datenspeicher) | EU-AI-Act-Konformitätsbewertung |
+| OpenAPI-Dokumentation | DSFA, AVV mit Partnern, ggf. ISO 27001 |
+
+Diese rechte Spalte lässt sich nicht durch weiteren Code lösen, sondern
+braucht Rechtsberatung, Zertifizierungsstellen und die KZBV/gematik selbst –
+das sollte vor jeder kommerziellen Vermarktung eingeplant werden.
+
 ### Leistungskatalog – wichtiger Hinweis
 
 `prisma/seed.ts` enthält einen **Beispielkatalog** typischer GOZ-/GOÄ-/BEMA-/
@@ -201,3 +243,8 @@ Patientendaten unbedingt beachten:
   echten Abrechnungseinsatz zu verifizieren; die Frequenzlimit-Beispielwerte
   (PZR, Zahnsteinentfernung) sind Praxisbeispiele zur Veranschaulichung der
   Prüfung, keine verbindlichen Vorgaben.
+- **Partner-API**: Es gibt noch keine Admin-Oberfläche zur Verwaltung von
+  API-Clients (nur das CLI-Skript `npm run api:create-client`), kein
+  Key-Rotation-/Widerruf-Endpunkt und kein Nutzungs-/Abrechnungs-Dashboard
+  für Partner. Das Rate-Limiting teilt sich zudem die In-Memory-Umsetzung
+  mit dem restlichen System (siehe oben).
