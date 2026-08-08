@@ -1,6 +1,13 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const apiKey = process.env.ANTHROPIC_API_KEY;
+// Ohne echten, kostenpflichtigen API-Key (z. B. im Testbetrieb) wird auf eine
+// kostenlose, rein regelbasierte Vorlage ausgewichen, statt die KI-Anfrage
+// fehlschlagen zu lassen - so lässt sich der volle Ablauf (Erfassung, Bericht,
+// Bearbeitung, PDF) ohne Anthropic-Guthaben testen. Sobald ein echter Key
+// gesetzt wird, greift automatisch wieder die echte KI-Generierung.
+const HAS_REAL_KEY = Boolean(apiKey && apiKey !== "dummy-key-for-build");
+const anthropic = new Anthropic({ apiKey });
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
 
 export type ReportType = "BEFUND" | "KRANKENKASSE";
@@ -57,7 +64,56 @@ etwas ausführlicher aus, ohne neue Fakten hinzuzuerfinden):\n${input.additional
 Erstelle daraus jetzt den vollständigen Bericht.`;
 }
 
+const TYPE_HEADING: Record<ReportType, string> = {
+  BEFUND: "Befund- und Behandlungsbericht",
+  KRANKENKASSE: "Bericht an die Krankenkasse zur Kostenübernahme/-erstattung",
+};
+
+// Kostenlose, rein regelbasierte Alternative zur KI-Formulierung: stellt aus
+// denselben strukturierten Angaben einen Bericht zusammen, ohne Fließtext zu
+// erfinden. Deutlich als Testmodus gekennzeichnet, damit ein so entstandener
+// Text nicht mit einem echten KI-Entwurf verwechselt und ungeprüft
+// weiterverwendet wird.
+function buildTemplateReportText(input: GenerateReportInput): string {
+  const { patient } = input;
+  const lines: string[] = [];
+
+  lines.push(
+    "[TESTMODUS – automatisch aus den erfassten Daten zusammengestellt, ohne KI-Formulierung. " +
+      "Kein fertiger Fließtext; vor Verwendung entsprechend ausformulieren und prüfen. " +
+      "Für echte KI-generierte Berichte einen Anthropic-API-Key hinterlegen.]"
+  );
+  lines.push("");
+  lines.push(TYPE_HEADING[input.reportType]);
+  lines.push(`Praxis: ${input.practiceName}`);
+  lines.push(`Verfasst von: ${input.authorName}`);
+  lines.push("");
+  lines.push(`Patient/in: ${patient.firstName} ${patient.lastName}`);
+  lines.push(`Geburtsdatum: ${patient.birthDate ?? "nicht angegeben"}`);
+  lines.push(
+    `Krankenkasse: ${patient.insuranceName ?? "nicht angegeben"}${
+      patient.insuranceNumber ? ` (Versichertennummer: ${patient.insuranceNumber})` : ""
+    }`
+  );
+  lines.push(`Behandlungsdatum: ${input.treatmentDate ?? "nicht angegeben"}`);
+  lines.push("");
+  lines.push("Erbrachte Leistungen:");
+  lines.push(input.serviceSummary);
+
+  if (input.additionalContext) {
+    lines.push("");
+    lines.push("Zusätzlicher Kontext (unverändert übernommen):");
+    lines.push(input.additionalContext);
+  }
+
+  return lines.join("\n");
+}
+
 export async function generateReportText(input: GenerateReportInput): Promise<string> {
+  if (!HAS_REAL_KEY) {
+    return buildTemplateReportText(input);
+  }
+
   const systemPrompt = `Du unterstützt eine Zahnarztpraxis dabei, professionelle schriftliche Berichte zu
 verfassen. Du bekommst strukturierte Angaben und Stichpunkte der Praxis und formulierst daraus einen
 fertigen, gut lesbaren Bericht auf Deutsch.

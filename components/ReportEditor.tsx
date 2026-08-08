@@ -159,11 +159,19 @@ export function ReportEditor({
         </span>
       </div>
 
-      {status === "ENTWURF" && (
-        <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-          Dieser Bericht wurde von einer KI erstellt. Bitte prüfen Sie den Inhalt sorgfältig, bevor
-          Sie ihn freigeben oder versenden.
+      {text.startsWith("[TESTMODUS") ? (
+        <p className="mb-4 rounded-lg bg-purple-50 px-3 py-2 text-sm text-purple-800">
+          Dieser Bericht wurde im <strong>Testmodus</strong> ohne KI-Verbindung erstellt (nur die
+          erfassten Daten zusammengestellt, kein ausformulierter Text). Für echte KI-Formulierung ist
+          serverseitig ein Anthropic-API-Key mit Guthaben hinterlegt und der Bericht neu zu generieren.
         </p>
+      ) : (
+        status === "ENTWURF" && (
+          <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            Dieser Bericht wurde von einer KI erstellt. Bitte prüfen Sie den Inhalt sorgfältig, bevor
+            Sie ihn freigeben oder versenden.
+          </p>
+        )
       )}
 
       {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}

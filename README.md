@@ -196,8 +196,15 @@ cp .env.example .env
   PostgreSQL umgestellt, da Vercels Dateisystem nicht dauerhaft ist.)
 - `NEXTAUTH_SECRET` – zufälligen Wert generieren, z. B. mit
   `openssl rand -base64 32`.
-- `ANTHROPIC_API_KEY` – API-Key von [console.anthropic.com](https://console.anthropic.com),
-  wird für die Berichtsgenerierung benötigt.
+- `ANTHROPIC_API_KEY` – API-Key von [console.anthropic.com](https://console.anthropic.com)
+  für die echte KI-Berichtsgenerierung. **Optional zum Testen**: Ist die
+  Variable leer oder auf `dummy-key-for-build` gesetzt, generiert die App
+  ohne API-Aufruf (also kostenlos) einen einfachen, rein aus den erfassten
+  Daten zusammengestellten Text statt eines KI-Fließtexts – deutlich als
+  „Testmodus“ markiert (siehe `lib/anthropic.ts`, `buildTemplateReportText`).
+  So lässt sich der komplette Ablauf (Erfassung, Bericht, Bearbeitung,
+  PDF-Export) ohne Anthropic-Guthaben durchspielen; für produktionsreife,
+  ausformulierte Berichte ist ein echter Key mit Guthaben nötig.
 
 Datenbank einrichten und Leistungskatalog/Vorlagen seeden:
 
