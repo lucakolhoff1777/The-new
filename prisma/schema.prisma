@@ -1,0 +1,320 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Practice {
+  id               String            @id @default(cuid())
+  name             String
+  createdAt        DateTime          @default(now())
+  users            User[]
+  patients         Patient[]
+  reports          Report[]
+  serviceCatalog   ServiceCatalogItem[]
+  serviceTemplates ServiceTemplate[]
+
+  // Punktwerte zur Berechnung geschätzter Rechnungsbeträge (Punktzahl ×
+  // Punktwert × Faktor). In Cent, mit Nachkommastellen, da die amtlichen
+  // Punktwerte selbst Bruchteile eines Cents sind. GOZ ist bundeseinheitlich
+  // gesetzlich fixiert (aktuell 5,62421 Cent) und wird bei Neuanlage einer
+  // Praxis vorbelegt; BEMA verhandelt jede KZV regional mit den
+  // Krankenkassen ihres Bundeslands, es gibt keinen bundeseinheitlichen
+  // Wert - die Praxis muss ihn selbst eintragen.
+  gozPunktwertCent  Float?
+  bemaPunktwertCent Float?
+  invites           StaffInvite[]
+}
+
+// Partner-Zugang für Drittsysteme (andere Praxisverwaltungssysteme), die
+// unsere Validierungs-/KI-Berichts-Engine per API einbinden, statt unsere
+// komplette App zu nutzen. Bewusst zustandslos gegenüber Patientendaten des
+// Partners - wir persistieren dessen Patienten-/Behandlungsdaten nicht,
+// nur Metadaten zum API-Client selbst.
+model ApiClient {
+  id           String    @id @default(cuid())
+  name         String // Partnername, z. B. "Charly PVS Systems GmbH"
+  apiKeyHash   String    @unique
+  apiKeyPrefix String // erste Zeichen des Keys zur Anzeige/Identifikation, ohne den vollen Key zu speichern
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("staff") // "admin" | "staff"
+  practiceId   String
+  practice     Practice @relation(fields: [practiceId], references: [id])
+  reports      Report[]
+  // TOTP-Zweitfaktor (RFC 6238). totpSecret wird beim Einrichten gesetzt,
+  // aber erst nach erfolgreicher Verifikation ist totpEnabled=true und der
+  // Login verlangt zusätzlich zum Passwort einen gültigen Code.
+  totpSecret      String?
+  totpEnabled     Boolean  @default(false)
+  // Gehashte Einmal-Backup-Codes für den Fall, dass der Zugriff auf die
+  // Authenticator-App verloren geht. Comma-separated bcrypt-Hashes; ein
+  // Code wird beim Verbrauch aus der Liste entfernt.
+  totpBackupCodes String?
+  reportRevisions ReportRevision[]
+  resetTokens     PasswordResetToken[]
+  verificationTokens EmailVerificationToken[]
+  // Nicht blockierend: unverifizierte Konten können sich weiterhin anmelden
+  // und die App nutzen (kein zusätzliches Hindernis im Praxisalltag), sehen
+  // aber einen Hinweis, bis die Adresse bestätigt wurde.
+  emailVerifiedAt DateTime?
+  createdAt    DateTime @default(now())
+}
+
+// Einmal-Token zur Bestätigung der E-Mail-Adresse nach der Registrierung.
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Einmal-Token für den Passwort-Reset-Flow. tokenHash statt Klartext, damit
+// ein DB-Leak keine gültigen Reset-Links preisgibt. Läuft nach kurzer Zeit
+// ab und wird nach Verwendung markiert, damit derselbe Link nicht zweimal
+// nutzbar ist.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Einladung eines weiteren Praxismitglieds. tokenHash statt Klartext wie
+// beim Passwort-Reset. Erst nach Einlösen (Name+Passwort setzen) entsteht
+// ein echter User-Datensatz - vorher existiert die eingeladene Person noch
+// nicht als Login.
+model StaffInvite {
+  id         String    @id @default(cuid())
+  practiceId String
+  practice   Practice  @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  email      String
+  role       String    @default("staff") // "admin" | "staff"
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([practiceId])
+}
+
+model Patient {
+  id              String   @id @default(cuid())
+  practiceId      String
+  practice        Practice @relation(fields: [practiceId], references: [id])
+  firstName       String
+  lastName        String
+  birthDate       DateTime?
+  // "GKV" (gesetzlich) | "PKV" (privat) - bestimmt, welches Gebührenwerk
+  // (BEMA vs. GOZ/GOÄ) für diesen Patienten grundsätzlich greift.
+  insuranceType   String?
+  insuranceName   String?
+  insuranceNumber String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  reports         Report[]
+
+  @@index([practiceId])
+}
+
+// SQLite has no native enum support; these are constrained to
+// "BEFUND" | "KRANKENKASSE" and "ENTWURF" | "FINAL" in application code.
+model Report {
+  id                String            @id @default(cuid())
+  practiceId        String
+  practice          Practice          @relation(fields: [practiceId], references: [id])
+  patientId         String
+  patient           Patient           @relation(fields: [patientId], references: [id])
+  authorId          String
+  author            User              @relation(fields: [authorId], references: [id])
+  type              String
+  status            String            @default("ENTWURF")
+  treatmentDate     DateTime?
+  serviceTemplateId String?
+  serviceTemplate   ServiceTemplate?  @relation(fields: [serviceTemplateId], references: [id])
+  serviceEntries    ReportServiceEntry[]
+  // Server-generated summary of the reviewed service list, used as the
+  // structured basis for the AI report text (replaces free-text input).
+  serviceSummary    String
+  // Set once staff has explicitly confirmed the full checklist was reviewed
+  // (nothing left unreviewed) before generation is allowed.
+  reviewConfirmed   Boolean           @default(false)
+  additionalContext String?
+  generatedText     String?
+  editedText        String?
+  revisions         ReportRevision[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([practiceId])
+  @@index([patientId])
+}
+
+// Snapshot des Berichtstexts, bevor er durch eine Bearbeitung überschrieben
+// wird - macht Änderungen an der Gesundheitsdokumentation nachvollziehbar,
+// statt sie kommentarlos zu überschreiben.
+model ReportRevision {
+  id         String   @id @default(cuid())
+  reportId   String
+  report     Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  text       String
+  editedById String
+  editedBy   User     @relation(fields: [editedById], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([reportId])
+}
+
+// Beispielkatalog von Leistungspositionen (GOZ/BEMA/GOÄ/BEL II). Enthält
+// bewusst keine Punktzahlen/Punktwerte/Festbeträge (Cent-Beträge), da sich
+// diese ändern und praxis-/kassenspezifisch sind - diese Felder existieren
+// im Schema, sind im Beispielkatalog aber unbefüllt (null) und müssen von
+// der Praxis gegen das aktuelle offizielle Gebührenverzeichnis eingetragen
+// werden. practiceId = null bedeutet: globale Standardposition, für alle
+// Praxen sichtbar; gesetzt = praxiseigene Zusatzposition.
+model ServiceCatalogItem {
+  id           String              @id @default(cuid())
+  practiceId   String?
+  practice     Practice?           @relation(fields: [practiceId], references: [id])
+  system       String // "GOZ" | "BEMA" | "GOAE" | "BEL_II" | "SONSTIGES"
+  code         String
+  title        String
+  description  String?
+  category     String
+  // Ob "Zahn/Region" bei dieser Position sinnvoll abfragbar ist (z. B. bei
+  // einer Füllung ja, bei "Eingehende Untersuchung" nein). Steuert nur, ob
+  // das Feld standardmäßig ein- oder ausgeblendet ist - es lässt sich in
+  // der Erfassung immer manuell einblenden.
+  toothRelevant Boolean            @default(true)
+
+  // Abrechnungsdetails - bewusst optional/unbefüllt im Beispielkatalog
+  // (siehe Kommentar oben), aber vom Modell her vorgesehen. Der Punktwert
+  // (Cent pro Punkt) steht bewusst NICHT hier, sondern auf Practice, da er
+  // system-/regionweit gilt und nicht je Katalogposition unterschiedlich
+  // ist - siehe Practice.gozPunktwertCent/bemaPunktwertCent.
+  punktzahl                   Float?    // GOZ/GOÄ/BEMA, amtliche Punktzahl der Ziffer
+  festbetragCent                Int?    // BEMA/BEL II Festbetrag in Cent (Pauschale statt Punktzahl×Punktwert)
+  faktorMin                     Float?  // GOZ/GOÄ, i. d. R. 1.0
+  faktorMax                     Float?  // GOZ/GOÄ, i. d. R. 3.5
+  regelhoechstfaktor            Float?  // GOZ i. d. R. 2.3
+  begruendungspflichtAbFaktor   Float?  // ab diesem Faktor ist eine schriftliche Begründung Pflicht (§5 GOZ)
+  // Comma-separated catalogItemIds nicht gleichzeitig abrechenbarer
+  // Positionen (z. B. zwei verschiedene Füllungsarten am selben Zahn).
+  ausschlussMit                 String?
+  frequenzlimitAnzahl           Int?    // z. B. 2x
+  frequenzlimitZeitraumTage     Int?    // z. B. je 365 Tage
+  gueltigAb                     DateTime?
+  gueltigBis                    DateTime?
+
+  createdAt    DateTime            @default(now())
+  templateItems ServiceTemplateItem[]
+  reportEntries ReportServiceEntry[]
+
+  @@index([practiceId])
+}
+
+// Vorlage für einen Sitzungstyp (z. B. "Kontrolluntersuchung",
+// "Füllungstherapie"), die eine feste Liste typischer Leistungspositionen
+// vorgibt. Beim Anlegen eines Berichts sind alle Positionen einer Vorlage
+// standardmäßig als erbracht markiert; nicht erbrachte Positionen müssen
+// aktiv gestrichen werden (Opt-out statt Opt-in), damit nichts vergessen
+// wird.
+model ServiceTemplate {
+  id          String                @id @default(cuid())
+  practiceId  String?
+  practice    Practice?             @relation(fields: [practiceId], references: [id])
+  name        String
+  description String?
+  createdAt   DateTime              @default(now())
+  items       ServiceTemplateItem[]
+  reports     Report[]
+
+  @@index([practiceId])
+}
+
+model ServiceTemplateItem {
+  id             String             @id @default(cuid())
+  templateId     String
+  template       ServiceTemplate    @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  catalogItemId  String
+  catalogItem    ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
+  position       Int                @default(0)
+  // Comma-separated catalogItemIds of OTHER items in the same template that
+  // must be effectively performed for this item to be possible at all
+  // (OR semantics — any one is enough). Lets a branch "aufeinander
+  // aufbauen": striking a prerequisite auto-strikes and locks everything
+  // that logically follows it. Null/empty = no dependency.
+  dependsOn      String?
+
+  @@unique([templateId, catalogItemId])
+  @@index([templateId])
+}
+
+// Kontrollierte Erfassung je Bericht: eine Zeile pro Leistungsposition der
+// verwendeten Vorlage, `performed` startet bei true (angehakt/erbracht) und
+// wird von der Praxis aktiv auf false gesetzt (durchgestrichen), wenn der
+// Arzt die Leistung nicht erbracht hat.
+model ReportServiceEntry {
+  id            String             @id @default(cuid())
+  reportId      String
+  report        Report             @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  catalogItemId String
+  catalogItem   ServiceCatalogItem @relation(fields: [catalogItemId], references: [id])
+  performed     Boolean            @default(true)
+  toothNumbers  String?
+  quantity      Int                @default(1)
+  note          String?
+  // Steigerungsfaktor bei GOZ/GOÄ-Positionen (i. d. R. 1.0-3.5).
+  faktor        Float?
+  // Schriftliche Begründung, Pflicht sobald faktor über dem
+  // Regelhöchstfaktor/begruendungspflichtAbFaktor der Position liegt.
+  begruendung   String?
+  position      Int                @default(0)
+
+  @@index([reportId])
+}
+
+// Rein informatives Nachschlagewerk zu gängigen Selbstzahlerleistungen
+// (IGEL) je Behandlungskategorie - bewusst NICHT patientenbezogen und ohne
+// jede Empfehlungs-/Vorschlagslogik. Zweck: der Praxis im
+// Beratungsgespräch sachliche Hintergrundinfos an die Hand geben, welche
+// Optionen über die Kassenleistung hinaus grundsätzlich existieren und wo
+// deren Grenzen liegen - die fachliche Einschätzung im Einzelfall bleibt
+// vollständig bei der behandelnden Person. Kein Bezug zu Report/Patient/
+// ServiceCatalogItem, damit hieraus technisch kein "für Patient X
+// vorgeschlagen"-Flow entstehen kann.
+model LexikonEntry {
+  id                  String   @id @default(cuid())
+  category            String
+  title               String
+  // Sachliche, knappe Einordnung: was deckt die GKV hier typischerweise ab
+  // bzw. wo liegen die üblichen Grenzen (Häufigkeit, Ausführung, Material).
+  gkvEinordnung        String
+  // Sachliche, knappe Beschreibung der Selbstzahler-Option und wann sie
+  // in Betracht gezogen werden könnte - bewusst ohne Werbesprache.
+  selbstzahlerOption   String
+  position             Int      @default(0)
+
+  @@index([category])
+}

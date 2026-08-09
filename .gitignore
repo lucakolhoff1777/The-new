@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# production
+build/
+
+# env files
+.env
+.env*.local
+
+# prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+
+# typescript
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+.env*
+
+# lokal von Marketplace-CLI-Integrationen installierte Agent-Skill-Docs
+# (z. B. `vercel integration add upstash/...`) - Referenzmaterial fürs
+# lokale Tooling, kein Projektcode
+.agents/
+.claude/
+skills-lock.json
