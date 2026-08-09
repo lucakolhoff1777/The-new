@@ -20,13 +20,13 @@ const GENERIC_MESSAGE =
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
   const rateLimitKey = `forgot-password:${ip}`;
-  if (isRateLimited(rateLimitKey, LIMIT, WINDOW_MS)) {
+  if (await isRateLimited(rateLimitKey, LIMIT, WINDOW_MS)) {
     return NextResponse.json(
       { error: "Zu viele Anfragen. Bitte später erneut versuchen." },
       { status: 429 }
     );
   }
-  recordAttempt(rateLimitKey, WINDOW_MS);
+  await recordAttempt(rateLimitKey, WINDOW_MS);
 
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);

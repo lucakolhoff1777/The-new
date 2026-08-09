@@ -19,13 +19,13 @@ const REGISTER_WINDOW_MS = 60 * 60 * 1000;
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
   const rateLimitKey = `register:${ip}`;
-  if (isRateLimited(rateLimitKey, REGISTER_LIMIT, REGISTER_WINDOW_MS)) {
+  if (await isRateLimited(rateLimitKey, REGISTER_LIMIT, REGISTER_WINDOW_MS)) {
     return NextResponse.json(
       { error: "Zu viele Registrierungsversuche. Bitte in einer Stunde erneut versuchen." },
       { status: 429 }
     );
   }
-  recordAttempt(rateLimitKey, REGISTER_WINDOW_MS);
+  await recordAttempt(rateLimitKey, REGISTER_WINDOW_MS);
 
   const body = await req.json();
   const parsed = registerSchema.safeParse(body);

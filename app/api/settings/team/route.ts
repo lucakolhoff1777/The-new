@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   if (!session) return error;
 
   const rateLimitKey = `staff-invite:${session.user.practiceId}`;
-  if (isRateLimited(rateLimitKey, INVITE_LIMIT, INVITE_WINDOW_MS)) {
+  if (await isRateLimited(rateLimitKey, INVITE_LIMIT, INVITE_WINDOW_MS)) {
     return NextResponse.json(
       { error: "Zu viele Einladungen in kurzer Zeit. Bitte später erneut versuchen." },
       { status: 429 }
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     );
   }
 
-  recordAttempt(rateLimitKey, INVITE_WINDOW_MS);
+  await recordAttempt(rateLimitKey, INVITE_WINDOW_MS);
 
   const { raw: rawToken, hash: tokenHash } = generateToken();
 

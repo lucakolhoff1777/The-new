@@ -26,3 +26,10 @@ next-env.d.ts
 *.tsbuildinfo
 .vercel
 .env*
+
+# lokal von Marketplace-CLI-Integrationen installierte Agent-Skill-Docs
+# (z. B. `vercel integration add upstash/...`) - Referenzmaterial fürs
+# lokale Tooling, kein Projektcode
+.agents/
+.claude/
+skills-lock.json

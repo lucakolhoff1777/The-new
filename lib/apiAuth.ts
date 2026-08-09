@@ -66,10 +66,10 @@ export async function authenticateAndRateLimitApiRequest(req: Request): Promise<
   if (!auth.client) return auth;
 
   const rateLimitKey = `apiv1:${auth.client.id}`;
-  if (isRateLimited(rateLimitKey, API_RATE_LIMIT, API_RATE_WINDOW_MS)) {
+  if (await isRateLimited(rateLimitKey, API_RATE_LIMIT, API_RATE_WINDOW_MS)) {
     return { error: "Rate limit überschritten (60 Anfragen/Minute je API-Key).", status: 429 };
   }
-  recordAttempt(rateLimitKey, API_RATE_WINDOW_MS);
+  await recordAttempt(rateLimitKey, API_RATE_WINDOW_MS);
 
   return auth;
 }

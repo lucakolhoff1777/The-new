@@ -13,13 +13,13 @@ export async function POST() {
   if (!session) return NextResponse.json({ error: "Nicht angemeldet" }, { status: 401 });
 
   const rateLimitKey = `resend-verification:${session.user.id}`;
-  if (isRateLimited(rateLimitKey, LIMIT, WINDOW_MS)) {
+  if (await isRateLimited(rateLimitKey, LIMIT, WINDOW_MS)) {
     return NextResponse.json(
       { error: "Zu viele Anfragen. Bitte später erneut versuchen." },
       { status: 429 }
     );
   }
-  recordAttempt(rateLimitKey, WINDOW_MS);
+  await recordAttempt(rateLimitKey, WINDOW_MS);
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!user) return NextResponse.json({ error: "Nicht gefunden" }, { status: 404 });

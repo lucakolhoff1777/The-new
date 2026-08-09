@@ -27,7 +27,7 @@ export const authOptions: AuthOptions = {
         const email = credentials.email.toLowerCase().trim();
         const rateLimitKey = `login:${email}`;
 
-        if (isRateLimited(rateLimitKey, LOGIN_ATTEMPT_LIMIT, LOGIN_ATTEMPT_WINDOW_MS)) {
+        if (await isRateLimited(rateLimitKey, LOGIN_ATTEMPT_LIMIT, LOGIN_ATTEMPT_WINDOW_MS)) {
           throw new Error(
             "Zu viele fehlgeschlagene Anmeldeversuche. Bitte in 15 Minuten erneut versuchen."
           );
@@ -38,13 +38,13 @@ export const authOptions: AuthOptions = {
           include: { practice: true },
         });
         if (!user) {
-          recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
+          await recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
           return null;
         }
 
         const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!isValid) {
-          recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
+          await recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
           return null;
         }
 
@@ -59,7 +59,7 @@ export const authOptions: AuthOptions = {
             // nicht verfügbar ist).
             const remainingCodes = await consumeBackupCode(credentials.token, user.totpBackupCodes);
             if (remainingCodes === null) {
-              recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
+              await recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
               throw new Error("2FA_INVALID");
             }
             await prisma.user.update({
@@ -69,7 +69,7 @@ export const authOptions: AuthOptions = {
           }
         }
 
-        clearAttempts(rateLimitKey);
+        await clearAttempts(rateLimitKey);
 
         return {
           id: user.id,

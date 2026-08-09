@@ -279,6 +279,11 @@ cp .env.example .env
   Test-Absender `onboarding@resend.dev`, der nur an die eigene, bei Resend
   verifizierte E-Mail-Adresse zustellt – für echten Versand an beliebige
   Empfänger muss eine eigene Domain bei Resend verifiziert werden).
+- `KV_REST_API_URL` / `KV_REST_API_TOKEN` – von Upstash Redis (z. B. über die
+  Vercel-Marketplace-Integration „Upstash for Redis“, die diese Variablen
+  automatisch setzt). **Optional**: Ohne diese Variablen läuft
+  Rate-Limiting In-Memory statt über einen geteilten Store (siehe oben,
+  `lib/rateLimit.ts`).
 
 Datenbank einrichten und Leistungskatalog/Vorlagen seeden:
 
@@ -338,10 +343,13 @@ Patientendaten unbedingt beachten:
   Vitest, `prisma migrate deploy` gegen einen frischen Postgres-Service-
   Container (prüft, dass die Migrationshistorie fehlerfrei von Grund auf
   durchläuft) und `next build`.
-- **Rate-Limiting ist In-Memory** (`lib/rateLimit.ts`) und läuft daher pro
-  Serverprozess; bei mehreren Instanzen (z. B. mehrere Serverless-Kaltstarts)
-  ist der Schutz nicht global konsistent. Für den Produktivbetrieb sollte ein
-  geteilter Store (z. B. Redis) verwendet werden.
+- **Rate-Limiting** (`lib/rateLimit.ts`) nutzt bei angebundenem Upstash-Redis
+  (Vercel-Marketplace-Integration, setzt `KV_REST_API_URL`/`KV_REST_API_TOKEN`)
+  einen geteilten Store – der Schutz ist dann über alle Serverless-Instanzen
+  hinweg konsistent (einfacher Fixed-Window-Zähler per `INCR`/`EXPIRE`). Ohne
+  angebundenes Redis (z. B. lokale Entwicklung, Tests) fällt der Limiter auf
+  In-Memory zurück statt zu crashen – dann läuft der Schutz nur pro
+  Serverprozess.
 - Unter „Einstellungen → Katalog“ lassen sich Katalogpositionen (Admin-Konten)
   jetzt vollständig über die Weboberfläche anlegen, bearbeiten und löschen
   (Löschen ist per Verwendungsprüfung blockiert, solange die Position noch in
