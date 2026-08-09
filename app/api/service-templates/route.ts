@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseDependsOn } from "@/lib/serviceDependency";
+import { requireAdmin } from "@/lib/permissions";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -34,4 +36,29 @@ export async function GET() {
   }));
 
   return NextResponse.json({ templates: withParsedDeps });
+}
+
+const createSchema = z.object({
+  name: z.string().min(2, "Name ist zu kurz"),
+  description: z.string().optional().nullable(),
+});
+
+export async function POST(req: Request) {
+  const { session, error } = await requireAdmin();
+  if (!session) return error;
+
+  const body = await req.json().catch(() => null);
+  const parsed = createSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Ungültige Eingabe" },
+      { status: 400 }
+    );
+  }
+
+  const template = await prisma.serviceTemplate.create({
+    data: { practiceId: null, name: parsed.data.name, description: parsed.data.description },
+  });
+
+  return NextResponse.json({ template });
 }

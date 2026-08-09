@@ -8,18 +8,34 @@ type CatalogItem = {
   code: string;
   title: string;
   category: string;
+  toothRelevant: boolean;
+  faktorMin: number | null;
   punktzahl: number | null;
   festbetragCent: number | null;
 };
 
 type RowState = { punktzahl: string; festbetrag: string; saving: boolean; saved: boolean; error: string | null };
 
+const SYSTEMS = ["GOZ", "BEMA", "GOAE", "BEL_II", "SONSTIGES"] as const;
+
+function emptyNewItem() {
+  return { system: "GOZ" as (typeof SYSTEMS)[number], code: "", title: "", category: "", toothRelevant: false, hasFaktor: true };
+}
+
 export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
   const [items, setItems] = useState<CatalogItem[]>([]);
   const [rows, setRows] = useState<Record<string, RowState>>({});
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<Record<string, string>>({});
 
-  useEffect(() => {
+  const [newItem, setNewItem] = useState(emptyNewItem());
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [showNewForm, setShowNewForm] = useState(false);
+
+  function load() {
+    setLoading(true);
     fetch("/api/catalog-items")
       .then((res) => res.json())
       .then((data) => {
@@ -38,7 +54,9 @@ export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
         setRows(next);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(load, []);
 
   const grouped = useMemo(() => {
     const byCategory = new Map<string, CatalogItem[]>();
@@ -76,6 +94,44 @@ export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
     setRows((prev) => ({ ...prev, [id]: { ...prev[id], saving: false, saved: true, error: null } }));
   }
 
+  async function deleteItem(id: string) {
+    if (!confirm("Diese Katalogposition wirklich löschen?")) return;
+    setDeletingId(id);
+    setDeleteError((prev) => ({ ...prev, [id]: "" }));
+
+    const res = await fetch(`/api/catalog-items/${id}`, { method: "DELETE" });
+    const data = await res.json();
+    setDeletingId(null);
+
+    if (!res.ok) {
+      setDeleteError((prev) => ({ ...prev, [id]: data.error ?? "Löschen fehlgeschlagen." }));
+      return;
+    }
+    load();
+  }
+
+  async function createItem(e: React.FormEvent) {
+    e.preventDefault();
+    setCreating(true);
+    setCreateError(null);
+
+    const res = await fetch("/api/catalog-items", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
+    });
+    const data = await res.json();
+    setCreating(false);
+
+    if (!res.ok) {
+      setCreateError(data.error ?? "Anlegen fehlgeschlagen.");
+      return;
+    }
+    setNewItem(emptyNewItem());
+    setShowNewForm(false);
+    load();
+  }
+
   if (loading) return <div className="card text-sm text-slate-500">Lädt…</div>;
 
   return (
@@ -84,7 +140,10 @@ export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
         Punktzahl und Festbetrag sind objektive Werte aus dem offiziellen Gebührenverzeichnis
         (GOZ/BEMA/BEL-II) und daher für alle Praxen geteilt, die diesen Referenzkatalog nutzen –
         nicht praxisspezifisch wie der Punktwert unter „Abrechnung“. Bitte gegen das aktuell
-        gültige Verzeichnis prüfen, bevor Sie Werte eintragen.
+        gültige Verzeichnis prüfen, bevor Sie Werte eintragen. Ausschluss-Regeln,
+        Gültigkeitszeiträume und Frequenzlimits lassen sich weiterhin nur über
+        <code className="mx-1 rounded bg-blue-100 px-1 text-xs">prisma/seed.ts</code>
+        pflegen.
       </p>
 
       {grouped.map(([category, categoryItems]) => (
@@ -130,16 +189,29 @@ export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
                     </div>
                     {!readOnly && (
                       <div className="flex flex-col items-start gap-1">
-                        <button
-                          type="button"
-                          onClick={() => saveRow(item.id)}
-                          disabled={row.saving}
-                          className="btn-secondary py-1 text-xs"
-                        >
-                          {row.saving ? "Speichert…" : "Speichern"}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => saveRow(item.id)}
+                            disabled={row.saving}
+                            className="btn-secondary py-1 text-xs"
+                          >
+                            {row.saving ? "Speichert…" : "Speichern"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => deleteItem(item.id)}
+                            disabled={deletingId === item.id}
+                            className="py-1 text-xs font-medium text-red-600 hover:underline"
+                          >
+                            {deletingId === item.id ? "Löscht…" : "Löschen"}
+                          </button>
+                        </div>
                         {row.saved && <span className="text-xs text-green-700">Gespeichert.</span>}
                         {row.error && <span className="text-xs text-red-700">{row.error}</span>}
+                        {deleteError[item.id] && (
+                          <span className="text-xs text-red-700">{deleteError[item.id]}</span>
+                        )}
                       </div>
                     )}
                   </div>
@@ -149,6 +221,98 @@ export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
           </div>
         </div>
       ))}
+
+      {!readOnly && (
+        <div className="card">
+          {!showNewForm ? (
+            <button type="button" className="btn-secondary" onClick={() => setShowNewForm(true)}>
+              + Neue Katalogposition
+            </button>
+          ) : (
+            <form onSubmit={createItem} className="space-y-3">
+              <h2 className="font-medium text-slate-900">Neue Katalogposition</h2>
+              {createError && (
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{createError}</p>
+              )}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div>
+                  <label className="label">System</label>
+                  <select
+                    className="input"
+                    value={newItem.system}
+                    onChange={(e) => setNewItem((p) => ({ ...p, system: e.target.value as typeof p.system }))}
+                  >
+                    {SYSTEMS.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="label">Ziffer</label>
+                  <input
+                    className="input"
+                    placeholder="z. B. 0010 oder –"
+                    value={newItem.code}
+                    onChange={(e) => setNewItem((p) => ({ ...p, code: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="label">Titel</label>
+                  <input
+                    className="input"
+                    value={newItem.title}
+                    onChange={(e) => setNewItem((p) => ({ ...p, title: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="label">Kategorie</label>
+                  <input
+                    className="input"
+                    placeholder="z. B. Prophylaxe"
+                    value={newItem.category}
+                    onChange={(e) => setNewItem((p) => ({ ...p, category: e.target.value }))}
+                    required
+                  />
+                </div>
+                <label className="flex items-center gap-2 self-end pb-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={newItem.toothRelevant}
+                    onChange={(e) => setNewItem((p) => ({ ...p, toothRelevant: e.target.checked }))}
+                  />
+                  Zahn/Region relevant
+                </label>
+                <label className="flex items-center gap-2 self-end pb-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={newItem.hasFaktor}
+                    onChange={(e) => setNewItem((p) => ({ ...p, hasFaktor: e.target.checked }))}
+                  />
+                  Faktor-Feld (GOZ/GOÄ)
+                </label>
+              </div>
+              <div className="flex gap-3">
+                <button type="submit" disabled={creating} className="btn-primary">
+                  {creating ? "Legt an…" : "Anlegen"}
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => {
+                    setShowNewForm(false);
+                    setNewItem(emptyNewItem());
+                    setCreateError(null);
+                  }}
+                >
+                  Abbrechen
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
     </div>
   );
 }

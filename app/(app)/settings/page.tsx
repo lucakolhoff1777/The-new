@@ -14,7 +14,12 @@ const CARDS = [
   {
     href: "/settings/catalog",
     title: "Katalog",
-    description: "Punktzahlen und Festbeträge der Leistungspositionen eintragen.",
+    description: "Leistungspositionen anlegen, bearbeiten, Punktzahlen/Festbeträge pflegen.",
+  },
+  {
+    href: "/settings/templates",
+    title: "Vorlagen",
+    description: "Sitzungstyp-Vorlagen anlegen und Positionen inkl. Abhängigkeiten verwalten.",
   },
   {
     href: "/settings/lexikon",

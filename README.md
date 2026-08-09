@@ -342,11 +342,15 @@ Patientendaten unbedingt beachten:
   Serverprozess; bei mehreren Instanzen (z. B. mehrere Serverless-Kaltstarts)
   ist der Schutz nicht global konsistent. Für den Produktivbetrieb sollte ein
   geteilter Store (z. B. Redis) verwendet werden.
-- Punktzahl/Festbetrag je Katalogposition und die praxiseigenen Punktwerte
-  lassen sich unter „Einstellungen“ pflegen; Katalogpositionen selbst neu
-  anlegen/entfernen sowie Sitzungstyp-Vorlagen und Abhängigkeitsketten
-  bearbeiten geht weiterhin nur über `prisma/seed.ts` bzw.
-  `npx prisma studio`, nicht über die Weboberfläche.
+- Unter „Einstellungen → Katalog“ lassen sich Katalogpositionen (Admin-Konten)
+  jetzt vollständig über die Weboberfläche anlegen, bearbeiten und löschen
+  (Löschen ist per Verwendungsprüfung blockiert, solange die Position noch in
+  einer Vorlage oder einem Bericht steckt). Unter „Einstellungen → Vorlagen“
+  lassen sich Sitzungstyp-Vorlagen anlegen, Positionen hinzufügen/entfernen
+  und Abhängigkeitsketten (`dependsOn`, "baut auf X auf") je Position setzen.
+  Bewusst weiterhin nur über `prisma/seed.ts` pflegbar: Ausschluss-Regeln,
+  Gültigkeitszeiträume und Frequenzlimits – das sind fachlich heikle Regeln
+  mit größerer Tragweite bei Fehleingaben.
 - GOZ-/BEMA-Ziffern im Beispielkatalog sind, wie oben beschrieben, vor dem
   echten Abrechnungseinsatz zu verifizieren; die Frequenzlimit-Beispielwerte
   (PZR, Zahnsteinentfernung) sind Praxisbeispiele zur Veranschaulichung der
