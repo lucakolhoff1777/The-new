@@ -74,7 +74,14 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="label" htmlFor="password">Passwort</label>
+            <div className="flex items-baseline justify-between">
+              <label className="label" htmlFor="password">Passwort</label>
+              {!needsTotp && (
+                <Link href="/forgot-password" className="text-xs text-brand-600 hover:underline">
+                  Passwort vergessen?
+                </Link>
+              )}
+            </div>
             <input
               id="password"
               type="password"
@@ -95,7 +102,7 @@ export default function LoginPage() {
                 autoComplete="one-time-code"
                 autoFocus
                 required
-                placeholder="6-stelliger Code aus Ihrer Authenticator-App"
+                placeholder="6-stelliger Code oder Backup-Code (XXXX-XXXX)"
                 className="input"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}

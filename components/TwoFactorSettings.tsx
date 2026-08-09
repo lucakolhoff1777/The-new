@@ -10,6 +10,8 @@ export function TwoFactorSettings({ initialEnabled }: { initialEnabled: boolean 
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [backupCodes, setBackupCodes] = useState<string[] | null>(null);
+  const [regenerating, setRegenerating] = useState(false);
 
   async function startSetup() {
     setLoading(true);
@@ -44,7 +46,23 @@ export function TwoFactorSettings({ initialEnabled }: { initialEnabled: boolean 
     setEnabled(true);
     setSetupData(null);
     setCode("");
+    setBackupCodes(data.backupCodes ?? null);
     setMessage("Zwei-Faktor-Authentifizierung ist jetzt aktiv.");
+  }
+
+  async function regenerateBackupCodes() {
+    setRegenerating(true);
+    setError(null);
+    setMessage(null);
+    const res = await fetch("/api/settings/2fa/backup-codes", { method: "POST" });
+    const data = await res.json();
+    setRegenerating(false);
+    if (!res.ok) {
+      setError(data.error ?? "Neue Codes konnten nicht erzeugt werden.");
+      return;
+    }
+    setBackupCodes(data.backupCodes);
+    setMessage("Neue Backup-Codes erzeugt. Die vorherigen Codes sind ab sofort ungültig.");
   }
 
   async function disable(e: React.FormEvent) {
@@ -65,6 +83,7 @@ export function TwoFactorSettings({ initialEnabled }: { initialEnabled: boolean 
     }
     setEnabled(false);
     setPassword("");
+    setBackupCodes(null);
     setMessage("Zwei-Faktor-Authentifizierung wurde deaktiviert.");
   }
 
@@ -129,25 +148,61 @@ export function TwoFactorSettings({ initialEnabled }: { initialEnabled: boolean 
         </form>
       )}
 
-      {enabled && (
-        <form onSubmit={disable} className="space-y-3">
-          <div>
-            <label className="label" htmlFor="disable-password">
-              Passwort zur Bestätigung, um 2FA zu deaktivieren
-            </label>
-            <input
-              id="disable-password"
-              type="password"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+      {backupCodes && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <p className="text-sm font-medium text-amber-900">
+            Backup-Codes – jetzt sicher speichern (werden nicht erneut angezeigt)
+          </p>
+          <p className="mt-1 text-xs text-amber-800">
+            Jeder Code funktioniert einmalig als Ersatz für den Authenticator-Code, falls Sie
+            keinen Zugriff mehr auf die App haben.
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-1.5 font-mono text-sm text-amber-900">
+            {backupCodes.map((c) => (
+              <span key={c}>{c}</span>
+            ))}
           </div>
-          <button type="submit" disabled={loading} className="btn-secondary">
-            2FA deaktivieren
-          </button>
-        </form>
+        </div>
+      )}
+
+      {enabled && (
+        <>
+          <div className="flex items-center justify-between rounded-lg border border-slate-100 p-3">
+            <div>
+              <p className="text-sm font-medium text-slate-900">Backup-Codes</p>
+              <p className="text-xs text-slate-500">
+                Für den Fall, dass die Authenticator-App nicht verfügbar ist.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={regenerateBackupCodes}
+              disabled={regenerating}
+              className="btn-secondary shrink-0"
+            >
+              {regenerating ? "Erzeugt…" : "Neue Codes generieren"}
+            </button>
+          </div>
+
+          <form onSubmit={disable} className="space-y-3">
+            <div>
+              <label className="label" htmlFor="disable-password">
+                Passwort zur Bestätigung, um 2FA zu deaktivieren
+              </label>
+              <input
+                id="disable-password"
+                type="password"
+                className="input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" disabled={loading} className="btn-secondary">
+              2FA deaktivieren
+            </button>
+          </form>
+        </>
       )}
     </div>
   );

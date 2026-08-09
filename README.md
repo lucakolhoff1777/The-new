@@ -93,7 +93,23 @@ geprüft und freigegeben werden.
 - **Zwei-Faktor-Authentifizierung (2FA)**: optional pro Konto unter
   „Sicherheit“ einrichtbar (TOTP, kompatibel mit gängigen Authenticator-Apps
   wie Google Authenticator/Authy). Ist 2FA aktiv, verlangt der Login
-  zusätzlich zum Passwort einen 6-stelligen Code.
+  zusätzlich zum Passwort einen 6-stelligen Code. Beim Aktivieren werden 10
+  Einmal-Backup-Codes angezeigt (Format `XXXX-XXXX`), die beim Login
+  alternativ zum TOTP-Code funktionieren, falls kein Zugriff auf die
+  Authenticator-App besteht – jeder Code ist nur einmal gültig, neue Codes
+  lassen sich jederzeit unter „Sicherheit“ generieren (ersetzt die alten).
+- **Passwort vergessen**: Self-Service-Link auf der Login-Seite; E-Mail-Versand
+  über Resend (`RESEND_API_KEY`), mit kostenlosem Testmodus-Fallback ohne
+  Key (Link landet dann im Server-Log statt im Postfach – siehe Setup-Sektion
+  weiter unten für Details zum Testmodus-Muster).
+- **Team-Verwaltung** (`/settings/team`, nur Admin-Konten): weitere
+  Praxismitglieder per E-Mail-Einladung hinzufügen (Link 7 Tage gültig,
+  ebenfalls über Resend/Testmodus), Rollen (Admin/Staff) vergeben und
+  wieder entfernen. Der letzte verbleibende Admin einer Praxis kann sich
+  nicht selbst herabstufen oder entfernen, damit keine Praxis ohne
+  Admin-Zugriff dasteht. Admin-Rechte sind serverseitig für Abrechnung,
+  Katalog und Team durchgesetzt (`lib/permissions.ts`) – Staff-Konten sehen
+  diese Einstellungen nur lesend bzw. mit Hinweis.
 - **Rate-Limiting** auf Login und Registrierung gegen Brute-Force-Versuche
   (siehe „Bekannte offene Punkte“ zu den Grenzen der aktuellen Umsetzung).
 - **Geschätzter Rechnungsbetrag & GKV-/Privat-Kennzeichnung**: Jede Position
@@ -249,6 +265,15 @@ cp .env.example .env
   So lässt sich der komplette Ablauf (Erfassung, Bericht, Bearbeitung,
   PDF-Export) ohne Anthropic-Guthaben durchspielen; für produktionsreife,
   ausformulierte Berichte ist ein echter Key mit Guthaben nötig.
+- `RESEND_API_KEY` – API-Key von [resend.com](https://resend.com) für den
+  Versand von Passwort-Reset- und Team-Einladungs-E-Mails. **Optional zum
+  Testen**: Ist die Variable nicht gesetzt, wird keine E-Mail verschickt,
+  sondern der Link nur ins Server-Log geschrieben (`lib/email.ts`) –
+  gleiches Testmodus-Muster wie bei `ANTHROPIC_API_KEY`. `RESEND_FROM_EMAIL`
+  optional für eine eigene Absenderadresse (Standard: Resends
+  Test-Absender `onboarding@resend.dev`, der nur an die eigene, bei Resend
+  verifizierte E-Mail-Adresse zustellt – für echten Versand an beliebige
+  Empfänger muss eine eigene Domain bei Resend verifiziert werden).
 
 Datenbank einrichten und Leistungskatalog/Vorlagen seeden:
 
@@ -308,9 +333,6 @@ Patientendaten unbedingt beachten:
   Serverprozess; bei mehreren Instanzen (z. B. mehrere Serverless-Kaltstarts)
   ist der Schutz nicht global konsistent. Für den Produktivbetrieb sollte ein
   geteilter Store (z. B. Redis) verwendet werden.
-- **2FA-Wiederherstellung**: Es gibt aktuell keine Backup-Codes für den Fall,
-  dass der Zugriff auf die Authenticator-App verloren geht – ein Admin müsste
-  `totpEnabled`/`totpSecret` direkt in der Datenbank zurücksetzen.
 - Punktzahl/Festbetrag je Katalogposition und die praxiseigenen Punktwerte
   lassen sich unter „Einstellungen“ pflegen; Katalogpositionen selbst neu
   anlegen/entfernen sowie Sitzungstyp-Vorlagen und Abhängigkeitsketten

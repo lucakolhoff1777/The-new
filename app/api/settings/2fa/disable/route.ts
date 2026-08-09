@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
   await prisma.user.update({
     where: { id: user.id },
-    data: { totpEnabled: false, totpSecret: null },
+    data: { totpEnabled: false, totpSecret: null, totpBackupCodes: null },
   });
 
   return NextResponse.json({ ok: true });

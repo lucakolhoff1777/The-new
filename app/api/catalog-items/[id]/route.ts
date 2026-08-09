@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { z } from "zod";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/permissions";
 
 // Bewusst eng begrenzt: nur punktzahl/festbetragCent sind editierbar, alles
 // andere an einer Katalogposition (Titel, Faktor-Regeln, Abhängigkeiten
@@ -14,8 +13,8 @@ const updateSchema = z.object({
 });
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Nicht angemeldet" }, { status: 401 });
+  const { session, error } = await requireAdmin();
+  if (!session) return error;
 
   const body = await req.json();
   const parsed = updateSchema.safeParse(body);

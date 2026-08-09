@@ -5,9 +5,11 @@ import { useState } from "react";
 export function BillingSettings({
   initialGozPunktwertCent,
   initialBemaPunktwertCent,
+  readOnly = false,
 }: {
   initialGozPunktwertCent: number | null;
   initialBemaPunktwertCent: number | null;
+  readOnly?: boolean;
 }) {
   const [gozPunktwert, setGozPunktwert] = useState(
     initialGozPunktwertCent != null ? String(initialGozPunktwertCent) : ""
@@ -69,7 +71,8 @@ export function BillingSettings({
             type="number"
             step="0.00001"
             min="0"
-            className="input"
+            className="input disabled:opacity-60"
+            disabled={readOnly}
             value={gozPunktwert}
             onChange={(e) => setGozPunktwert(e.target.value)}
           />
@@ -89,7 +92,8 @@ export function BillingSettings({
             type="number"
             step="0.00001"
             min="0"
-            className="input"
+            className="input disabled:opacity-60"
+            disabled={readOnly}
             placeholder="von Ihrer KZV mitgeteilter Wert eintragen"
             value={bemaPunktwert}
             onChange={(e) => setBemaPunktwert(e.target.value)}
@@ -101,9 +105,11 @@ export function BillingSettings({
           </p>
         </div>
 
-        <button type="submit" disabled={saving} className="btn-primary">
-          {saving ? "Speichert…" : "Speichern"}
-        </button>
+        {!readOnly && (
+          <button type="submit" disabled={saving} className="btn-primary">
+            {saving ? "Speichert…" : "Speichern"}
+          </button>
+        )}
       </form>
     </div>
   );

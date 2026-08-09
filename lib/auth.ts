@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited, recordAttempt, clearAttempts } from "@/lib/rateLimit";
-import { verifyTotpToken } from "@/lib/twoFactor";
+import { verifyTotpToken, consumeBackupCode } from "@/lib/twoFactor";
 
 const LOGIN_ATTEMPT_LIMIT = 5;
 const LOGIN_ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
@@ -54,8 +54,18 @@ export const authOptions: AuthOptions = {
           }
           const tokenValid = await verifyTotpToken(credentials.token, user.totpSecret);
           if (!tokenValid) {
-            recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
-            throw new Error("2FA_INVALID");
+            // Kein gültiger TOTP-Code - ggf. handelt es sich um einen
+            // Einmal-Backup-Code (für den Fall, dass die Authenticator-App
+            // nicht verfügbar ist).
+            const remainingCodes = await consumeBackupCode(credentials.token, user.totpBackupCodes);
+            if (remainingCodes === null) {
+              recordAttempt(rateLimitKey, LOGIN_ATTEMPT_WINDOW_MS);
+              throw new Error("2FA_INVALID");
+            }
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { totpBackupCodes: remainingCodes || null },
+            });
           }
         }
 

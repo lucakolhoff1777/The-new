@@ -21,6 +21,11 @@ const CARDS = [
     title: "Leistungslexikon",
     description: "Nachschlagewerk zu gängigen Selbstzahlerleistungen – nicht patientenbezogen.",
   },
+  {
+    href: "/settings/team",
+    title: "Team",
+    description: "Weitere Praxismitglieder einladen, Rollen (Admin/Staff) verwalten.",
+  },
 ];
 
 export default function SettingsPage() {

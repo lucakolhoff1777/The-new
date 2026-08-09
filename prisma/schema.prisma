@@ -26,6 +26,7 @@ model Practice {
   // Wert - die Praxis muss ihn selbst eintragen.
   gozPunktwertCent  Float?
   bemaPunktwertCent Float?
+  invites           StaffInvite[]
 }
 
 // Partner-Zugang für Drittsysteme (andere Praxisverwaltungssysteme), die
@@ -57,8 +58,47 @@ model User {
   // Login verlangt zusätzlich zum Passwort einen gültigen Code.
   totpSecret      String?
   totpEnabled     Boolean  @default(false)
+  // Gehashte Einmal-Backup-Codes für den Fall, dass der Zugriff auf die
+  // Authenticator-App verloren geht. Comma-separated bcrypt-Hashes; ein
+  // Code wird beim Verbrauch aus der Liste entfernt.
+  totpBackupCodes String?
   reportRevisions ReportRevision[]
+  resetTokens     PasswordResetToken[]
   createdAt    DateTime @default(now())
+}
+
+// Einmal-Token für den Passwort-Reset-Flow. tokenHash statt Klartext, damit
+// ein DB-Leak keine gültigen Reset-Links preisgibt. Läuft nach kurzer Zeit
+// ab und wird nach Verwendung markiert, damit derselbe Link nicht zweimal
+// nutzbar ist.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Einladung eines weiteren Praxismitglieds. tokenHash statt Klartext wie
+// beim Passwort-Reset. Erst nach Einlösen (Name+Passwort setzen) entsteht
+// ein echter User-Datensatz - vorher existiert die eingeladene Person noch
+// nicht als Login.
+model StaffInvite {
+  id         String    @id @default(cuid())
+  practiceId String
+  practice   Practice  @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  email      String
+  role       String    @default("staff") // "admin" | "staff"
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([practiceId])
 }
 
 model Patient {

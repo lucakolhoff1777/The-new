@@ -14,7 +14,7 @@ type CatalogItem = {
 
 type RowState = { punktzahl: string; festbetrag: string; saving: boolean; saved: boolean; error: string | null };
 
-export function CatalogSettings() {
+export function CatalogSettings({ readOnly = false }: { readOnly?: boolean }) {
   const [items, setItems] = useState<CatalogItem[]>([]);
   const [rows, setRows] = useState<Record<string, RowState>>({});
   const [loading, setLoading] = useState(true);
@@ -107,10 +107,11 @@ export function CatalogSettings() {
                     <div className="w-28">
                       <label className="mb-1 block text-xs text-slate-400">Punktzahl</label>
                       <input
-                        className="input py-1 text-xs"
+                        className="input py-1 text-xs disabled:opacity-60"
                         type="number"
                         step="0.1"
                         min="0"
+                        disabled={readOnly}
                         value={row.punktzahl}
                         onChange={(e) => updateRow(item.id, { punktzahl: e.target.value })}
                       />
@@ -118,26 +119,29 @@ export function CatalogSettings() {
                     <div className="w-28">
                       <label className="mb-1 block text-xs text-slate-400">Festbetrag (EUR)</label>
                       <input
-                        className="input py-1 text-xs"
+                        className="input py-1 text-xs disabled:opacity-60"
                         type="number"
                         step="0.01"
                         min="0"
+                        disabled={readOnly}
                         value={row.festbetrag}
                         onChange={(e) => updateRow(item.id, { festbetrag: e.target.value })}
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-1">
-                      <button
-                        type="button"
-                        onClick={() => saveRow(item.id)}
-                        disabled={row.saving}
-                        className="btn-secondary py-1 text-xs"
-                      >
-                        {row.saving ? "Speichert…" : "Speichern"}
-                      </button>
-                      {row.saved && <span className="text-xs text-green-700">Gespeichert.</span>}
-                      {row.error && <span className="text-xs text-red-700">{row.error}</span>}
-                    </div>
+                    {!readOnly && (
+                      <div className="flex flex-col items-start gap-1">
+                        <button
+                          type="button"
+                          onClick={() => saveRow(item.id)}
+                          disabled={row.saving}
+                          className="btn-secondary py-1 text-xs"
+                        >
+                          {row.saving ? "Speichert…" : "Speichern"}
+                        </button>
+                        {row.saved && <span className="text-xs text-green-700">Gespeichert.</span>}
+                        {row.error && <span className="text-xs text-red-700">{row.error}</span>}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
