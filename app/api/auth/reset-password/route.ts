@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited, recordAttempt } from "@/lib/rateLimit";
+import { hashToken } from "@/lib/tokens";
 
 const schema = z.object({
   token: z.string().min(1),
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const tokenHash = crypto.createHash("sha256").update(parsed.data.token).digest("hex");
+  const tokenHash = hashToken(parsed.data.token);
   const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
 
   if (

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/permissions";
 import { sendEmail } from "@/lib/email";
 import { isRateLimited, recordAttempt } from "@/lib/rateLimit";
+import { generateToken } from "@/lib/tokens";
 
 export async function GET() {
   const { session, error } = await requireAdmin();
@@ -68,8 +68,7 @@ export async function POST(req: Request) {
 
   recordAttempt(rateLimitKey, INVITE_WINDOW_MS);
 
-  const rawToken = crypto.randomBytes(32).toString("hex");
-  const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+  const { raw: rawToken, hash: tokenHash } = generateToken();
 
   await prisma.staffInvite.create({
     data: {

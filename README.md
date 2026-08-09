@@ -102,6 +102,11 @@ geprüft und freigegeben werden.
   über Resend (`RESEND_API_KEY`), mit kostenlosem Testmodus-Fallback ohne
   Key (Link landet dann im Server-Log statt im Postfach – siehe Setup-Sektion
   weiter unten für Details zum Testmodus-Muster).
+- **E-Mail-Verifizierung**: Nach der Registrierung wird eine
+  Bestätigungs-E-Mail verschickt (24 Std. gültig, gleicher Resend-/
+  Testmodus-Mechanismus). Nicht blockierend – ein unbestätigtes Konto kann
+  sich weiterhin anmelden und die App normal nutzen, sieht aber einen
+  Hinweisbanner mit „Erneut senden“, bis die Adresse bestätigt wurde.
 - **Team-Verwaltung** (`/settings/team`, nur Admin-Konten): weitere
   Praxismitglieder per E-Mail-Einladung hinzufügen (Link 7 Tage gültig,
   ebenfalls über Resend/Testmodus), Rollen (Admin/Staff) vergeben und
@@ -326,9 +331,13 @@ Patientendaten unbedingt beachten:
   Einsatz sollte dieses Upgrade separat geplant werden.
 - **Automatisierte Tests**: `npm test` (Vitest) deckt die reine Geschäftslogik
   ab (Abhängigkeitskaskaden, Faktor-/Ausschluss-/Gültigkeitsregeln,
-  Rate-Limiter). API-Routen und UI werden weiterhin nur manuell/per
-  Playwright-Rauchtest geprüft, nicht automatisiert in CI – ein
+  Rate-Limiter, Backup-Codes). API-Routen und UI werden weiterhin nur
+  manuell/per Playwright-Rauchtest geprüft, nicht automatisiert in CI – ein
   DB-gestütztes Integrationstest-Setup wäre ein sinnvoller nächster Schritt.
+  **CI** (`.github/workflows/ci.yml`) läuft bei jedem Push/PR: Typecheck,
+  Vitest, `prisma migrate deploy` gegen einen frischen Postgres-Service-
+  Container (prüft, dass die Migrationshistorie fehlerfrei von Grund auf
+  durchläuft) und `next build`.
 - **Rate-Limiting ist In-Memory** (`lib/rateLimit.ts`) und läuft daher pro
   Serverprozess; bei mehreren Instanzen (z. B. mehrere Serverless-Kaltstarts)
   ist der Schutz nicht global konsistent. Für den Produktivbetrieb sollte ein

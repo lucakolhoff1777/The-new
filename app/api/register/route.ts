@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited, recordAttempt } from "@/lib/rateLimit";
 import { STANDARD_GOZ_PUNKTWERT_CENT } from "@/lib/billing";
+import { sendVerificationEmail } from "@/lib/emailVerification";
 
 const registerSchema = z.object({
   practiceName: z.string().min(2, "Praxisname ist zu kurz"),
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  await prisma.practice.create({
+  const practice = await prisma.practice.create({
     data: {
       name: practiceName,
       // GOZ-Punktwert ist bundeseinheitlich fixiert und wird vorbelegt; der
@@ -65,7 +66,10 @@ export async function POST(req: Request) {
         },
       },
     },
+    include: { users: true },
   });
+
+  await sendVerificationEmail(practice.users[0]);
 
   return NextResponse.json({ ok: true });
 }

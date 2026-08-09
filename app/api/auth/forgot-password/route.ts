@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited, recordAttempt } from "@/lib/rateLimit";
 import { sendEmail } from "@/lib/email";
+import { generateToken } from "@/lib/tokens";
 
 const schema = z.object({ email: z.string().email() });
 
@@ -38,8 +38,7 @@ export async function POST(req: Request) {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (user) {
-    const rawToken = crypto.randomBytes(32).toString("hex");
-    const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+    const { raw: rawToken, hash: tokenHash } = generateToken();
 
     await prisma.passwordResetToken.create({
       data: {

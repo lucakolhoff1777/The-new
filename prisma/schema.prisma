@@ -64,7 +64,25 @@ model User {
   totpBackupCodes String?
   reportRevisions ReportRevision[]
   resetTokens     PasswordResetToken[]
+  verificationTokens EmailVerificationToken[]
+  // Nicht blockierend: unverifizierte Konten können sich weiterhin anmelden
+  // und die App nutzen (kein zusätzliches Hindernis im Praxisalltag), sehen
+  // aber einen Hinweis, bis die Adresse bestätigt wurde.
+  emailVerifiedAt DateTime?
   createdAt    DateTime @default(now())
+}
+
+// Einmal-Token zur Bestätigung der E-Mail-Adresse nach der Registrierung.
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 // Einmal-Token für den Passwort-Reset-Flow. tokenHash statt Klartext, damit

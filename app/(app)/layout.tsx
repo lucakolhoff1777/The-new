@@ -2,12 +2,19 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { SignOutButton } from "@/components/SignOutButton";
 import { MobileNav } from "@/components/MobileNav";
+import { VerifyEmailBanner } from "@/components/VerifyEmailBanner";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { emailVerifiedAt: true },
+  });
 
   return (
     <div className="min-h-screen">
@@ -36,6 +43,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <MobileNav userName={session.user.name} />
         </div>
       </header>
+      {!currentUser?.emailVerifiedAt && <VerifyEmailBanner />}
       <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">{children}</main>
     </div>
   );
