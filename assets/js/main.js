@@ -177,6 +177,135 @@
   }
 
   /* -----------------------------------------------------------------------
+     Räume — drag the oversized shot inside the frame to look around
+     ----------------------------------------------------------------------- */
+  const ROOMS = [
+    {
+      img: "assets/img/empfang.jpg",
+      name: "Empfang",
+      sign: true,
+      desc: "Eine Wand aus konserviertem Moos, von hinten beleuchtet, mit unserem " +
+            "Monogramm darin. Davor ein Tresen aus einem einzigen Stamm. Hier kommst " +
+            "du an, hier wirst du empfangen — ohne Wartezimmer-Atmosphäre.",
+      tags: ["Mooswand", "Hinterleuchtetes Monogramm", "Massivholztresen"],
+    },
+    {
+      img: "assets/img/raum-1.jpg",
+      name: "Behandlungsraum I",
+      desc: "Heller Raum für Manuelle Therapie und CMD. Runde Nischen mit indirektem " +
+            "Licht, Waschbecken am Platz, Olivenbaum am Fenster. Ruhig genug, dass " +
+            "man am Kiefer arbeiten kann.",
+      tags: ["Manuelle Therapie", "CMD · CRAFTA", "Höhenverstellbare Liege"],
+    },
+    {
+      img: "assets/img/raum-2.jpg",
+      name: "Behandlungsraum II",
+      desc: "Holz, Kalkputz und ein hinterleuchtetes Rattanpaneel. Der dunklere, " +
+            "geschütztere Raum — für Massage, Lymphdrainage und alles, wobei man " +
+            "wirklich abschalten soll.",
+      tags: ["Massage", "Lymphdrainage", "Gedämpftes Licht"],
+    },
+    {
+      img: "assets/img/lab.jpg",
+      name: "Athletik-Lab",
+      desc: "Kraftmessung, Sprungdiagnostik und aktives Training. Geplant sind " +
+            "zusätzlich eine Kunstrasenbahn für Sprint- und Schlittenarbeit sowie " +
+            "ein Gewichtsschlitten in derselben Holz-Optik wie die Geräteschränke.",
+      tags: ["Kraftmessdiagnostik", "Return-to-Sport"],
+      planned: ["Kunstrasenbahn", "Gewichtsschlitten"],
+    },
+    {
+      img: "assets/img/umkleide.jpg",
+      name: "Umkleide & Duschen",
+      desc: "Abschließbare Schränke, Duschen und frische Handtücher. Gedacht für " +
+            "alle, die vor oder nach dem Training kommen — du musst nicht in " +
+            "Sportsachen wieder aus der Tür.",
+      tags: ["Abschließbare Schränke", "Duschen", "Handtuchservice"],
+    },
+  ];
+
+  const viewer = document.getElementById("viewer");
+  if (viewer) {
+    const stage = document.getElementById("viewerStage");
+    const vImg = document.getElementById("viewerImg");
+    const vSign = document.getElementById("viewerSign");
+    const vHint = document.getElementById("viewerHint");
+    let current = 0;
+    let pan = { x: 0, y: 0 };
+    let drag = null;
+
+    function applyPan() {
+      vImg.style.transform = `translate(calc(-50% + ${pan.x}px), calc(-50% + ${pan.y}px))`;
+    }
+
+    function limits() {
+      // how far the oversized image may travel before its edge shows
+      return {
+        x: Math.max(0, (vImg.offsetWidth - stage.clientWidth) / 2),
+        y: Math.max(0, (vImg.offsetHeight - stage.clientHeight) / 2),
+      };
+    }
+
+    function show(i) {
+      current = (i + ROOMS.length) % ROOMS.length;
+      const r = ROOMS[current];
+      vImg.src = r.img;
+      vImg.alt = r.name;
+      document.getElementById("vName").textContent = r.name;
+      document.getElementById("vDesc").textContent = r.desc;
+      document.getElementById("vCount").textContent = `${current + 1} / ${ROOMS.length}`;
+      document.getElementById("vTags").innerHTML =
+        (r.tags || []).map((t) => `<span>${t}</span>`).join("") +
+        (r.planned || []).map((t) => `<span class="is-planned">${t} · geplant</span>`).join("");
+      vSign.classList.toggle("is-on", !!r.sign);
+      pan = { x: 0, y: 0 };
+      applyPan();
+      vHint.classList.remove("is-gone");
+    }
+
+    function open(i) {
+      viewer.hidden = false;
+      document.body.style.overflow = "hidden";
+      show(i);
+    }
+    function close() {
+      viewer.hidden = true;
+      document.body.style.removeProperty("overflow");
+    }
+
+    document.querySelectorAll(".room-card").forEach((card) => {
+      card.addEventListener("click", () => open(+card.dataset.room));
+    });
+    document.getElementById("viewerClose").addEventListener("click", close);
+    document.getElementById("vPrev").addEventListener("click", () => show(current - 1));
+    document.getElementById("vNext").addEventListener("click", () => show(current + 1));
+    viewer.addEventListener("click", (e) => { if (e.target === viewer) close(); });
+
+    document.addEventListener("keydown", (e) => {
+      if (viewer.hidden) return;
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") show(current + 1);
+      if (e.key === "ArrowLeft") show(current - 1);
+    });
+
+    stage.addEventListener("pointerdown", (e) => {
+      drag = { sx: e.clientX, sy: e.clientY, px: pan.x, py: pan.y };
+      stage.classList.add("is-dragging");
+      stage.setPointerCapture(e.pointerId);
+      vHint.classList.add("is-gone");
+    });
+    stage.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const l = limits();
+      pan.x = Math.max(-l.x, Math.min(l.x, drag.px + (e.clientX - drag.sx)));
+      pan.y = Math.max(-l.y, Math.min(l.y, drag.py + (e.clientY - drag.sy)));
+      applyPan();
+    });
+    ["pointerup", "pointercancel"].forEach((ev) =>
+      stage.addEventListener(ev, () => { drag = null; stage.classList.remove("is-dragging"); }));
+  }
+
+  /* -----------------------------------------------------------------------
      Philosophie: pinned panels driven by scroll position
      ----------------------------------------------------------------------- */
   const storyTrack = document.getElementById("storyTrack");

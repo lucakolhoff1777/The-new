@@ -42,6 +42,7 @@
     <nav class="main-nav" id="mainNav">
       <ul>
         <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
+        <li><a href="#raeume" class="nav-link">Räume</a></li>
         <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
         <li><a href="#fragen" class="nav-link">Fragen</a></li>
         <li><a href="#team" class="nav-link">Team</a></li>
@@ -66,6 +67,7 @@
   <ul>
     <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
     <li><a href="#saeulen" class="nav-link">Sport &amp; Kiefer</a></li>
+    <li><a href="#raeume" class="nav-link">Räume</a></li>
     <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
     <li><a href="#fragen" class="nav-link">Häufige Fragen</a></li>
     <li><a href="#team" class="nav-link">Team</a></li>
@@ -301,13 +303,120 @@
     </div>
   </section>
 
+  <!-- RÄUME -->
+  <section class="block rule-top" id="raeume">
+    <div class="pool pool-a" style="top:-150px; right:-160px;" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">iii.</span>
+        <h2 class="reveal" data-reveal>Unsere Räume</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Schau dich um, bevor du kommst — Empfang, Behandlungsräume,
+          Athletik-Lab und Umkleide.
+        </p>
+      </div>
+
+      <div class="rooms-grid" id="roomsGrid">
+        <button type="button" class="glass room-card room-card-wide reveal" data-room="0" data-reveal>
+          <span class="room-shot">
+            <img src="assets/img/empfang.jpg" alt="Empfang mit begrünter Mooswand" loading="lazy">
+            <!-- the monogram sits in the moss, lit from behind -->
+            <span class="room-sign" aria-hidden="true">
+              <svg viewBox="126 66 306 274">
+                <g transform="translate(402,0) scale(-1,1)">
+                  <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
+                </g>
+                <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
+              </svg>
+            </span>
+          </span>
+          <span class="room-meta">
+            <span class="room-name">Empfang</span>
+            <span class="room-note">Mooswand mit hinterleuchtetem Monogramm</span>
+          </span>
+          <span class="room-cue">Ansehen</span>
+        </button>
+
+        <button type="button" class="glass room-card reveal" data-room="1" data-reveal data-delay="70">
+          <span class="room-shot"><img src="assets/img/raum-1.jpg" alt="Heller Behandlungsraum" loading="lazy"></span>
+          <span class="room-meta">
+            <span class="room-name">Behandlungsraum I</span>
+            <span class="room-note">Manuelle Therapie · CMD</span>
+          </span>
+          <span class="room-cue">Ansehen</span>
+        </button>
+
+        <button type="button" class="glass room-card reveal" data-room="2" data-reveal data-delay="140">
+          <span class="room-shot"><img src="assets/img/raum-2.jpg" alt="Ruhiger Behandlungsraum in Holz und Stein" loading="lazy"></span>
+          <span class="room-meta">
+            <span class="room-name">Behandlungsraum II</span>
+            <span class="room-note">Massage · Lymphdrainage</span>
+          </span>
+          <span class="room-cue">Ansehen</span>
+        </button>
+
+        <button type="button" class="glass room-card reveal" data-room="3" data-reveal>
+          <span class="room-shot"><img src="assets/img/lab.jpg" alt="Athletik-Lab mit Trainingsgeräten" loading="lazy"></span>
+          <span class="room-meta">
+            <span class="room-name">Athletik-Lab</span>
+            <span class="room-note">Diagnostik · Kunstrasen · Schlitten</span>
+          </span>
+          <span class="room-cue">Ansehen</span>
+        </button>
+
+        <button type="button" class="glass room-card reveal" data-room="4" data-reveal data-delay="70">
+          <span class="room-shot"><img src="assets/img/umkleide.jpg" alt="Umkleide mit Schränken und Duschen" loading="lazy"></span>
+          <span class="room-meta">
+            <span class="room-name">Umkleide &amp; Duschen</span>
+            <span class="room-note">Schränke · Duschen · Handtücher</span>
+          </span>
+          <span class="room-cue">Ansehen</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Room viewer -->
+  <div class="viewer" id="viewer" hidden>
+    <div class="viewer-inner" role="dialog" aria-modal="true" aria-labelledby="vName">
+      <button class="viewer-close" id="viewerClose" aria-label="Schließen">×</button>
+
+      <div class="viewer-stage" id="viewerStage">
+        <img id="viewerImg" src="" alt="">
+        <span class="room-sign viewer-sign" id="viewerSign" aria-hidden="true">
+          <svg viewBox="126 66 306 274">
+            <g transform="translate(402,0) scale(-1,1)">
+              <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
+            </g>
+            <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
+          </svg>
+        </span>
+        <span class="viewer-hint" id="viewerHint">Ziehen zum Umsehen</span>
+      </div>
+
+      <div class="viewer-info">
+        <div class="viewer-head">
+          <h3 id="vName"></h3>
+          <span class="viewer-count" id="vCount"></span>
+        </div>
+        <p id="vDesc"></p>
+        <div class="viewer-tags" id="vTags"></div>
+        <div class="viewer-nav">
+          <button type="button" class="ghost-round" id="vPrev" aria-label="Vorheriger Raum">←</button>
+          <button type="button" class="ghost-round" id="vNext" aria-label="Nächster Raum">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ABLAUF -->
   <section class="block rule-top" id="ablauf">
     <div class="pool pool-a" style="bottom:-200px; left:-180px;" aria-hidden="true"></div>
 
     <div class="container">
       <div class="sec-head">
-        <span class="num">iii.</span>
+        <span class="num">iv.</span>
         <h2 class="reveal" data-reveal>Der Ablauf</h2>
         <p class="reveal" data-reveal data-delay="80">Zwei Wege, ein Prinzip: klar, dokumentiert, nachvollziehbar.</p>
       </div>
@@ -366,7 +475,7 @@
 
     <div class="container">
       <div class="sec-head">
-        <span class="num">iv.</span>
+        <span class="num">v.</span>
         <h2 class="reveal" data-reveal>Dein erster Termin</h2>
         <p class="reveal" data-reveal data-delay="80">
           Damit du weißt, worauf du dich einlässt — die Dinge, die man vorher
@@ -475,7 +584,7 @@
         <div class="story-bg" aria-hidden="true"><img src="assets/img/raum.jpg" alt=""></div>
 
         <div class="story-panel is-active" data-panel="0">
-          <span class="story-eyebrow">iv. · Philosophie</span>
+          <span class="story-eyebrow">vi. · Philosophie</span>
           <p class="story-quote">„Schön genug, dass Menschen kommen, bevor etwas wehtut.“</p>
         </div>
 
@@ -508,7 +617,7 @@
 
     <div class="container">
       <div class="sec-head">
-        <span class="num">v.</span>
+        <span class="num">vii.</span>
         <h2 class="reveal" data-reveal>Das Team</h2>
         <p class="reveal" data-reveal data-delay="80">
           Vier Therapeut:innen, die zusammen das gesamte Spektrum abdecken —
@@ -552,7 +661,7 @@
   <section class="block rule-top" id="praxis">
     <div class="container">
       <div class="founder-copy">
-        <span class="num">vi.</span>
+        <span class="num">viii.</span>
         <h2 class="reveal" data-reveal>Aufgebaut von Luca Kolhoff.</h2>
         <p class="reveal" data-reveal data-delay="80">
           Seit der Gründung steht die Praxis für dieselbe Idee: Physiotherapie in
@@ -578,7 +687,7 @@
 
     <div class="container contact-grid">
       <div class="contact-info reveal" data-reveal>
-        <span class="sec-eyebrow">vii. · Kontakt</span>
+        <span class="sec-eyebrow">ix. · Kontakt</span>
         <h2>Sprich mit uns.</h2>
         <p class="contact-lead">
           Ob Sport, Kiefer oder eine Verordnung von der Hausärztin — schreib uns
@@ -650,6 +759,7 @@
 
     <nav class="footer-nav">
       <a href="#leistungen">Leistungen</a>
+      <a href="#raeume">Räume</a>
       <a href="#ablauf">Ablauf</a>
       <a href="#fragen">Häufige Fragen</a>
       <a href="#team">Team</a>
