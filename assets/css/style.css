@@ -414,7 +414,28 @@ section.block > .container { position: relative; z-index: 1; }
    Leistungen — glass cards
    ------------------------------------------------------------------------- */
 
+.svc-filter { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.svc-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px; border-radius: 999px;
+  background: rgba(218,222,216,.05);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid var(--glass-brd);
+  color: var(--cedar-soft);
+  font-family: var(--font-body); font-size: .78rem; letter-spacing: .06em;
+  cursor: pointer;
+  transition: background .4s var(--ease-glass), color .35s ease, border-color .35s ease, transform .4s var(--ease-swish);
+}
+.svc-chip span { font-size: .68rem; color: var(--cedar); }
+.svc-chip:hover { border-color: var(--glass-brd-lit); transform: translateY(-2px); }
+.svc-chip.is-on { background: var(--aloe); color: var(--moss); border-color: var(--aloe); }
+.svc-chip.is-on span { color: var(--olive); }
+
 .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.svc-card.is-filtered-out {
+  display: none;
+}
 .svc-card { padding: 32px 28px 28px; display: flex; flex-direction: column; gap: 12px; }
 .svc-card .svc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; position: relative; z-index: 1; }
 .svc-icon {
@@ -489,11 +510,55 @@ section.block > .container { position: relative; z-index: 1; }
 .path-step .ps-desc { font-size: .82rem; color: var(--cedar); margin-top: 3px; }
 
 /* -------------------------------------------------------------------------
+   Ankommen + häufige Fragen
+   ------------------------------------------------------------------------- */
+
+.arrive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 56px; }
+.arrive-tile { padding: 28px 24px 26px; }
+.arrive-tile > * { position: relative; z-index: 1; }
+.arrive-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 12px;
+  background: rgba(218,222,216,.10);
+  border: 1px solid var(--glass-brd);
+  color: var(--aloe); margin-bottom: 16px;
+}
+.arrive-icon svg { width: 20px; height: 20px; }
+.arrive-tile h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.1rem; color: var(--aloe); margin-bottom: 8px; }
+.arrive-tile p { font-size: .88rem; color: var(--cedar-soft); }
+
+.faq { display: flex; flex-direction: column; gap: 12px; max-width: 860px; }
+.faq-item { border-radius: 18px; }
+.faq-item summary {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 22px 26px;
+  font-family: var(--font-display); font-size: 1.12rem; color: var(--aloe);
+  cursor: pointer; list-style: none;
+  transition: color .3s ease;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: ""; flex-shrink: 0;
+  width: 11px; height: 11px;
+  border-right: 1.5px solid var(--cedar-soft);
+  border-bottom: 1.5px solid var(--cedar-soft);
+  transform: rotate(45deg) translate(-3px, -3px);
+  transition: transform .45s var(--ease-swish);
+}
+.faq-item[open] summary::after { transform: rotate(-135deg) translate(-3px, -3px); }
+.faq-item summary:hover { color: var(--cedar-soft); }
+.faq-body { position: relative; z-index: 1; padding: 0 26px 24px; }
+.faq-body p { font-size: .94rem; color: var(--cedar-soft); max-width: 66ch; }
+
+/* -------------------------------------------------------------------------
    Philosophie — pinned scroll sequence over the image
    ------------------------------------------------------------------------- */
 
 .story { position: relative; }
-.story-track { position: relative; height: 400vh; }
+/* kept short on purpose — a long pinned section is a wall between the
+   sections people are actually looking for */
+.story-track { position: relative; height: 280vh; }
 .story-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .story-bg { position: absolute; inset: 0; z-index: 0; }
 .story-bg img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); }
@@ -580,6 +645,8 @@ section.block > .container { position: relative; z-index: 1; }
 .contact-label { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cedar); }
 .contact-details a, .contact-details span:not(.contact-label) { color: var(--aloe); font-size: .98rem; transition: color .3s ease; }
 .contact-details a:hover { color: var(--cedar-soft); }
+/* marks the entries that still need the practice's real data */
+[data-placeholder] { border-bottom: 1px dashed rgba(218,222,216,.35); }
 
 .contact-form { padding: 42px; display: flex; flex-direction: column; gap: 20px; }
 .contact-form > * { position: relative; z-index: 1; }
@@ -620,6 +687,31 @@ section.block > .container { position: relative; z-index: 1; }
 .footer-bottom { padding: 22px 0; border-top: 1px solid var(--glass-brd); font-size: .76rem; color: var(--cedar); text-align: center; }
 
 /* -------------------------------------------------------------------------
+   Persistent booking bar — small screens only, where the header CTA is hidden
+   ------------------------------------------------------------------------- */
+
+.mobile-cta {
+  display: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 450;
+  gap: 10px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(20, 25, 16, .82);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border-top: 1px solid var(--glass-brd);
+}
+.mobile-cta-call {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--glass-brd);
+  color: var(--aloe);
+  font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+  flex-shrink: 0;
+}
+.mobile-cta-call svg { width: 17px; height: 17px; }
+.mobile-cta-book { flex: 1; padding: 14px 20px; }
+
+/* -------------------------------------------------------------------------
    Back to top
    ------------------------------------------------------------------------- */
 
@@ -644,6 +736,7 @@ section.block > .container { position: relative; z-index: 1; }
 @media (max-width: 1080px) {
   .svc-grid { grid-template-columns: repeat(2, 1fr); }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .arrive-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 900px) {
@@ -658,12 +751,23 @@ section.block > .container { position: relative; z-index: 1; }
   .header-actions .btn-small { display: none; }
   .svc-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr; }
+  .arrive-grid { grid-template-columns: 1fr; gap: 12px; }
   .form-row { grid-template-columns: 1fr; }
   .container { padding: 0 22px; }
   section.block { padding: 84px 0; }
-  .story-track { height: 320vh; }
+  .story-track { height: 260vh; }
   .hero-chip { right: 20px; bottom: 96px; }
   .story-fact { min-width: 0; flex: 1 1 140px; padding: 20px 18px; }
+  .faq-item summary { padding: 18px 20px; font-size: 1.02rem; }
+  .faq-body { padding: 0 20px 20px; }
+
+  /* the booking bar replaces the hidden header CTA */
+  .mobile-cta { display: flex; }
+  .back-to-top { bottom: 92px; }
+  .site-footer { padding-bottom: 78px; }
+  /* the bar occupies the bottom edge the cue used to sit in */
+  .scroll-cue { display: none; }
+  .hero-chip { bottom: 88px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

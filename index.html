@@ -41,10 +41,9 @@
     <nav class="main-nav" id="mainNav">
       <ul>
         <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
-        <li><a href="#saeulen" class="nav-link">Säulen</a></li>
         <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
+        <li><a href="#fragen" class="nav-link">Fragen</a></li>
         <li><a href="#team" class="nav-link">Team</a></li>
-        <li><a href="#praxis" class="nav-link">Praxis</a></li>
         <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
       </ul>
     </nav>
@@ -61,8 +60,9 @@
 <div class="mobile-menu" id="mobileMenu">
   <ul>
     <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
-    <li><a href="#saeulen" class="nav-link">Säulen</a></li>
+    <li><a href="#saeulen" class="nav-link">Sport &amp; Kiefer</a></li>
     <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
+    <li><a href="#fragen" class="nav-link">Häufige Fragen</a></li>
     <li><a href="#team" class="nav-link">Team</a></li>
     <li><a href="#praxis" class="nav-link">Praxis</a></li>
     <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
@@ -128,8 +128,15 @@
         </p>
       </div>
 
+      <div class="svc-filter reveal" data-reveal data-delay="120" role="group" aria-label="Leistungen filtern">
+        <button type="button" class="svc-chip is-on" data-filter="alle">Alle <span>9</span></button>
+        <button type="button" class="svc-chip" data-filter="sport">Sport <span>5</span></button>
+        <button type="button" class="svc-chip" data-filter="kiefer">Kiefer &amp; CMD <span>2</span></button>
+        <button type="button" class="svc-chip" data-filter="rezept">Auf Rezept <span>5</span></button>
+      </div>
+
       <div class="svc-grid">
-        <article class="glass glass-lift svc-card reveal" data-reveal>
+        <article class="glass glass-lift svc-card reveal" data-cat="sport kiefer rezept" data-reveal>
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M5 17c2.5-6 5-9 7-9s4.5 3 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -141,7 +148,7 @@
           <span class="svc-tag">Rezept &amp; privat</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="70">
+        <article class="glass glass-lift svc-card reveal" data-cat="sport rezept" data-reveal data-delay="70">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-6 4 12 2-6h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -153,7 +160,7 @@
           <span class="svc-tag">Rezept &amp; privat</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="140">
+        <article class="glass glass-lift svc-card reveal" data-cat="sport" data-reveal data-delay="140">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="5" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7v5l-4 8M8 12l4 3 2 5M8 12l5-2 3-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -165,7 +172,7 @@
           <span class="svc-tag">Direktzugang</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal>
+        <article class="glass glass-lift svc-card reveal" data-cat="kiefer" data-reveal>
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M4 9c0-3 3-5 8-5s8 2 8 5-2 5-4 6-2 2-2 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="14" cy="20" r="1.3" fill="currentColor"/></svg>
@@ -177,7 +184,7 @@
           <span class="svc-tag">Mit Zuweisung</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="70">
+        <article class="glass glass-lift svc-card reveal" data-cat="rezept" data-reveal data-delay="70">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M4 12c2-4 5-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 17c2-2.5 4-4 6-4s4 1.5 6 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -189,7 +196,7 @@
           <span class="svc-tag">Rezept &amp; privat</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="140">
+        <article class="glass glass-lift svc-card reveal" data-cat="rezept" data-reveal data-delay="140">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M4 8h16M4 13h16M4 18h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -201,7 +208,7 @@
           <span class="svc-tag">Rezept &amp; privat</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal>
+        <article class="glass glass-lift svc-card reveal" data-cat="rezept" data-reveal>
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h3l2-5 3 10 3-10 2 5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -213,7 +220,7 @@
           <span class="svc-tag">Zusatz</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="70">
+        <article class="glass glass-lift svc-card reveal" data-cat="sport" data-reveal data-delay="70">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M8 5h11v11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -225,7 +232,7 @@
           <span class="svc-tag">Zusatz</span>
         </article>
 
-        <article class="glass glass-lift svc-card reveal" data-reveal data-delay="140">
+        <article class="glass glass-lift svc-card reveal" data-cat="sport" data-reveal data-delay="140">
           <div class="svc-top">
             <span class="svc-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V9M10 20V4M16 20v-8M22 20H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -343,6 +350,114 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANKOMMEN + FRAGEN -->
+  <section class="block rule-top" id="fragen">
+    <div class="pool pool-b" style="top:-140px; left:-160px;" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">iv.</span>
+        <h2 class="reveal" data-reveal>Dein erster Termin</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Damit du weißt, worauf du dich einlässt — die Dinge, die man vorher
+          gerne gefragt hätte.
+        </p>
+      </div>
+
+      <div class="arrive-grid">
+        <div class="glass arrive-tile reveal" data-reveal>
+          <span class="arrive-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h3>Ohne Rezept möglich</h3>
+          <p>Für einen Termin brauchst du keine Überweisung. Hast du eine Verordnung, bring sie einfach mit.</p>
+        </div>
+
+        <div class="glass arrive-tile reveal" data-reveal data-delay="70">
+          <span class="arrive-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="1.7"/></svg>
+          </span>
+          <h3>Bequeme Kleidung reicht</h3>
+          <p>Sportsachen sind ideal, nötig sind sie nicht. Handtücher und alles Weitere stellen wir.</p>
+        </div>
+
+        <div class="glass arrive-tile reveal" data-reveal data-delay="140">
+          <span class="arrive-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Plan 15 Minuten mehr ein</h3>
+          <p>Der Ersttermin beginnt mit Gespräch und Untersuchung — die Zeit nehmen wir uns bewusst.</p>
+        </div>
+
+        <div class="glass arrive-tile reveal" data-reveal data-delay="210">
+          <span class="arrive-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14M5 12h14M5 18h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Absagen ist unkompliziert</h3>
+          <p>Bis 24 Stunden vorher kostenlos — eine kurze Nachricht genügt, du musst nicht anrufen.</p>
+        </div>
+      </div>
+
+      <div class="faq reveal" data-reveal data-delay="120">
+        <details class="glass faq-item">
+          <summary>Brauche ich eine Verordnung vom Arzt?</summary>
+          <div class="faq-body">
+            <p>Nein. Du kannst direkt einen Termin vereinbaren — das nennt sich Direktzugang.
+            Wenn du eine ärztliche Verordnung hast, rechnen wir darüber ab. Ohne Verordnung
+            behandeln wir dich als Selbstzahlerin oder Selbstzahler zu den Preisen, die bei
+            jeder Leistung stehen.</p>
+          </div>
+        </details>
+
+        <details class="glass faq-item">
+          <summary>Was kostet eine Behandlung?</summary>
+          <div class="faq-body">
+            <p>Jeder Preis steht offen bei der jeweiligen Leistung — von 25 € für ein Tape bis
+            180 € für den Athletik-Check. Es gibt keine versteckten Zuschläge. Privatversicherungen
+            und Beihilfe erstatten in der Regel; bei gesetzlicher Verordnung rechnen wir direkt ab.</p>
+          </div>
+        </details>
+
+        <details class="glass faq-item">
+          <summary>Wie schnell bekomme ich einen Termin?</summary>
+          <div class="faq-body">
+            <p>In der Regel innerhalb weniger Tage. Schreib uns kurz, worum es geht und wann du
+            kannst — wir melden uns innerhalb eines Werktages mit konkreten Vorschlägen.
+            Bei akuten Beschwerden sag das bitte dazu, dann suchen wir früher etwas.</p>
+          </div>
+        </details>
+
+        <details class="glass faq-item">
+          <summary>Woran merke ich, ob CMD mein Thema ist?</summary>
+          <div class="faq-body">
+            <p>Typisch sind Knirschen oder Pressen, Kiefergelenkgeräusche, morgendliche
+            Kiefersteifigkeit, Kopfschmerz an den Schläfen oder hartnäckige Nackenverspannung.
+            Wenn dich deine Zahnarztpraxis auf eine Schiene angesprochen hat, ist das ein
+            deutliches Zeichen. Im Ersttermin klären wir das mit einem strukturierten Befund.</p>
+          </div>
+        </details>
+
+        <details class="glass faq-item">
+          <summary>Kann ich nach einer Verletzung direkt kommen?</summary>
+          <div class="faq-body">
+            <p>Ja. Bring mit, was du an Befunden hast — MRT, Arztbrief, OP-Bericht. Wir ordnen
+            ein, wo du stehst, und sagen dir ehrlich, ob Physiotherapie jetzt das Richtige ist
+            oder ob zuerst etwas anderes ansteht.</p>
+          </div>
+        </details>
+
+        <details class="glass faq-item">
+          <summary>Behandelt ihr auch ohne sportlichen Hintergrund?</summary>
+          <div class="faq-body">
+            <p>Selbstverständlich. Der größte Teil unserer Termine ist ganz normale
+            Physiotherapie: Rücken, Nacken, Schulter, Knie, nach Operationen, bei
+            Verspannungen. Sport und Kiefer sind unsere Schwerpunkte, keine Bedingung.</p>
+          </div>
+        </details>
       </div>
     </div>
   </section>
@@ -467,8 +582,16 @@
 
         <ul class="contact-details">
           <li>
+            <span class="contact-label">Adresse</span>
+            <span data-placeholder>Musterstraße 12 · 00000 Musterstadt</span>
+          </li>
+          <li>
+            <span class="contact-label">Anfahrt</span>
+            <span>Parkplätze direkt vor der Praxis · barrierefrei erreichbar</span>
+          </li>
+          <li>
             <span class="contact-label">Telefon</span>
-            <a href="tel:+491700000000">Auf Anfrage</a>
+            <a href="tel:+490000000000" data-placeholder>+49 000 000 000</a>
           </li>
           <li>
             <span class="contact-label">E-Mail</span>
@@ -521,8 +644,10 @@
 
     <nav class="footer-nav">
       <a href="#leistungen">Leistungen</a>
-      <a href="#saeulen">Säulen</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#fragen">Häufige Fragen</a>
       <a href="#team">Team</a>
+      <a href="#praxis">Praxis</a>
       <a href="#kontakt">Kontakt</a>
       <a href="#">Impressum</a>
       <a href="#">Datenschutz</a>
@@ -537,6 +662,14 @@
     <span>© <span id="year"></span> Luca Kolhoff · L &amp; K zur römischen Zwei</span>
   </div>
 </footer>
+
+<div class="mobile-cta" id="mobileCta">
+  <a href="tel:+491700000000" class="mobile-cta-call" aria-label="Praxis anrufen">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h3.5l1.7 4.2-2.1 1.4a11 11 0 005.3 5.3l1.4-2.1L19 14.5V18a1.6 1.6 0 01-1.8 1.6C10.6 19 5 13.4 4.4 6.8A1.6 1.6 0 016 5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <span>Anrufen</span>
+  </a>
+  <a href="#kontakt" class="btn btn-primary mobile-cta-book">Termin anfragen</a>
+</div>
 
 <button class="back-to-top" id="backToTop" aria-label="Nach oben scrollen">↑</button>
 

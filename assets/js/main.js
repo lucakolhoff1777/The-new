@@ -157,6 +157,26 @@
   }
 
   /* -----------------------------------------------------------------------
+     Service filter — nine cards is a lot to read through
+     ----------------------------------------------------------------------- */
+  const filterChips = document.querySelectorAll(".svc-chip");
+  const svcCards = document.querySelectorAll(".svc-card");
+  if (filterChips.length && svcCards.length) {
+    filterChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const want = chip.dataset.filter;
+        filterChips.forEach((c) => c.classList.toggle("is-on", c === chip));
+        svcCards.forEach((card) => {
+          const cats = (card.dataset.cat || "").split(" ");
+          const show = want === "alle" || cats.includes(want);
+          card.classList.toggle("is-filtered-out", !show);
+          card.setAttribute("aria-hidden", show ? "false" : "true");
+        });
+      });
+    });
+  }
+
+  /* -----------------------------------------------------------------------
      Philosophie: pinned panels driven by scroll position
      ----------------------------------------------------------------------- */
   const storyTrack = document.getElementById("storyTrack");
@@ -204,12 +224,12 @@
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!form.checkValidity()) {
-        formNote.textContent = "Bitte füllen Sie alle Pflichtfelder korrekt aus.";
+        formNote.textContent = "Bitte fülle Name, E-Mail und dein Anliegen aus.";
         formNote.classList.add("is-error");
         return;
       }
       formNote.classList.remove("is-error");
-      formNote.textContent = "Danke! Ihre Nachricht wurde gesendet — wir melden uns in Kürze.";
+      formNote.textContent = "Danke — deine Nachricht ist da. Wir melden uns innerhalb eines Werktages.";
       form.reset();
     });
   }
