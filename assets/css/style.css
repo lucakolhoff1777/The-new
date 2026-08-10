@@ -347,38 +347,74 @@ ul { list-style: none; }
 .hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #0B0F07; }
 .fly-scene, .fly-door { position: absolute; inset: 0; transform-origin: 50% 46%; }
 .fly-scene img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; }
-/* the monogram composited into the moss wall, lit from behind */
-.scene-sign { position: absolute; left: 30%; top: 28%; width: 16%; transform: translate(-50%,-50%); pointer-events: none; }
-.scene-sign svg {
-  width: 100%; height: auto;
-  filter: drop-shadow(0 0 7px rgba(244,248,238,.95))
-          drop-shadow(0 0 26px rgba(214,240,190,.8))
-          drop-shadow(0 0 60px rgba(150,205,110,.6));
-}
-.fly-door svg { width: 100%; height: 100%; display: block; }
 
-/* the approach: the room grows while the doorway rushes past the camera */
-.fly-scene { transform: scale(.58); }
+/* The entrance: two panes of glass filling the frame, as if you were standing
+   right at the door. They run apart into the sides while the whole door plane
+   rushes past the camera — no wall geometry to keep in sync with the photo, so
+   it holds up at every viewport ratio. */
+.door-gap { position: absolute; inset: 0; overflow: hidden; }
+/* one pane of low-iron glass: a green cast, two raking reflections and the
+   room behind it thrown just out of focus */
+.door-leaf {
+  position: absolute; top: 0; bottom: 0; width: 50%;
+  background:
+    linear-gradient(104deg, transparent 20%, rgba(236,246,228,.20) 34%,
+                    rgba(236,246,228,.05) 42%, transparent 56%),
+    linear-gradient(104deg, transparent 64%, rgba(236,246,228,.11) 72%, transparent 80%),
+    linear-gradient(176deg, rgba(200,218,188,.26), rgba(126,146,114,.17) 46%, rgba(16,24,14,.40));
+  backdrop-filter: blur(4px) saturate(104%) brightness(.8);
+  -webkit-backdrop-filter: blur(4px) saturate(104%) brightness(.8);
+  box-shadow: inset 0 0 90px rgba(10,16,8,.34);
+  will-change: transform;
+}
+/* the brushed stile on the leading edge — the part that reads as "door" */
+.door-leaf--l { left: 0;  border-right: 7px solid rgba(206,220,196,.7); }
+.door-leaf--r { right: 0; border-left:  7px solid rgba(206,220,196,.7); }
+/* head track and floor guide */
+.door-rail, .door-sill { position: absolute; left: 0; right: 0; }
+.door-rail {
+  top: 0; height: 16px;
+  background: linear-gradient(180deg, #7C8870, #2C3324 62%, #161C11);
+  box-shadow: 0 3px 14px rgba(0,0,0,.55);
+}
+.door-sill {
+  bottom: 0; height: 5px;
+  background: linear-gradient(180deg, #171D12, #4E5945);
+}
+
+/* the approach: the doors run apart while the camera pushes through them */
+.fly-scene { transform: scale(1); }
 .fly-door  { transform: scale(1); opacity: 1; }
-.hero-media.is-flying .fly-scene { animation: flyIn 2.9s cubic-bezier(.36,.06,.16,1) forwards; }
-.hero-media.is-flying .fly-door  { animation: flyDoor 2.9s cubic-bezier(.36,.06,.16,1) forwards; }
-.hero-media.is-landed .fly-scene { transform: scale(1); }
+.hero-media.is-flying .fly-scene    { animation: flyIn   3.4s cubic-bezier(.5,0,.24,1) forwards; }
+.hero-media.is-flying .fly-door     { animation: flyDoor 3.4s cubic-bezier(.5,0,.24,1) forwards; }
+.hero-media.is-flying .door-leaf--l { animation: slideL  3.4s cubic-bezier(.62,.01,.3,1) forwards; }
+.hero-media.is-flying .door-leaf--r { animation: slideR  3.4s cubic-bezier(.62,.01,.3,1) forwards; }
+/* the camera has come 12 % closer by the time it settles */
+.hero-media.is-landed .fly-scene { transform: scale(1.12); }
 .hero-media.is-landed .fly-door  { opacity: 0; visibility: hidden; }
 
 @keyframes flyIn {
-  0%   { transform: scale(.58); }
-  100% { transform: scale(1); }
+  0%, 30% { transform: scale(1); }          /* held while the doors break apart */
+  100%    { transform: scale(1.12); }
 }
 @keyframes flyDoor {
-  0%   { transform: scale(1);   opacity: 1; }
-  62%  { opacity: 1; }
-  100% { transform: scale(4.6); opacity: 0; }
+  0%, 30% { transform: scale(1);   opacity: 1; }
+  80%     { opacity: 1; }
+  100%    { transform: scale(2.9); opacity: 0; }
+}
+@keyframes slideL {
+  0%, 7%    { transform: translateX(0); }
+  72%, 100% { transform: translateX(-101%); }
+}
+@keyframes slideR {
+  0%, 7%    { transform: translateX(0); }
+  72%, 100% { transform: translateX(101%); }
 }
 .hero-scrim {
   position: absolute; inset: 0;
   background:
-    /* darkens only the lower band the type sits on, so the monogram set into
-       the moss wall above stays fully readable */
+    /* darkens only the lower band the type sits on, so the room itself
+       stays fully readable */
     linear-gradient(180deg, rgba(14,19,11,.58) 0%, rgba(14,19,11,.06) 24%,
                             rgba(14,19,11,.18) 46%, rgba(14,19,11,.72) 74%, rgba(14,19,11,.92) 100%),
     linear-gradient(0deg, rgba(44,52,36,.16), rgba(44,52,36,.16));
@@ -563,22 +599,6 @@ section.block > .container { position: relative; z-index: 1; }
 }
 .room-card:hover .room-cue, .room-card:focus-visible .room-cue { opacity: 1; transform: translateY(0); }
 
-/* the monogram set into the moss wall, lit from behind */
-.room-sign {
-  position: absolute; z-index: 2;
-  left: 30%; top: 25%;
-  width: 15%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.room-sign svg {
-  width: 100%; height: auto;
-  filter:
-    drop-shadow(0 0 6px rgba(244, 248, 238, .95))
-    drop-shadow(0 0 22px rgba(214, 240, 190, .75))
-    drop-shadow(0 0 52px rgba(150, 205, 110, .55));
-}
-
 .viewer {
   position: fixed; inset: 0; z-index: 800;
   display: flex; align-items: center; justify-content: center;
@@ -621,8 +641,6 @@ section.block > .container { position: relative; z-index: 1; }
   transform: translate(-50%, -50%);
   will-change: transform; user-select: none; -webkit-user-drag: none;
 }
-.viewer-sign { display: none; }
-.viewer-sign.is-on { display: block; }
 .viewer-hint {
   position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 5;
   padding: 7px 16px; border-radius: 999px;

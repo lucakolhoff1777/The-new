@@ -364,6 +364,86 @@ a { color: inherit; text-decoration: none; }
 .tcard-types span { font-size: .66rem; color: var(--cedar-soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; }
 
 /* -------------------------------------------------------------------------
+   Abrechnung
+   ------------------------------------------------------------------------- */
+
+/* one measure across categories, so one hue — the bar length carries the value */
+.bars { display: flex; flex-direction: column; gap: 9px; }
+.bar {
+  display: grid; grid-template-columns: 190px 1fr 108px;
+  align-items: center; gap: 16px;
+}
+.bar-label { font-size: .82rem; color: var(--cedar-soft); }
+.bar-track { height: 13px; background: rgba(218,222,216,.07); border-radius: 4px; overflow: hidden; }
+.bar-track i {
+  display: block; height: 100%; border-radius: 4px;
+  background: #6F9E70;
+  transition: width .7s var(--ease);
+}
+.bar-val { text-align: right; font-variant-numeric: tabular-nums; }
+.bar-val b { font-weight: 400; font-size: .88rem; color: var(--aloe); }
+.bar-val small { display: block; font-size: .68rem; color: var(--cedar); }
+
+.bill-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.search { flex: 1 1 240px; }
+.search input {
+  width: 100%; padding: 10px 16px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 999px; color: var(--aloe);
+  font-family: var(--font-body); font-size: .82rem;
+}
+.search input::placeholder { color: var(--cedar); }
+.search input:focus { outline: none; border-color: var(--line-strong); }
+
+.btable { width: 100%; border-collapse: collapse; font-size: .86rem; min-width: 820px; }
+.btable th {
+  text-align: left; padding: 13px 18px; background: var(--surface-2);
+  font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--cedar); font-weight: 500; border-bottom: 1px solid var(--line);
+}
+.btable td { padding: 12px 18px; border-bottom: 1px solid rgba(218,222,216,.07); color: var(--cedar-soft); vertical-align: middle; }
+.btable .num { text-align: right; font-variant-numeric: tabular-nums; }
+.btable tbody tr { cursor: pointer; transition: background .25s var(--ease); }
+.btable tbody tr:hover, .btable tbody tr:focus-visible { background: rgba(218,222,216,.05); }
+.btable .bp b { display: block; font-weight: 400; color: var(--aloe); white-space: nowrap; }
+.btable .bp small { font-size: .68rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.btable .bmuted { font-size: .78rem; }
+.btable .sum { color: var(--aloe); white-space: nowrap; }
+.btable tfoot th {
+  background: none; text-align: right; text-transform: none;
+  letter-spacing: 0; font-size: .78rem; border-bottom: none; border-top: 1px solid var(--line);
+}
+.btable tfoot td {
+  border-bottom: none; border-top: 1px solid var(--line);
+  text-align: right; font-variant-numeric: tabular-nums;
+  color: var(--aloe); font-size: 1rem;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chips span { font-size: .66rem; color: var(--cedar-soft); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+
+/* status never rides on colour alone — the mark and the word carry it too */
+.pill {
+  display: inline-flex; flex-direction: column; gap: 1px;
+  padding: 5px 12px; border-radius: 10px;
+  font-size: .76rem; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.pill small { font-size: .64rem; opacity: .8; }
+.pill.is-paid { background: rgba(62,156,109,.14); border-color: rgba(62,156,109,.4); color: #7FCFA6; }
+.pill.is-open { background: rgba(192,138,42,.14); border-color: rgba(192,138,42,.42); color: #E0B063; }
+
+.pricelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+.pr {
+  display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 12px;
+  padding: 10px 16px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 12px;
+}
+.pr-name { font-size: .84rem; color: var(--cedar-soft); }
+.pr-unit { font-size: .7rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.pr-eur { font-size: .88rem; color: var(--aloe); font-variant-numeric: tabular-nums; }
+
+/* -------------------------------------------------------------------------
    Drawer
    ------------------------------------------------------------------------- */
 
@@ -391,6 +471,39 @@ a { color: inherit; text-decoration: none; }
 .drawer-list dt { font-size: .74rem; color: var(--cedar); }
 .drawer-list dd { font-size: .9rem; color: var(--aloe); text-align: right; }
 
+.drawer-more {
+  margin-top: 20px; width: 100%;
+  padding: 11px 16px; border-radius: 999px;
+  background: none; border: 1px solid var(--line);
+  color: var(--cedar-soft); font-family: var(--font-body); font-size: .78rem;
+  cursor: pointer; transition: border-color .3s var(--ease), color .3s var(--ease);
+}
+.drawer-more:hover { border-color: var(--line-strong); color: var(--aloe); }
+
+/* the invoice needs the room the appointment card does not */
+.drawer:has(.postable) .drawer-card { width: min(720px, 100%); }
+.inv-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.inv-meta { font-size: .76rem; color: var(--cedar); }
+
+.postable { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.postable th {
+  text-align: left; padding: 9px 12px;
+  font-size: .64rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--cedar); font-weight: 500; border-bottom: 1px solid var(--line);
+}
+.postable td { padding: 10px 12px; border-bottom: 1px solid rgba(218,222,216,.07); color: var(--cedar-soft); }
+.postable .num { text-align: right; font-variant-numeric: tabular-nums; }
+.postable td:first-child { color: var(--aloe); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.postable td:first-child small { display: block; font-size: .68rem; color: var(--cedar); }
+.postable .who-cell { display: inline-flex; align-items: center; gap: 7px; }
+.postable .who-cell i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); display: block; }
+.postable tfoot th, .postable tfoot td {
+  border-bottom: none; border-top: 1px solid var(--line-strong);
+  text-transform: none; letter-spacing: 0; font-size: .95rem;
+  color: var(--aloe); padding-top: 13px;
+}
+.postable tfoot th { text-align: right; }
+
 /* -------------------------------------------------------------------------
    Footer
    ------------------------------------------------------------------------- */
@@ -412,6 +525,9 @@ a { color: inherit; text-decoration: none; }
   .topbar { gap: 14px; }
   .tabs { order: 3; width: 100%; justify-content: space-between; }
   .tab { flex: 1; text-align: center; padding: 9px 10px; }
+  .bar { grid-template-columns: 1fr; gap: 4px; }
+  .bar-val { text-align: left; display: flex; align-items: baseline; gap: 8px; }
+  .bar-val small { display: inline; }
 }
 
 @media (max-width: 560px) {

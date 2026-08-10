@@ -26,7 +26,7 @@
     setTimeout(() => {
       heroMedia.classList.remove("is-flying");
       heroMedia.classList.add("is-landed");
-    }, 2900);
+    }, 3400);   // matches the flight animations in style.css
   }
 
   function finishIntro() {
@@ -177,7 +177,6 @@
     {
       img: "assets/img/empfang.jpg",
       name: "Empfang",
-      sign: true,
       desc: "Eine Wand aus konserviertem Moos, von hinten beleuchtet, mit unserem " +
             "Monogramm darin. Davor ein Tresen aus einem einzigen Stamm. Hier kommst " +
             "du an, hier wirst du empfangen — ohne Wartezimmer-Atmosphäre.",
@@ -222,7 +221,6 @@
   if (viewer) {
     const stage = document.getElementById("viewerStage");
     const vImg = document.getElementById("viewerImg");
-    const vSign = document.getElementById("viewerSign");
     const vHint = document.getElementById("viewerHint");
     let current = 0;
     let pan = { x: 0, y: 0 };
@@ -251,7 +249,6 @@
       document.getElementById("vTags").innerHTML =
         (r.tags || []).map((t) => `<span>${t}</span>`).join("") +
         (r.planned || []).map((t) => `<span class="is-planned">${t} · geplant</span>`).join("");
-      vSign.classList.toggle("is-on", !!r.sign);
       pan = { x: 0, y: 0 };
       applyPan();
       vHint.classList.remove("is-gone");

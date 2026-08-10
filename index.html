@@ -78,35 +78,23 @@
 
   <!-- HERO -->
   <section class="hero">
-    <!-- the camera pushes through the doorway and settles in front of reception -->
+    <!-- the glass doors part, then the camera pushes through and settles at reception -->
     <div class="hero-media" id="heroMedia" aria-hidden="true">
       <div class="fly-scene">
         <img src="assets/img/empfang.jpg" alt="Empfang der Praxis">
-        <span class="scene-sign" aria-hidden="true">
-          <svg viewBox="126 66 306 274">
-            <g transform="translate(402,0) scale(-1,1)">
-              <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
-            </g>
-            <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
-          </svg>
-        </span>
       </div>
       <div class="fly-door">
-        <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
-          <path fill-rule="evenodd" fill="#0B0F07"
-                d="M0,0 H1600 V1000 H0 Z
-                   M600,214 H1000 A18,18 0 0 1 1018,232 V1000 H582 V232 A18,18 0 0 1 600,214 Z"/>
-          <path fill="none" stroke="#C4A074" stroke-width="9"
-                d="M600,222 H1000 A10,10 0 0 1 1010,232 V1000 M590,1000 V232 A10,10 0 0 1 600,222"/>
-          <path fill="none" stroke="#FFEBC4" stroke-opacity=".5" stroke-width="2.5"
-                d="M604,228 H996 A6,6 0 0 1 1002,234 V1000"/>
-        </svg>
+        <span class="door-gap">
+          <span class="door-leaf door-leaf--l"></span>
+          <span class="door-leaf door-leaf--r"></span>
+        </span>
+        <span class="door-rail"></span>
+        <span class="door-sill"></span>
       </div>
       <div class="hero-scrim"></div>
       <div class="hero-grain"></div>
     </div>
 
-    <!-- no monogram here: the mark is already set into the moss wall behind -->
     <div class="hero-lockup reveal" data-reveal>
       <div class="hero-name">
         <p class="name">Luca Kolhoff</p>
@@ -333,14 +321,6 @@
         <button type="button" class="glass room-card room-card-wide reveal" data-room="0" data-reveal>
           <span class="room-shot">
             <img src="assets/img/empfang.jpg" alt="Empfang mit begrünter Mooswand" loading="lazy">
-            <span class="room-sign" aria-hidden="true">
-              <svg viewBox="126 66 306 274">
-                <g transform="translate(402,0) scale(-1,1)">
-                  <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
-                </g>
-                <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
-              </svg>
-            </span>
           </span>
           <span class="room-meta">
             <span class="room-name">Empfang</span>
@@ -395,14 +375,6 @@
 
       <div class="viewer-stage" id="viewerStage">
         <img id="viewerImg" src="" alt="">
-        <span class="room-sign viewer-sign" id="viewerSign" aria-hidden="true">
-          <svg viewBox="126 66 306 274">
-            <g transform="translate(402,0) scale(-1,1)">
-              <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
-            </g>
-            <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
-          </svg>
-        </span>
         <span class="viewer-hint" id="viewerHint">Ziehen zum Umsehen</span>
       </div>
 

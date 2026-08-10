@@ -158,6 +158,47 @@
   ];
 
   /* =======================================================================
+     Preisliste — Privatsätze der Praxis.
+     `unit` ist die Dauer, für die `eur` gilt; abweichende Dauern werden
+     anteilig berechnet und auf 50 Cent gerundet, so wie auf der Rechnung.
+     ======================================================================= */
+
+  const PRICES = {
+    "Manuelle Therapie":    { unit: 30, eur: 46 },
+    "Krankengymnastik":     { unit: 30, eur: 38 },
+    "Sportphysiotherapie":  { unit: 30, eur: 49 },
+    "Klassische Massage":   { unit: 30, eur: 36 },
+    "Lymphdrainage":        { unit: 30, eur: 42 },
+    "Elektro & Ultraschall":{ unit: 15, eur:  9 },
+    "Kinesiotaping":        { unit: 15, eur: 24 },
+    "CMD-Ersttermin":       { unit: 60, eur: 135 },
+    "CMD-Folge":            { unit: 45, eur: 98 },
+    "Schienenbegleitung":   { unit: 45, eur: 86 },
+    "Return-to-Sport":      { unit: 60, eur: 125 },
+    "Leistungs-Recheck":    { unit: 45, eur: 95 },
+    "Athletik-Check":       { unit: 90, eur: 215 },
+  };
+
+  const priceOf = (a) => {
+    const p = PRICES[a.type];
+    if (!p) return 0;
+    return Math.round((p.eur * a.min) / p.unit * 2) / 2;   // auf 50 Cent
+  };
+
+  const eur = (n) =>
+    n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const eur0 = (n) => Math.round(n).toLocaleString("de-DE") + " €";
+
+  // Jede Rechnung braucht einen Zahlungsstand. Die Beispieldaten leiten ihn
+  // fest aus dem Namen ab, damit die Zahlen bei jedem Laden dieselben sind.
+  const hash = (s) => {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+  };
+  const PAYMENTS = ["Karte", "Überweisung", "Bar"];
+
+  /* =======================================================================
      Helpers
      ======================================================================= */
 
@@ -456,12 +497,135 @@
     }).join("");
   }
 
+  /* =======================================================================
+     Abrechnung — eine Rechnung je Patient:in über die ganze Woche
+     ======================================================================= */
+
+  // gebaut, sobald die Datei geladen ist; die Woche ändert sich nicht mehr
+  const INVOICES = (() => {
+    const map = new Map();
+    APPOINTMENTS.forEach((a, i) => {
+      if (!map.has(a.patient)) map.set(a.patient, { patient: a.patient, items: [] });
+      map.get(a.patient).items.push({ idx: i, appt: a, price: priceOf(a) });
+    });
+
+    return [...map.values()].map((inv) => {
+      inv.items.sort((x, y) =>
+        x.appt.day - y.appt.day || toMin(x.appt.start) - toMin(y.appt.start));
+      inv.total = inv.items.reduce((s, it) => s + it.price, 0);
+      inv.types = [...new Set(inv.items.map((it) => it.appt.type))];
+      inv.bills = [...new Set(inv.items.map((it) => it.appt.bill))];
+      inv.thers = [...new Set(inv.items.map((it) => it.appt.ther))];
+      const last = inv.items[inv.items.length - 1].appt;
+      inv.lastDay = DAYS[last.day];
+
+      const h = hash(inv.patient);
+      inv.paid = h % 100 < 62;
+      inv.pay = PAYMENTS[h % PAYMENTS.length];
+      inv.no = "R-2026-" + String(1200 + (h % 780)).padStart(4, "0");
+      return inv;
+    });
+  })();
+
+  const billState = { sort: "summe", q: "" };
+
+  function billRows() {
+    const q = billState.q.trim().toLowerCase();
+    const rows = INVOICES.filter((inv) =>
+      !q || inv.patient.toLowerCase().includes(q) ||
+      inv.types.some((t) => t.toLowerCase().includes(q)));
+
+    const by = {
+      summe:   (x, y) => y.total - x.total,
+      termine: (x, y) => y.items.length - x.items.length || y.total - x.total,
+      name:    (x, y) => x.patient.localeCompare(y.patient, "de"),
+    }[billState.sort];
+    return rows.sort(by);
+  }
+
+  function renderBill() {
+    const total = INVOICES.reduce((s, i) => s + i.total, 0);
+    const open = INVOICES.filter((i) => !i.paid).reduce((s, i) => s + i.total, 0);
+    const n = APPOINTMENTS.length;
+
+    byId("billTotal").textContent = eur0(total);
+    byId("billTotalNote").textContent = `${n} Positionen · ${INVOICES.length} Rechnungen`;
+    byId("billOpen").textContent = eur0(open);
+    byId("billOpenNote").textContent =
+      `${INVOICES.filter((i) => !i.paid).length} offene Rechnungen · ${Math.round((open / total) * 100)} % vom Umsatz`;
+    byId("billOpenBar").style.width = Math.round((open / total) * 100) + "%";
+    byId("billAvg").textContent = eur0(total / n);
+    byId("billHeads").textContent = INVOICES.length;
+    byId("billHeadsNote").textContent =
+      `Ø ${(n / INVOICES.length).toFixed(1).replace(".", ",")} Termine je Person`;
+
+    /* --- Umsatz nach Leistung: eine Größe, deshalb ein Farbton --- */
+    const perType = Object.keys(PRICES).map((type) => {
+      const list = APPOINTMENTS.filter((a) => a.type === type);
+      return { type, n: list.length, sum: list.reduce((s, a) => s + priceOf(a), 0) };
+    }).filter((r) => r.n).sort((x, y) => y.sum - x.sum);
+
+    const peak = perType[0].sum;
+    byId("billBars").innerHTML = perType.map((r) => `
+      <div class="bar">
+        <span class="bar-label">${r.type}</span>
+        <span class="bar-track"><i style="width:${(r.sum / peak) * 100}%"></i></span>
+        <span class="bar-val"><b>${eur0(r.sum)}</b><small>${r.n}×</small></span>
+      </div>`).join("");
+
+    /* --- Rechnungen je Patient:in --- */
+    const rows = billRows();
+    byId("billBody").innerHTML = rows.map((inv) => `
+      <tr tabindex="0" role="button" data-patient="${inv.patient}">
+        <td class="bp"><b>${inv.patient}</b><small>${inv.no}</small></td>
+        <td class="num">${inv.items.length}</td>
+        <td><span class="chips">${inv.types.map((t) => `<span>${t}</span>`).join("")}</span></td>
+        <td class="bmuted">${inv.bills.map((b) => BILL[b]).join(" · ")}</td>
+        <td>${inv.paid
+          ? `<span class="pill is-paid">✓ bezahlt<small>${inv.pay}</small></span>`
+          : `<span class="pill is-open">● offen<small>seit ${inv.lastDay.date}</small></span>`}</td>
+        <td class="num sum">${eur(inv.total)}</td>
+      </tr>`).join("") ||
+      `<tr><td colspan="6">Keine Treffer für „${billState.q}“.</td></tr>`;
+
+    byId("billFoot").textContent = eur(rows.reduce((s, i) => s + i.total, 0));
+
+    byId("billBody").querySelectorAll("tr[data-patient]").forEach((tr) => {
+      const inv = INVOICES.find((i) => i.patient === tr.dataset.patient);
+      tr.addEventListener("click", () => openInvoice(inv));
+      tr.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openInvoice(inv); }
+      });
+    });
+
+    byId("priceList").innerHTML = Object.entries(PRICES)
+      .sort((a, b) => b[1].eur / b[1].unit - a[1].eur / a[1].unit)
+      .map(([type, p]) => `<div class="pr">
+        <span class="pr-name">${type}</span>
+        <span class="pr-unit">${p.unit} Min.</span>
+        <span class="pr-eur">${eur0(p.eur)}</span>
+      </div>`).join("");
+  }
+
+  byId("billSearch").addEventListener("input", (e) => {
+    billState.q = e.target.value;
+    renderBill();
+  });
+  document.querySelectorAll("[data-sort]").forEach((b) => {
+    b.addEventListener("click", () => {
+      billState.sort = b.dataset.sort;
+      document.querySelectorAll("[data-sort]").forEach((x) => x.classList.toggle("is-on", x === b));
+      renderBill();
+    });
+  });
+
   function render() {
     renderHead();
     renderBoard();
     renderList();
     renderStats();
     renderWeek();
+    renderBill();
     renderTeam();
   }
 
@@ -470,15 +634,63 @@
      ======================================================================= */
 
   const drawer = byId("drawer");
+  const drawerBody = byId("drawerBody");
+
   function openDrawer(a) {
     const t = therOf(a.ther);
     byId("dTime").textContent = `${DAYS[a.day].short} ${DAYS[a.day].date} · ${a.start}–${fmt(toMin(a.start) + a.min)}`;
     byId("dTitle").textContent = a.patient;
-    byId("dTher").textContent = `${t.name} (${t.short})`;
-    byId("dRoom").textContent = ROOMS[a.room].name;
-    byId("dType").textContent = a.type;
-    byId("dDur").textContent = a.min + " Minuten";
-    byId("dBill").textContent = BILL[a.bill] || "—";
+    drawerBody.innerHTML = `
+      <dl class="drawer-list">
+        <div><dt>Therapeut:in</dt><dd>${t.name} (${t.short})</dd></div>
+        <div><dt>Raum</dt><dd>${ROOMS[a.room].name}</dd></div>
+        <div><dt>Leistung</dt><dd>${a.type}</dd></div>
+        <div><dt>Dauer</dt><dd>${a.min} Minuten</dd></div>
+        <div><dt>Abrechnung</dt><dd>${BILL[a.bill] || "—"}</dd></div>
+        <div><dt>Betrag</dt><dd>${eur(priceOf(a))}</dd></div>
+      </dl>
+      <button type="button" class="drawer-more" data-open-invoice="${a.patient}">
+        Ganze Abrechnung von ${a.patient} ansehen →
+      </button>`;
+    drawerBody.querySelector("[data-open-invoice]").addEventListener("click", () => {
+      openInvoice(INVOICES.find((i) => i.patient === a.patient));
+    });
+    drawer.hidden = false;
+  }
+
+  function openInvoice(inv) {
+    byId("dTime").textContent = `${inv.no} · Woche 10.–15.08.2026`;
+    byId("dTitle").textContent = inv.patient;
+    drawerBody.innerHTML = `
+      <div class="inv-head">
+        ${inv.paid
+          ? `<span class="pill is-paid">✓ bezahlt<small>${inv.pay}</small></span>`
+          : `<span class="pill is-open">● offen<small>seit ${inv.lastDay.date}</small></span>`}
+        <span class="inv-meta">${inv.items.length} Positionen · ${inv.bills.map((b) => BILL[b]).join(" · ")}</span>
+      </div>
+      <table class="postable">
+        <caption class="sr-only">Einzelpositionen</caption>
+        <thead>
+          <tr><th scope="col">Tag</th><th scope="col">Leistung</th>
+              <th scope="col">Therapeut:in</th><th scope="col" class="num">Dauer</th>
+              <th scope="col" class="num">Betrag</th></tr>
+        </thead>
+        <tbody>
+          ${inv.items.map((it) => {
+            const a = it.appt, t = therOf(a.ther);
+            return `<tr>
+              <td>${DAYS[a.day].short} ${DAYS[a.day].date}<small>${a.start}</small></td>
+              <td>${a.type}</td>
+              <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span></td>
+              <td class="num">${a.min} Min.</td>
+              <td class="num">${eur(it.price)}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+        <tfoot>
+          <tr><th scope="row" colspan="4">Gesamt</th><td class="num">${eur(inv.total)}</td></tr>
+        </tfoot>
+      </table>`;
     drawer.hidden = false;
   }
   function closeDrawer() { drawer.hidden = true; }

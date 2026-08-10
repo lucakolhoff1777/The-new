@@ -60,6 +60,7 @@
     <nav class="tabs" id="tabs" role="tablist" aria-label="Bereiche">
       <button type="button" class="tab is-on" data-tab="tagesplan" role="tab" aria-selected="true">Tagesplan</button>
       <button type="button" class="tab" data-tab="woche" role="tab" aria-selected="false">Woche</button>
+      <button type="button" class="tab" data-tab="abrechnung" role="tab" aria-selected="false">Abrechnung</button>
       <button type="button" class="tab" data-tab="team" role="tab" aria-selected="false">Team</button>
     </nav>
 
@@ -147,6 +148,91 @@
     <div class="rooms-load" id="roomsLoad"></div>
   </section>
 
+  <!-- ================= ABRECHNUNG ================= -->
+  <section class="panel" data-panel="abrechnung" hidden>
+    <div class="panel-head">
+      <h2>Abrechnung · Woche 10.–15.08.</h2>
+      <p>Wer welche Leistungen bekommen hat und was daraus zusammenkommt.
+         Ein Klick auf eine Zeile öffnet die Einzelpositionen.</p>
+    </div>
+
+    <section class="stats" aria-label="Kennzahlen zur Abrechnung">
+      <div class="stat">
+        <span class="stat-label">Umsatz Woche</span>
+        <span class="stat-value" id="billTotal">—</span>
+        <span class="stat-note" id="billTotalNote">alle Positionen</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Davon offen</span>
+        <span class="stat-value" id="billOpen">—</span>
+        <span class="stat-note" id="billOpenNote">noch nicht bezahlt</span>
+        <span class="meter" aria-hidden="true"><i id="billOpenBar"></i></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Ø je Termin</span>
+        <span class="stat-value" id="billAvg">—</span>
+        <span class="stat-note" id="billAvgNote">über alle Leistungen</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Patient:innen</span>
+        <span class="stat-value" id="billHeads">—</span>
+        <span class="stat-note" id="billHeadsNote">in dieser Woche</span>
+      </div>
+    </section>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Umsatz nach Leistung</h2>
+      <p>Woher das Geld kommt — absteigend sortiert, Betrag und Anzahl direkt an der Säule.</p>
+    </div>
+    <div class="bars" id="billBars"></div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Nach Patient:in</h2>
+      <p>Jede Zeile ist eine Rechnung über die Woche.</p>
+    </div>
+
+    <div class="bill-controls">
+      <label class="search">
+        <span class="sr-only">Patient:in suchen</span>
+        <input type="search" id="billSearch" placeholder="Patient:in oder Leistung suchen" autocomplete="off">
+      </label>
+      <div class="viewtoggle" role="group" aria-label="Sortierung">
+        <button type="button" class="vbtn is-on" data-sort="summe">Summe</button>
+        <button type="button" class="vbtn" data-sort="termine">Termine</button>
+        <button type="button" class="vbtn" data-sort="name">Name</button>
+      </div>
+    </div>
+
+    <div class="matrix-wrap">
+      <table class="btable">
+        <caption class="sr-only">Leistungen und Summen je Patient:in</caption>
+        <thead>
+          <tr>
+            <th scope="col">Patient:in</th>
+            <th scope="col" class="num">Termine</th>
+            <th scope="col">Erhaltene Leistungen</th>
+            <th scope="col">Abrechnung</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="num">Summe</th>
+          </tr>
+        </thead>
+        <tbody id="billBody"></tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="5">Summe der angezeigten Zeilen</th>
+            <td class="num" id="billFoot">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Preisliste</h2>
+      <p>Grundlage der Beträge oben. Abweichende Dauern werden anteilig berechnet.</p>
+    </div>
+    <div class="pricelist" id="priceList"></div>
+  </section>
+
   <!-- ================= TEAM ================= -->
   <section class="panel" data-panel="team" hidden>
     <div class="panel-head">
@@ -162,7 +248,8 @@
       das Passwort liegt im Quelltext der Seite und hält niemanden ernsthaft ab. Für
       echten Schutz muss die Seite serverseitig abgesichert werden: Passwortschutz beim
       Hoster, HTTP-Basic-Auth oder ein richtiger Login. Solange das nicht eingerichtet
-      ist, gehören hier keine echten Patientendaten hinein.
+      ist, gehören hier keine echten Patienten- oder Abrechnungsdaten hinein.
+      Namen, Diagnosen und Rechnungsbeträge sind Gesundheitsdaten nach DSGVO.
     </p>
     <p class="foot-meta">Beispieldaten · Intranet Luca Kolhoff</p>
   </footer>
@@ -174,13 +261,7 @@
     <button class="drawer-close" id="drawerClose" aria-label="Schließen">×</button>
     <span class="drawer-time" id="dTime"></span>
     <h2 id="dTitle"></h2>
-    <dl class="drawer-list">
-      <div><dt>Therapeut:in</dt><dd id="dTher"></dd></div>
-      <div><dt>Raum</dt><dd id="dRoom"></dd></div>
-      <div><dt>Leistung</dt><dd id="dType"></dd></div>
-      <div><dt>Dauer</dt><dd id="dDur"></dd></div>
-      <div><dt>Abrechnung</dt><dd id="dBill"></dd></div>
-    </dl>
+    <div id="drawerBody"></div>
   </div>
 </div>
 
