@@ -229,7 +229,7 @@ ul { list-style: none; }
    ------------------------------------------------------------------------- */
 
 .logo { display: flex; align-items: center; gap: 10px; }
-.logo-mono { width: 34px; height: 26px; }
+.logo-mono { width: 32px; height: auto; }
 .logo-word { font-family: var(--font-display); font-size: 13px; letter-spacing: .3em; color: var(--aloe); }
 .logo-word em { display: block; font-style: normal; font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--cedar); margin-top: 2px; }
 
