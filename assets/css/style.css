@@ -300,7 +300,22 @@ ul { list-style: none; }
 .nav-link:hover::after, .nav-link.is-active::after { transform: scaleX(1); transform-origin: left; }
 .nav-link.is-active { color: var(--cedar-soft); }
 
-.header-actions { display: flex; align-items: center; gap: 22px; }
+.header-actions { display: flex; align-items: center; gap: 18px; }
+
+/* staff entrance — present but deliberately quieter than the patient nav */
+.intern-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--glass-brd);
+  color: var(--cedar-soft);
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  transition: border-color .35s ease, color .35s ease, background .35s ease;
+}
+.intern-link svg { width: 14px; height: 14px; }
+.intern-link:hover { border-color: var(--glass-brd-lit); color: var(--aloe); background: rgba(218,222,216,.06); }
+
+.mobile-menu-sep { margin-top: 6px; padding-top: 22px; border-top: 1px solid var(--glass-brd); }
+.nav-link-intern { color: var(--cedar-soft) !important; font-size: .92rem !important; }
 
 .hamburger { display: flex; flex-direction: column; gap: 5px; width: 24px; background: none; border: none; cursor: pointer; padding: 6px 0; }
 .hamburger span { height: 1px; background: var(--aloe); transition: transform .4s var(--ease-swish), opacity .3s ease; }
@@ -749,6 +764,8 @@ section.block > .container { position: relative; z-index: 1; }
 @media (max-width: 700px) {
   .main-nav { display: none; }
   .header-actions .btn-small { display: none; }
+  /* the staff entrance lives in the mobile menu instead */
+  .intern-link { display: none; }
   .svc-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr; }
   .arrive-grid { grid-template-columns: 1fr; gap: 12px; }

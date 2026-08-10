@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Praxisplan · Luca Kolhoff</title>
+<title>Intranet · Luca Kolhoff</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232C3424%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22%23DADED8%22 font-family=%22Georgia,serif%22>II</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 </head>
 <body data-palette="#2E9A76,#BE8418,#4489BE,#BC5570">
 
-<!-- Convenience lock only. This is NOT access control — see the note in the footer. -->
+<!-- Sign-in. A curtain, not a lock — see the note in the footer. -->
 <div class="gate" id="gate">
   <form class="gate-card" id="gateForm">
     <svg class="gate-mark" viewBox="126 66 306 274" aria-hidden="true">
@@ -22,19 +22,27 @@
       </g>
       <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
     </svg>
-    <h1>Praxisplan</h1>
-    <p>Interner Bereich der Praxisleitung.</p>
+    <h1>Intranet</h1>
+    <p>Interner Bereich · Luca Kolhoff Physiotherapie</p>
+
     <label class="gate-field">
-      <span>Zugangscode</span>
-      <input type="password" id="gateInput" autocomplete="off" placeholder="••••" autofocus>
+      <span>Benutzer</span>
+      <input type="text" id="gateUser" value="Praxisleitung" readonly tabindex="-1">
     </label>
-    <button type="submit" class="btn btn-primary btn-full">Öffnen</button>
-    <p class="gate-note" id="gateNote" role="status" aria-live="polite">Demo-Code: <strong>2026</strong></p>
+    <label class="gate-field">
+      <span>Passwort</span>
+      <input type="password" id="gateInput" autocomplete="current-password" placeholder="••••" autofocus>
+    </label>
+
+    <button type="submit" class="btn btn-primary btn-full">Anmelden</button>
+    <p class="gate-note" id="gateNote" role="status" aria-live="polite">Demo-Passwort: <strong>2026</strong></p>
+    <a class="gate-back" href="index.html">← Zurück zur Website</a>
   </form>
 </div>
 
-<div class="app" id="app" hidden>
+<div class="shell" id="app" hidden>
 
+  <!-- Intranet chrome -->
   <header class="topbar">
     <div class="topbar-left">
       <svg class="mark" viewBox="126 66 306 274" aria-hidden="true">
@@ -44,83 +52,119 @@
         <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
       </svg>
       <div class="topbar-title">
-        <h1>Praxisplan</h1>
-        <p>Belegung nach Raum und Therapeut:in</p>
+        <h1>Intranet</h1>
+        <p>Luca Kolhoff Physiotherapie</p>
       </div>
     </div>
 
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Bereiche">
+      <button type="button" class="tab is-on" data-tab="tagesplan" role="tab" aria-selected="true">Tagesplan</button>
+      <button type="button" class="tab" data-tab="woche" role="tab" aria-selected="false">Woche</button>
+      <button type="button" class="tab" data-tab="team" role="tab" aria-selected="false">Team</button>
+    </nav>
+
     <div class="topbar-right">
-      <span class="pill pill-private">Nicht öffentlich</span>
-      <a class="pill pill-link" href="index.html">Zur Website</a>
+      <span class="whoami"><i></i>Praxisleitung</span>
+      <a class="ghost-btn" href="index.html">Website</a>
+      <button type="button" class="ghost-btn" id="logout">Abmelden</button>
     </div>
   </header>
 
-  <!-- Overview figures for the selected day -->
-  <section class="stats" aria-label="Kennzahlen des Tages">
-    <div class="stat">
-      <span class="stat-label">Termine</span>
-      <span class="stat-value" id="statCount">—</span>
-      <span class="stat-note" id="statCountNote">am gewählten Tag</span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">Belegte Zeit</span>
-      <span class="stat-value" id="statHours">—</span>
-      <span class="stat-note">Behandlungsstunden</span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">Auslastung</span>
-      <span class="stat-value" id="statLoad">—</span>
-      <span class="stat-note">4 Räume · 08–19 Uhr</span>
-      <span class="meter" aria-hidden="true"><i id="statLoadBar"></i></span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">Längste Lücke</span>
-      <span class="stat-value" id="statGap">—</span>
-      <span class="stat-note" id="statGapNote">freier Block</span>
-    </div>
-  </section>
-
-  <!-- Controls -->
-  <section class="controls">
-    <div class="days" id="days" role="tablist" aria-label="Wochentag"></div>
-
-    <div class="control-right">
-      <div class="legend" id="legend" role="group" aria-label="Nach Therapeut:in filtern"></div>
-      <div class="viewtoggle" role="group" aria-label="Ansicht">
-        <button type="button" class="vbtn is-on" data-view="raum">Räume</button>
-        <button type="button" class="vbtn" data-view="liste">Liste</button>
+  <!-- ================= TAGESPLAN ================= -->
+  <section class="panel" data-panel="tagesplan">
+    <section class="stats" aria-label="Kennzahlen des Tages">
+      <div class="stat">
+        <span class="stat-label">Termine</span>
+        <span class="stat-value" id="statCount">—</span>
+        <span class="stat-note" id="statCountNote">am gewählten Tag</span>
       </div>
-    </div>
+      <div class="stat">
+        <span class="stat-label">Belegte Zeit</span>
+        <span class="stat-value" id="statHours">—</span>
+        <span class="stat-note">Behandlungsstunden</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Auslastung</span>
+        <span class="stat-value" id="statLoad">—</span>
+        <span class="stat-note">4 Räume · 08–19 Uhr</span>
+        <span class="meter" aria-hidden="true"><i id="statLoadBar"></i></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Längste Lücke</span>
+        <span class="stat-value" id="statGap">—</span>
+        <span class="stat-note" id="statGapNote">freier Block</span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="days" id="days" role="tablist" aria-label="Wochentag"></div>
+      <div class="control-right">
+        <div class="legend" id="legend" role="group" aria-label="Nach Therapeut:in filtern"></div>
+        <div class="viewtoggle" role="group" aria-label="Ansicht">
+          <button type="button" class="vbtn is-on" data-view="raum">Räume</button>
+          <button type="button" class="vbtn" data-view="liste">Liste</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="board" id="boardWrap">
+      <div class="board-scroll">
+        <div class="board-head" id="boardHead"></div>
+        <div class="board-body" id="boardBody"></div>
+      </div>
+    </section>
+
+    <section class="listview" id="listWrap" hidden>
+      <table class="ltable">
+        <caption class="sr-only">Termine des gewählten Tages</caption>
+        <thead>
+          <tr><th scope="col">Zeit</th><th scope="col">Raum</th><th scope="col">Therapeut:in</th><th scope="col">Patient:in</th><th scope="col">Leistung</th></tr>
+        </thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </section>
   </section>
 
-  <!-- Room grid -->
-  <section class="board" id="boardWrap">
-    <div class="board-scroll">
-      <div class="board-head" id="boardHead"></div>
-      <div class="board-body" id="boardBody"></div>
+  <!-- ================= WOCHE ================= -->
+  <section class="panel" data-panel="woche" hidden>
+    <div class="panel-head">
+      <h2>Woche 10.–15.08.</h2>
+      <p>Termine je Therapeut:in und Tag. Die Zahl darunter sind die Behandlungsstunden.</p>
     </div>
+
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <caption class="sr-only">Termine je Therapeut:in und Wochentag</caption>
+        <thead><tr id="matrixHead"></tr></thead>
+        <tbody id="matrixBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Raumauslastung</h2>
+      <p>Anteil der belegten Zeit an der Öffnungszeit über die ganze Woche.</p>
+    </div>
+    <div class="rooms-load" id="roomsLoad"></div>
   </section>
 
-  <!-- Table view — same data, readable without colour -->
-  <section class="listview" id="listWrap" hidden>
-    <table class="ltable">
-      <caption class="sr-only">Termine des gewählten Tages</caption>
-      <thead>
-        <tr><th scope="col">Zeit</th><th scope="col">Raum</th><th scope="col">Therapeut:in</th><th scope="col">Patient:in</th><th scope="col">Leistung</th></tr>
-      </thead>
-      <tbody id="listBody"></tbody>
-    </table>
+  <!-- ================= TEAM ================= -->
+  <section class="panel" data-panel="team" hidden>
+    <div class="panel-head">
+      <h2>Team</h2>
+      <p>Wer welche Leistungen abdeckt und wie die Woche verteilt ist.</p>
+    </div>
+    <div class="team-list" id="teamList"></div>
   </section>
 
   <footer class="foot">
     <p>
-      <strong>Hinweis zum Zugriff:</strong> Der Code oben ist nur eine Sichtblende —
-      er liegt im Quelltext der Seite und hält niemanden ernsthaft ab. Für echten
-      Schutz muss die Seite serverseitig abgesichert werden: Passwortschutz beim
-      Hoster, HTTP-Basic-Auth oder ein richtiger Login. Solange das nicht
-      eingerichtet ist, gehören hier keine echten Patientendaten hinein.
+      <strong>Hinweis zum Zugriff:</strong> Die Anmeldung oben ist nur eine Sichtblende —
+      das Passwort liegt im Quelltext der Seite und hält niemanden ernsthaft ab. Für
+      echten Schutz muss die Seite serverseitig abgesichert werden: Passwortschutz beim
+      Hoster, HTTP-Basic-Auth oder ein richtiger Login. Solange das nicht eingerichtet
+      ist, gehören hier keine echten Patientendaten hinein.
     </p>
-    <p class="foot-meta">Beispieldaten · Luca Kolhoff Praxisplan</p>
+    <p class="foot-meta">Beispieldaten · Intranet Luca Kolhoff</p>
   </footer>
 </div>
 

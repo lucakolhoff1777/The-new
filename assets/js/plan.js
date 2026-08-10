@@ -153,21 +153,53 @@
   const state = { day: 0, hidden: new Set(), view: "raum" };
 
   /* =======================================================================
-     Gate — a curtain, not a lock (see the note in the page footer)
+     Sign-in — a curtain, not a lock (see the note in the page footer).
+     The session flag only saves re-typing while the tab is open.
      ======================================================================= */
 
+  const PASSWORD = "2026";
+  const SESSION_KEY = "lk-intranet";
   const gate = byId("gate"), app = byId("app");
+
+  function signIn() {
+    gate.classList.add("is-open");
+    app.hidden = false;
+    try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) { /* private mode */ }
+    render();
+  }
+
   byId("gateForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const note = byId("gateNote");
-    if (byId("gateInput").value.trim() === "2026") {
-      gate.classList.add("is-open");
-      app.hidden = false;
-      render();
+    if (byId("gateInput").value.trim() === PASSWORD) {
+      signIn();
     } else {
-      note.textContent = "Code stimmt nicht — Demo-Code ist 2026.";
+      note.textContent = "Passwort stimmt nicht — Demo-Passwort ist 2026.";
       note.classList.add("is-error");
+      byId("gateInput").select();
     }
+  });
+
+  byId("logout").addEventListener("click", () => {
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* private mode */ }
+    location.reload();
+  });
+
+  /* =======================================================================
+     Section tabs
+     ======================================================================= */
+
+  document.querySelectorAll(".tab").forEach((t) => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((x) => {
+        const on = x === t;
+        x.classList.toggle("is-on", on);
+        x.setAttribute("aria-selected", String(on));
+      });
+      document.querySelectorAll(".panel").forEach((p) => {
+        p.hidden = p.dataset.panel !== t.dataset.tab;
+      });
+    });
   });
 
   /* =======================================================================
@@ -322,11 +354,94 @@
       : "durchgehend belegt";
   }
 
+  /* =======================================================================
+     Week matrix — therapists down, days across
+     ======================================================================= */
+
+  const statsFor = (list) => ({
+    n: list.length,
+    h: list.reduce((s, a) => s + a.min, 0) / 60,
+  });
+
+  function renderWeek() {
+    byId("matrixHead").innerHTML =
+      `<th scope="col">Therapeut:in</th>` +
+      DAYS.map((d) => `<th scope="col">${d.short}<small>${d.date}</small></th>`).join("") +
+      `<th scope="col" class="tot">Woche</th>`;
+
+    // one shared scale so the cells are comparable across the whole table
+    let peak = 0;
+    THERAPISTS.forEach((t) => DAYS.forEach((d) => {
+      const n = APPOINTMENTS.filter((a) => a.ther === t.id && a.day === d.key).length;
+      if (n > peak) peak = n;
+    }));
+
+    byId("matrixBody").innerHTML = THERAPISTS.map((t) => {
+      const cells = DAYS.map((d) => {
+        const s = statsFor(APPOINTMENTS.filter((a) => a.ther === t.id && a.day === d.key));
+        if (!s.n) return `<td class="mc is-empty"><span class="mc-n">–</span></td>`;
+        const strength = 0.16 + (s.n / peak) * 0.5;
+        return `<td class="mc" style="--c:${t.color}; --f:${strength}">
+                  <span class="mc-n">${s.n}</span>
+                  <span class="mc-h">${s.h.toFixed(1).replace(".", ",")} h</span>
+                </td>`;
+      }).join("");
+      const w = statsFor(APPOINTMENTS.filter((a) => a.ther === t.id));
+      return `<tr>
+        <th scope="row" class="mrow" style="--c:${t.color}">
+          <i></i><span><b>${t.name}</b><small>${t.role}</small></span>
+        </th>
+        ${cells}
+        <td class="mc tot"><span class="mc-n">${w.n}</span><span class="mc-h">${w.h.toFixed(1).replace(".", ",")} h</span></td>
+      </tr>`;
+    }).join("");
+
+    // room utilisation across the week
+    const openMin = DAYS.length * (DAY_END - DAY_START) * 60;
+    byId("roomsLoad").innerHTML = ROOMS.map((r) => {
+      const mins = APPOINTMENTS.filter((a) => a.room === r.id).reduce((s, a) => s + a.min, 0);
+      const pct = Math.round((mins / openMin) * 100);
+      return `<div class="rl">
+        <div class="rl-top"><span>${r.name}</span><b>${pct} %</b></div>
+        <span class="meter"><i style="width:${pct}%"></i></span>
+        <span class="rl-note">${(mins / 60).toFixed(1).replace(".", ",")} h belegt · ${r.note}</span>
+      </div>`;
+    }).join("");
+  }
+
+  /* =======================================================================
+     Team
+     ======================================================================= */
+
+  function renderTeam() {
+    byId("teamList").innerHTML = THERAPISTS.map((t) => {
+      const mine = APPOINTMENTS.filter((a) => a.ther === t.id);
+      const w = statsFor(mine);
+      const rooms = [...new Set(mine.map((a) => ROOMS[a.room].name))].join(" · ") || "—";
+      const types = [...new Set(mine.map((a) => a.type))];
+      return `<article class="tcard" style="--c:${t.color}">
+        <div class="tcard-top">
+          <span class="tcard-badge">${t.short}</span>
+          <div><h3>${t.name}</h3><p>${t.role}</p></div>
+        </div>
+        <dl class="tcard-figs">
+          <div><dt>Termine</dt><dd>${w.n}</dd></div>
+          <div><dt>Stunden</dt><dd>${w.h.toFixed(1).replace(".", ",")}</dd></div>
+          <div><dt>Ø / Tag</dt><dd>${(w.n / DAYS.length).toFixed(1).replace(".", ",")}</dd></div>
+        </dl>
+        <p class="tcard-rooms"><span>Räume</span>${rooms}</p>
+        <div class="tcard-types">${types.map((x) => `<span>${x}</span>`).join("")}</div>
+      </article>`;
+    }).join("");
+  }
+
   function render() {
     renderHead();
     renderBoard();
     renderList();
     renderStats();
+    renderWeek();
+    renderTeam();
   }
 
   /* =======================================================================
@@ -349,4 +464,13 @@
   byId("drawerClose").addEventListener("click", closeDrawer);
   drawer.addEventListener("click", (e) => { if (e.target === drawer) closeDrawer(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+  /* =======================================================================
+     Restore an open session — last, because signIn() renders and the
+     renderers close over bindings declared above this point.
+     ======================================================================= */
+
+  let restored = false;
+  try { restored = sessionStorage.getItem(SESSION_KEY) === "1"; } catch (e) { /* private mode */ }
+  if (restored) signIn();
 })();
