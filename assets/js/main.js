@@ -175,7 +175,7 @@
      ----------------------------------------------------------------------- */
   const ROOMS = [
     {
-      img: "assets/img/empfang-szene.svg",
+      img: "assets/img/empfang.jpg",
       name: "Empfang",
       sign: true,
       desc: "Eine Wand aus konserviertem Moos, von hinten beleuchtet, mit unserem " +
