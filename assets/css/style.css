@@ -137,12 +137,16 @@ ul { list-style: none; }
 }
 /* hard stop (skip button / reduced motion) */
 .intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
-/* while the chip opens, only the words leave — the ground stays put so the
-   hero never shows through a half-transparent overlay */
-.intro.is-opening { pointer-events: none; }
-.intro.is-opening .intro-word { opacity: 0; transition: opacity .4s ease; }
-.intro.is-opening .intro-skip { opacity: 0; transition: opacity .3s ease; }
-.intro.is-covered { opacity: 0; visibility: hidden; transition: none; }
+
+/* the hero content waits until the camera has settled */
+.hero-media.is-flying ~ .hero-lockup,
+.hero-media.is-flying ~ .hero-headline,
+.hero-media.is-flying ~ .hero-sub,
+.hero-media.is-flying ~ .hero-actions,
+.hero-media.is-flying ~ .hero-chip,
+.hero-media.is-flying ~ .scroll-cue {
+  opacity: 0; transition: opacity .5s ease;
+}
 
 .intro-inner {
   display: flex;
@@ -209,20 +213,6 @@ ul { list-style: none; }
 }
 .intro-skip:hover { border-color: var(--cedar); color: var(--aloe); }
 
-/* the expander: clipped to the chip, then opened to the full viewport */
-.intro-expand {
-  position: fixed;
-  inset: 0;
-  z-index: 901;
-  opacity: 0;
-  visibility: hidden;
-  clip-path: inset(50% 50% 50% 50% round 8px);
-  transition: clip-path 1.15s var(--ease-glass);
-}
-.intro-expand.is-armed { opacity: 1; visibility: visible; }
-.intro-expand.is-open { clip-path: inset(0% 0% 0% 0% round 0px); }
-.intro-expand.is-gone { opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
-.intro-expand img { width: 100%; height: 100%; object-fit: cover; }
 
 /* -------------------------------------------------------------------------
    Monogram lockups
@@ -349,22 +339,41 @@ ul { list-style: none; }
   height: 100vh;
   min-height: 620px;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  align-items: center; justify-content: flex-end;
   text-align: center;
   overflow: hidden;
-  padding: 104px 32px 118px;
+  padding: 104px 32px 132px;
 }
-.hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-/* the room is a centred, vertical view — hold the treatment table in frame */
-.hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #0B0F07; }
+.fly-scene, .fly-door { position: absolute; inset: 0; transform-origin: 50% 46%; }
+.fly-scene img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.fly-door svg { width: 100%; height: 100%; display: block; }
+
+/* the approach: the room grows while the doorway rushes past the camera */
+.fly-scene { transform: scale(.58); }
+.fly-door  { transform: scale(1); opacity: 1; }
+.hero-media.is-flying .fly-scene { animation: flyIn 2.9s cubic-bezier(.36,.06,.16,1) forwards; }
+.hero-media.is-flying .fly-door  { animation: flyDoor 2.9s cubic-bezier(.36,.06,.16,1) forwards; }
+.hero-media.is-landed .fly-scene { transform: scale(1); }
+.hero-media.is-landed .fly-door  { opacity: 0; visibility: hidden; }
+
+@keyframes flyIn {
+  0%   { transform: scale(.58); }
+  100% { transform: scale(1); }
+}
+@keyframes flyDoor {
+  0%   { transform: scale(1);   opacity: 1; }
+  62%  { opacity: 1; }
+  100% { transform: scale(4.6); opacity: 0; }
+}
 .hero-scrim {
   position: absolute; inset: 0;
   background:
-    /* pool behind the lockup so the type always clears the room */
-    radial-gradient(54% 48% at 50% 46%, rgba(16,21,13,.72), rgba(16,21,13,.10) 84%),
-    linear-gradient(180deg, rgba(16,21,13,.68), rgba(16,21,13,.14) 32%, rgba(16,21,13,.24) 60%, rgba(16,21,13,.84)),
-    /* pulls the warm room toward the brand's moss */
-    linear-gradient(0deg, rgba(44,52,36,.30), rgba(44,52,36,.30));
+    /* darkens only the lower band the type sits on, so the monogram set into
+       the moss wall above stays fully readable */
+    linear-gradient(180deg, rgba(14,19,11,.58) 0%, rgba(14,19,11,.06) 24%,
+                            rgba(14,19,11,.18) 46%, rgba(14,19,11,.72) 74%, rgba(14,19,11,.92) 100%),
+    linear-gradient(0deg, rgba(44,52,36,.16), rgba(44,52,36,.16));
 }
 .hero-grain {
   position: absolute; inset: 0; opacity: .05; mix-blend-mode: overlay; pointer-events: none;
@@ -372,8 +381,7 @@ ul { list-style: none; }
 }
 
 .hero-lockup { position: relative; z-index: 2; }
-.hero-mono { width: min(148px, 32vw); margin: 0 auto; }
-.hero-name { margin-top: 16px; }
+.hero-name { margin-top: 0; }
 .hero-name .name {
   font-family: var(--font-display); font-weight: 500;
   font-size: clamp(19px, 3.5vw, 34px);
@@ -390,6 +398,7 @@ ul { list-style: none; }
   text-wrap: balance;
 }
 .hero-headline .roman { color: var(--cedar-soft); font-style: italic; }
+.hero-lockup, .hero-headline, .hero-sub { text-shadow: 0 2px 18px rgba(10,14,8,.8); }
 .hero-sub { position: relative; z-index: 2; margin-top: 14px; max-width: 460px; color: var(--cedar-soft); font-size: .95rem; }
 .hero-actions { position: relative; z-index: 2; margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 

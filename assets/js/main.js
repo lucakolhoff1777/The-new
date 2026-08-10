@@ -8,48 +8,42 @@
      opens out to a full-bleed image — the hero is already waiting beneath it.
      ----------------------------------------------------------------------- */
   const intro = document.getElementById("intro");
-  const introChip = document.getElementById("introChip");
-  const introExpand = document.getElementById("introExpand");
   const introSkip = document.getElementById("introSkip");
   const timers = [];
+
+  const heroMedia = document.getElementById("heroMedia");
+  let flightStarted = false;
+
+  function startFlight() {
+    if (flightStarted || !heroMedia) return;
+    flightStarted = true;
+    if (prefersReducedMotion) {
+      heroMedia.classList.add("is-landed");
+      return;
+    }
+    heroMedia.classList.add("is-flying");
+    // hold the landed state once the approach finishes
+    setTimeout(() => {
+      heroMedia.classList.remove("is-flying");
+      heroMedia.classList.add("is-landed");
+    }, 2900);
+  }
 
   function finishIntro() {
     timers.forEach(clearTimeout);
     timers.length = 0;
     intro.classList.add("is-done");
-    introExpand.classList.add("is-gone");
     document.body.style.removeProperty("overflow");
-  }
-
-  function openChip() {
-    // Clip the full-screen image to exactly where the chip sits, then release it.
-    const r = introChip.getBoundingClientRect();
-    const top = r.top;
-    const right = window.innerWidth - r.right;
-    const bottom = window.innerHeight - r.bottom;
-    const left = r.left;
-    introExpand.style.clipPath = `inset(${top}px ${right}px ${bottom}px ${left}px round 8px)`;
-    introExpand.classList.add("is-armed");
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        introExpand.style.clipPath = "";
-        introExpand.classList.add("is-open");
-        // the words leave, the moss ground stays until the image has covered it
-        intro.classList.add("is-opening");
-      });
-    });
-
-    // once the image fills the viewport the overlay is safe to drop outright
-    timers.push(setTimeout(() => intro.classList.add("is-covered"), 1200));
-    timers.push(setTimeout(finishIntro, 1500));
+    startFlight();
   }
 
   function runIntro() {
     document.body.style.overflow = "hidden";
     intro.classList.add("is-running");
     timers.push(setTimeout(() => intro.classList.add("is-widening"), 1150));
-    timers.push(setTimeout(openChip, 2350));
+    // the wordmark hands straight over to the approach: the hero is already
+    // sitting at its far position behind the overlay, so nothing jumps
+    timers.push(setTimeout(finishIntro, 2350));
   }
 
   if (prefersReducedMotion) {
@@ -181,7 +175,7 @@
      ----------------------------------------------------------------------- */
   const ROOMS = [
     {
-      img: "assets/img/empfang.jpg",
+      img: "assets/img/empfang-szene.svg",
       name: "Empfang",
       sign: true,
       desc: "Eine Wand aus konserviertem Moos, von hinten beleuchtet, mit unserem " +

@@ -17,15 +17,11 @@
 <div class="intro" id="intro">
   <div class="intro-inner">
     <span class="intro-word">Luca</span>
-    <span class="intro-chip" id="introChip"><img src="assets/img/raum.jpg" alt=""></span>
+    <span class="intro-chip" id="introChip"><img src="assets/img/empfang-szene.svg" alt=""></span>
     <span class="intro-word">Kolhoff</span>
   </div>
   <button class="intro-skip" id="introSkip">Überspringen</button>
 </div>
-<div class="intro-expand" id="introExpand" aria-hidden="true">
-  <img src="assets/img/raum.jpg" alt="">
-</div>
-
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="#top" class="logo">
@@ -82,20 +78,26 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-media" aria-hidden="true">
-      <img src="assets/img/raum.jpg" alt="Behandlungsraum der Praxis">
+    <!-- the camera pushes through the doorway and settles in front of reception -->
+    <div class="hero-media" id="heroMedia" aria-hidden="true">
+      <div class="fly-scene"><img src="assets/img/empfang-szene.svg" alt=""></div>
+      <div class="fly-door">
+        <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+          <path fill-rule="evenodd" fill="#0B0F07"
+                d="M0,0 H1600 V1000 H0 Z
+                   M600,214 H1000 A18,18 0 0 1 1018,232 V1000 H582 V232 A18,18 0 0 1 600,214 Z"/>
+          <path fill="none" stroke="#C4A074" stroke-width="9"
+                d="M600,222 H1000 A10,10 0 0 1 1010,232 V1000 M590,1000 V232 A10,10 0 0 1 600,222"/>
+          <path fill="none" stroke="#FFEBC4" stroke-opacity=".5" stroke-width="2.5"
+                d="M604,228 H996 A6,6 0 0 1 1002,234 V1000"/>
+        </svg>
+      </div>
       <div class="hero-scrim"></div>
       <div class="hero-grain"></div>
     </div>
 
+    <!-- no monogram here: the mark is already set into the moss wall behind -->
     <div class="hero-lockup reveal" data-reveal>
-      <svg class="hero-mono" viewBox="126 66 306 274" fill="none" aria-label="Monogramm — gespiegeltes L und K bilden die römische Zwei">
-        <g transform="translate(402,0) scale(-1,1)">
-          <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
-        </g>
-        <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
-        <line x1="234" y1="296" x2="326" y2="296" stroke="#B7BDAD" stroke-width="1.6"/>
-      </svg>
       <div class="hero-name">
         <p class="name">Luca Kolhoff</p>
         <p class="sub">Privatpraxis für Physiotherapie</p>
@@ -320,16 +322,7 @@
       <div class="rooms-grid" id="roomsGrid">
         <button type="button" class="glass room-card room-card-wide reveal" data-room="0" data-reveal>
           <span class="room-shot">
-            <img src="assets/img/empfang.jpg" alt="Empfang mit begrünter Mooswand" loading="lazy">
-            <!-- the monogram sits in the moss, lit from behind -->
-            <span class="room-sign" aria-hidden="true">
-              <svg viewBox="126 66 306 274">
-                <g transform="translate(402,0) scale(-1,1)">
-                  <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">L</text>
-                </g>
-                <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#F4F8EE">K</text>
-              </svg>
-            </span>
+            <img src="assets/img/empfang-szene.svg" alt="Empfang mit begrünter Mooswand" loading="lazy">
           </span>
           <span class="room-meta">
             <span class="room-name">Empfang</span>
@@ -581,7 +574,7 @@
   <section class="story" id="philosophie">
     <div class="story-track" id="storyTrack">
       <div class="story-stage">
-        <div class="story-bg" aria-hidden="true"><img src="assets/img/raum.jpg" alt=""></div>
+        <div class="story-bg" aria-hidden="true"><img src="assets/img/empfang-szene.svg" alt=""></div>
 
         <div class="story-panel is-active" data-panel="0">
           <span class="story-eyebrow">vi. · Philosophie</span>
