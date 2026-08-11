@@ -6,156 +6,166 @@
 <title>Luca Kolhoff — Mode</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;0,900;1,500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Palette: Cream · Ink · Rust (Quarter-Zip) · Sage (Polo) · Sand (Chino) */
-    --cream:#F4ECDD;        /* Bühne */
-    --paper:#FBF6EC;        /* Karten hell */
-    --ink:#201C15;          /* Text & Bühne dunkel */
-    --ink-soft:#4A4335;     /* Sekundärtext */
-    --line:#D8C9AC;         /* Linien auf Cream */
-    --line-dark:#4E4834;    /* Linien auf Ink */
-    --rust:#D2571F;         /* Quarter-Zip */
-    --sage:#6C7A44;         /* Polo */
-    --sand:#B8934F;         /* Chino */
-    --bone:#F4ECDD;
-    --T:4.8s;
+    /* Palette: quiet luxury — crisp paper, warm ink, one muted bronze accent */
+    --white:#FFFFFF;
+    --cream:#F6F3EC;        /* Bühne */
+    --paper:#FCFBF8;        /* Karten */
+    --ink:#171512;          /* Text */
+    --ink-soft:#7A7364;     /* Sekundärtext */
+    --hairline:#E4DFD2;     /* Linien auf Hell */
+    --hairline-dark:#39362E;/* Linien auf Dunkel */
+    --bronze:#8C7A55;       /* einziger Akzent */
+    --T:5.6s;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  body{background:var(--ink);color:var(--cream);font-family:'Space Grotesk',sans-serif;line-height:1.6;overflow-x:hidden}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 44px}
   .label{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
-  ::selection{background:var(--rust);color:var(--cream)}
+  ::selection{background:var(--ink);color:var(--cream)}
+
+  /* ---------- NAV ---------- */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;
+    padding:28px 44px;background:linear-gradient(to bottom, rgba(246,243,236,.92), rgba(246,243,236,0));}
+  .nav .mark{font-family:'Fraunces',serif;font-weight:500;font-size:14px;letter-spacing:.32em;color:var(--ink);text-decoration:none}
+  .nav ul{display:flex;align-items:center;gap:40px;list-style:none}
+  .nav a.link{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);text-decoration:none;opacity:.68;transition:opacity .35s ease}
+  .nav a.link:hover{opacity:1}
+  .nav .region{font-size:10px;letter-spacing:.16em;color:var(--ink-soft)}
 
   /* ---------- HERO ---------- */
-  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:72px 32px;
-        background:radial-gradient(120% 90% at 50% 40%, rgba(210,87,31,.10), rgba(0,0,0,0) 55%), radial-gradient(130% 120% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.28));}
-  .hero-top{position:absolute;top:34px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 38px}
-  .hero-top .label{color:var(--rust)}
-  .corner{font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink-soft)}
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:120px 32px 72px;
+        background:radial-gradient(90% 70% at 50% 42%, rgba(140,122,85,.10), rgba(0,0,0,0) 60%);}
+  .corner{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft)}
 
   .mark-stage{position:relative;display:inline-block}
-  .stage{display:block;width:min(470px,88vw);height:auto}
+  .stage{display:block;width:min(430px,82vw);height:auto}
 
   .sheen{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-  .sheen::before{content:'';position:absolute;top:-25%;left:-65%;width:42%;height:150%;
-    background:linear-gradient(105deg,transparent 30%,rgba(210,87,31,0) 42%,rgba(210,87,31,.5) 50%,rgba(210,87,31,0) 58%,transparent 70%);
-    transform:skewX(-12deg);filter:blur(2px);mix-blend-mode:screen;opacity:0}
+  .sheen::before{content:'';position:absolute;top:-25%;left:-65%;width:38%;height:150%;
+    background:linear-gradient(105deg,transparent 30%,rgba(140,122,85,0) 42%,rgba(140,122,85,.30) 50%,rgba(140,122,85,0) 58%,transparent 70%);
+    transform:skewX(-12deg);filter:blur(2px);mix-blend-mode:multiply;opacity:0}
   .animate .sheen::before{animation:sweep var(--T) ease both}
-  @keyframes sweep{0%{left:-65%;opacity:0}55%{left:-65%;opacity:0}62%{opacity:1}80%{left:122%;opacity:1}88%{opacity:0}100%{left:122%;opacity:0}}
+  @keyframes sweep{0%{left:-65%;opacity:0}58%{left:-65%;opacity:0}64%{opacity:1}82%{left:122%;opacity:1}90%{opacity:0}100%{left:122%;opacity:0}}
 
   .l-clip{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}
   .k-clip{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}
-  .glow{opacity:.85;transform-box:fill-box;transform-origin:center}
+  .glow{opacity:.7;transform-box:fill-box;transform-origin:center}
   .underline{stroke-dasharray:96;stroke-dashoffset:0}
   .tick{stroke-dasharray:50;stroke-dashoffset:0}
 
-  .animate .l-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, lReveal var(--T) cubic-bezier(.34,1.4,.34,1) both}
-  .animate .k-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, kReveal var(--T) cubic-bezier(.34,1.4,.34,1) both}
+  .animate .l-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, lReveal var(--T) cubic-bezier(.4,0,.2,1) both}
+  .animate .k-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, kReveal var(--T) cubic-bezier(.4,0,.2,1) both}
   .animate .glow{animation:glowBloom var(--T) ease both}
   .animate .underline{animation:lineDraw var(--T) ease both}
   .animate .tick{animation:tickDraw var(--T) ease both}
 
   @keyframes iiIn{0%{opacity:0}8%{opacity:1}100%{opacity:1}}
-  @keyframes iiFocus{0%{filter:blur(7px)}11%{filter:blur(0)}100%{filter:blur(0)}}
-  @keyframes lReveal{0%{clip-path:inset(0 0 0 70%)}42%{clip-path:inset(0 0 0 70%)}68%{clip-path:inset(0 0 0 -6%)}80%{clip-path:inset(0 0 0 0%)}100%{clip-path:inset(0 0 0 0%)}}
-  @keyframes kReveal{0%{clip-path:inset(0 74% 0 0)}42%{clip-path:inset(0 74% 0 0)}68%{clip-path:inset(0 -6% 0 0)}80%{clip-path:inset(0 0% 0 0)}100%{clip-path:inset(0 0% 0 0)}}
-  @keyframes glowBloom{0%{opacity:0;transform:scale(.85)}42%{opacity:0;transform:scale(.85)}58%{opacity:1;transform:scale(1.1)}76%{opacity:.85;transform:scale(1)}100%{opacity:.85;transform:scale(1)}}
-  @keyframes lineDraw{0%{stroke-dashoffset:96}10%{stroke-dashoffset:96}26%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
-  @keyframes tickDraw{0%{stroke-dashoffset:50}6%{stroke-dashoffset:50}20%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+  @keyframes iiFocus{0%{filter:blur(7px)}14%{filter:blur(0)}100%{filter:blur(0)}}
+  @keyframes lReveal{0%{clip-path:inset(0 0 0 70%)}46%{clip-path:inset(0 0 0 70%)}74%{clip-path:inset(0 0 0 0%)}100%{clip-path:inset(0 0 0 0%)}}
+  @keyframes kReveal{0%{clip-path:inset(0 74% 0 0)}46%{clip-path:inset(0 74% 0 0)}74%{clip-path:inset(0 0% 0 0)}100%{clip-path:inset(0 0% 0 0)}}
+  @keyframes glowBloom{0%{opacity:0;transform:scale(.9)}46%{opacity:0;transform:scale(.9)}64%{opacity:.85;transform:scale(1.04)}82%{opacity:.7;transform:scale(1)}100%{opacity:.7;transform:scale(1)}}
+  @keyframes lineDraw{0%{stroke-dashoffset:96}14%{stroke-dashoffset:96}30%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+  @keyframes tickDraw{0%{stroke-dashoffset:50}8%{stroke-dashoffset:50}24%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
 
-  .name-block{margin-top:30px}
-  .name-block .name{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3.4vw,30px);letter-spacing:.42em;text-transform:uppercase;padding-left:.42em;color:var(--cream)}
-  .animate .name-block .name{animation:nameSettle var(--T) cubic-bezier(.2,.9,.15,1.2) both}
-  @keyframes nameSettle{0%{opacity:0;letter-spacing:1.1em;transform:translateY(10px) rotate(-1deg)}70%{opacity:0;letter-spacing:1.1em;transform:translateY(10px) rotate(-1deg)}90%{opacity:1;letter-spacing:.42em;transform:translateY(0) rotate(0)}100%{opacity:1;letter-spacing:.42em;transform:translateY(0) rotate(0)}}
+  .name-block{margin-top:34px}
+  .name-block .name{font-family:'Inter',sans-serif;font-weight:500;font-size:clamp(15px,2vw,17px);letter-spacing:.5em;text-transform:uppercase;padding-left:.5em;color:var(--ink)}
+  .animate .name-block .name{animation:nameSettle var(--T) cubic-bezier(.3,.7,.2,1) both}
+  @keyframes nameSettle{0%{opacity:0;letter-spacing:1.1em;transform:translateY(8px)}76%{opacity:0;letter-spacing:1.1em;transform:translateY(8px)}94%{opacity:1;letter-spacing:.5em;transform:translateY(0)}100%{opacity:1;letter-spacing:.5em;transform:translateY(0)}}
   .meta{opacity:1}
   .animate .meta{animation:metaIn var(--T) ease both}
-  @keyframes metaIn{0%{opacity:0}80%{opacity:0}96%{opacity:1}100%{opacity:1}}
-  .rule{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px}
-  .rule .line{height:1px;width:58px;background:linear-gradient(90deg,transparent,var(--rust))}
-  .rule .line.r{background:linear-gradient(90deg,var(--rust),transparent)}
-  .rule .dot{width:4px;height:4px;background:var(--rust);transform:rotate(45deg)}
+  @keyframes metaIn{0%{opacity:0}84%{opacity:0}98%{opacity:1}100%{opacity:1}}
+  .rule{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px}
+  .rule .line{height:1px;width:58px;background:linear-gradient(90deg,transparent,var(--bronze))}
+  .rule .line.r{background:linear-gradient(90deg,var(--bronze),transparent)}
+  .rule .dot{width:3px;height:3px;background:var(--bronze);transform:rotate(45deg)}
   .rule .tag{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft)}
-  .concept{margin-top:13px;font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft)}
+  .concept{margin-top:16px;font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:18px;color:var(--ink-soft);max-width:420px;margin-left:auto;margin-right:auto}
 
-  .cta{margin-top:34px;display:inline-flex;align-items:center;gap:10px;background:var(--rust);color:var(--cream);
-    font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
-    padding:14px 26px;border-radius:100px;text-decoration:none;transition:.25s ease}
-  .cta:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 10px 24px rgba(210,87,31,.35)}
-  .animate .cta{animation:metaIn var(--T) ease both}
+  .cta-link{margin-top:38px;display:inline-block;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);
+    text-decoration:none;padding-bottom:7px;border-bottom:1px solid var(--ink);transition:opacity .4s ease,letter-spacing .4s ease}
+  .cta-link:hover{opacity:.5;letter-spacing:.4em}
+  .animate .cta-link{animation:metaIn var(--T) ease both}
 
-  .replay{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:transparent;border:1px solid var(--line-dark);color:var(--ink-soft);
-    font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;padding:9px 18px;cursor:pointer;transition:.3s;border-radius:100px}
-  .replay:hover{border-color:var(--rust);color:var(--rust)}
+  .replay{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:transparent;border:1px solid var(--hairline);color:var(--ink-soft);
+    font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;padding:9px 18px;cursor:pointer;transition:.35s}
+  .replay:hover{border-color:var(--bronze);color:var(--bronze)}
 
   /* ---------- SECTIONS ---------- */
-  section.block{padding:90px 0;border-top:1px solid var(--line-dark)}
-  section.block.on-cream{background:var(--cream);color:var(--ink)}
-  .on-cream .label{color:var(--ink-soft)}
-  .on-cream .sec-head h2{color:var(--ink)}
-  .on-cream{border-top:1px solid var(--line)}
-  .sec-head{display:flex;align-items:baseline;gap:22px;margin-bottom:48px;flex-wrap:wrap}
-  .sec-head .num{font-family:'Fraunces',serif;font-style:italic;font-size:24px;color:var(--rust)}
-  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(24px,3.4vw,34px);color:var(--cream)}
-  .sec-head p{margin-left:auto;max-width:320px;font-size:13.5px;color:var(--ink-soft);text-align:right}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-  .card{background:rgba(255,255,255,.03);border:1px solid var(--line-dark);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;transition:.3s ease}
-  .on-cream .card{background:var(--paper);border-color:var(--line)}
-  .card:hover{transform:translateY(-4px) rotate(-.6deg)}
-  .card .cap{position:absolute;bottom:16px;left:0;right:0;text-align:center}
-  .seal{width:64%}
+  section.block{padding:130px 0;border-top:1px solid var(--hairline);scroll-margin-top:100px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:64px;flex-wrap:wrap}
+  .sec-head .num{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:22px;color:var(--bronze)}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(28px,3.6vw,40px);color:var(--ink);letter-spacing:.01em}
+  .sec-head p{margin-left:auto;max-width:320px;font-size:13.5px;color:var(--ink-soft);text-align:right;font-weight:300}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline)}
+  .card{background:var(--paper);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;transition:background .4s ease}
+  .card:hover{background:var(--white)}
+  .card .cap{position:absolute;bottom:20px;left:0;right:0;text-align:center}
+  .seal{width:60%}
+
+  /* ---------- MANIFESTO ---------- */
+  .manifesto{padding:150px 0;text-align:center;background:var(--white);border-top:1px solid var(--hairline)}
+  .manifesto blockquote{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:clamp(24px,4vw,40px);color:var(--ink);max-width:760px;margin:0 auto;line-height:1.4}
+  .manifesto .by{margin-top:28px;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze)}
+  .manifesto p.body{max-width:520px;margin:34px auto 0;font-size:14.5px;color:var(--ink-soft);font-weight:300;line-height:1.9}
 
   /* Product cards */
-  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-  .prod{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 26px 26px;position:relative;overflow:hidden;transition:.3s ease}
-  .prod:hover{transform:translateY(-6px) rotate(-.7deg);box-shadow:0 18px 34px rgba(32,28,21,.12)}
-  .prod::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent)}
-  .prod .icon{width:100%;height:150px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-  .prod .tag{display:inline-block;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--accent);
-    border:1px solid var(--accent);padding:5px 10px;border-radius:100px;margin-bottom:14px}
-  .prod h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;color:var(--ink);margin-bottom:8px}
-  .prod p.desc{font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;min-height:44px}
-  .prod .price{display:flex;align-items:baseline;justify-content:space-between;border-top:1px dashed var(--line);padding-top:14px}
-  .prod .price b{font-family:'Fraunces',serif;font-size:18px;color:var(--ink)}
-  .prod .price span{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
-  .prod.qz{--accent:var(--rust)}
-  .prod.polo{--accent:var(--sage)}
-  .prod.chino{--accent:var(--sand)}
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline)}
+  .prod{background:var(--paper);padding:44px 38px 36px;position:relative;transition:background .45s ease}
+  .prod:hover{background:var(--white)}
+  .prod .tag{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:28px}
+  .prod .icon{width:100%;height:150px;display:flex;align-items:center;justify-content:center;margin-bottom:30px;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+  .prod:hover .icon{transform:scale(1.035)}
+  .prod h3{font-family:'Fraunces',serif;font-weight:400;font-size:24px;color:var(--ink);margin-bottom:10px}
+  .prod p.desc{font-size:13px;color:var(--ink-soft);margin-bottom:26px;min-height:44px;font-weight:300;line-height:1.8}
+  .prod .price{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--hairline);padding-top:16px}
+  .prod .price b{font-family:'Fraunces',serif;font-weight:400;font-size:17px;color:var(--ink)}
+  .prod .price span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 
-  .ribbon{position:absolute;top:14px;right:-32px;background:var(--rust);color:var(--cream);font-size:9.5px;font-weight:700;
-    letter-spacing:.16em;text-transform:uppercase;padding:5px 38px;transform:rotate(38deg);box-shadow:0 4px 10px rgba(0,0,0,.15)}
+  footer{padding:70px 0 80px;background:var(--ink);color:var(--cream);text-align:center}
+  footer .fmark{font-family:'Fraunces',serif;font-weight:400;font-size:32px;letter-spacing:.34em;padding-left:.34em;color:var(--cream)}
+  footer .fnote{margin-top:18px;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#9A9384}
 
-  footer{padding:54px 0 64px;border-top:1px solid var(--line-dark);text-align:center}
-  footer .fmark{font-family:'Fraunces',serif;font-weight:700;font-size:30px;letter-spacing:.32em;padding-left:.32em;color:var(--cream)}
-  footer .fnote{margin-top:14px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
-
-  @media(max-width:760px){.grid,.prod-grid{grid-template-columns:1fr}.sec-head p{display:none}.hero-top{display:none}}
+  @media(max-width:760px){
+    .grid,.prod-grid{grid-template-columns:1fr}
+    .sec-head p{display:none}
+    .nav ul{display:none}
+    .nav{padding:22px 28px}
+    section.block{padding:88px 0}
+    .manifesto{padding:100px 0}
+  }
   @media(prefers-reduced-motion:reduce){ .animate *{animation:none!important} .sheen{display:none} .replay{display:none} }
 </style>
 </head>
 <body>
 
+<nav class="nav">
+  <a href="#hero" class="mark">L · K</a>
+  <ul>
+    <li><a class="link" href="#kollektion">Kollektion</a></li>
+    <li><a class="link" href="#haus">Das Haus</a></li>
+    <li><a class="link" href="#angewandt">Zeichen</a></li>
+  </ul>
+  <span class="region">DE — EUR</span>
+</nav>
+
 <!-- ===================== HERO ===================== -->
 <header class="hero animate" id="hero">
-  <div class="hero-top">
-    <span class="label">Mode · Identität</span>
-    <span class="corner">SS · 26</span>
-  </div>
-
   <div class="mark-stage">
     <svg class="stage" viewBox="0 0 560 360" fill="none" aria-label="Luca Kolhoff — gespiegeltes L und K bilden die römische Zwei">
       <defs>
         <radialGradient id="ctr" cx="50%" cy="46%" r="52%">
-          <stop offset="0%" stop-color="#D2571F" stop-opacity="0.16"/>
-          <stop offset="100%" stop-color="#D2571F" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#8C7A55" stop-opacity="0.14"/>
+          <stop offset="100%" stop-color="#8C7A55" stop-opacity="0"/>
         </radialGradient>
       </defs>
 
       <ellipse class="glow" cx="284" cy="172" rx="118" ry="148" fill="url(#ctr)"/>
 
-      <g stroke="#D2571F" stroke-width="1.6" fill="none" stroke-linecap="round">
+      <g stroke="#8C7A55" stroke-width="1" fill="none" stroke-linecap="square">
         <path class="tick" d="M126 92 L126 66 L152 66"/>
         <path class="tick" d="M408 66 L434 66 L434 92"/>
         <path class="tick" d="M126 300 L126 326 L152 326"/>
@@ -165,16 +175,16 @@
       <g class="l-clip">
         <g transform="translate(428,0) scale(-1,1)">
           <text x="214" y="284" text-anchor="middle" font-family="Fraunces, serif"
-                font-weight="600" font-size="248" fill="#F4ECDD">L</text>
+                font-weight="500" font-size="248" fill="#171512">L</text>
         </g>
       </g>
 
       <g class="k-clip">
         <text x="360" y="284" text-anchor="middle" font-family="Fraunces, serif"
-              font-weight="600" font-size="248" fill="#F4ECDD">K</text>
+              font-weight="500" font-size="248" fill="#171512">K</text>
       </g>
 
-      <line class="underline" x1="246" y1="310" x2="342" y2="310" stroke="#D2571F" stroke-width="1.6" stroke-linecap="round"/>
+      <line class="underline" x1="246" y1="310" x2="342" y2="310" stroke="#8C7A55" stroke-width="1" stroke-linecap="round"/>
     </svg>
     <div class="sheen"></div>
   </div>
@@ -184,11 +194,11 @@
     <div class="meta">
       <div class="rule">
         <span class="line"></span><span class="dot"></span>
-        <span class="tag">· II ·</span>
+        <span class="tag">Maison · II</span>
         <span class="dot"></span><span class="line r"></span>
       </div>
-      <div class="concept">Quarter-Zips, Polos &amp; Chinos — die Zwei, die aus L &amp; K entsteht</div>
-      <a href="#kollektion" class="cta">Kollektion entdecken ↓</a>
+      <div class="concept">Quarter-Zips, Polos &amp; Chinos — gefertigt für die, die kein Logo brauchen, um erkannt zu werden.</div>
+      <a href="#kollektion" class="cta-link">Kollektion entdecken</a>
     </div>
   </div>
 
@@ -201,29 +211,29 @@
     <div class="sec-head">
       <span class="num">i.</span>
       <h2>Die Idee</h2>
-      <p>Gespiegeltes L, daneben das K — die langen Seiten stehen mit Abstand parallel und formen die II. Ein Zeichen, das genauso gut auf einem Kragen sitzt wie auf einem Siegel.</p>
+      <p>Gespiegeltes L, daneben das K — die langen Seiten stehen mit Abstand parallel und formen die II. Ein Zeichen, das man erst auf den zweiten Blick liest.</p>
     </div>
     <div class="grid">
       <div class="card">
-        <svg width="150" height="150" viewBox="0 0 200 200" aria-label="L gespiegelt">
+        <svg width="140" height="140" viewBox="0 0 200 200" aria-label="L gespiegelt">
           <g transform="translate(200,0) scale(-1,1)">
-            <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#D2571F">L</text>
+            <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="400" font-size="170" fill="#8C7A55">L</text>
           </g>
         </svg>
         <div class="cap"><span class="label">1 · L falsch herum</span></div>
       </div>
       <div class="card">
-        <svg width="150" height="150" viewBox="0 0 200 200" aria-label="K">
-          <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#D2571F">K</text>
+        <svg width="140" height="140" viewBox="0 0 200 200" aria-label="K">
+          <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="400" font-size="170" fill="#8C7A55">K</text>
         </svg>
         <div class="cap"><span class="label">2 · K daneben</span></div>
       </div>
       <div class="card">
-        <svg width="180" height="150" viewBox="0 0 280 200" aria-label="Ergebnis L + K = II">
+        <svg width="170" height="140" viewBox="0 0 280 200" aria-label="Ergebnis L + K = II">
           <g transform="translate(238,0) scale(-1,1)">
-            <text x="119" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#F4ECDD">L</text>
+            <text x="119" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="400" font-size="170" fill="#171512">L</text>
           </g>
-          <text x="190" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#F4ECDD">K</text>
+          <text x="190" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="400" font-size="170" fill="#171512">K</text>
         </svg>
         <div class="cap"><span class="label">3 · II entsteht</span></div>
       </div>
@@ -231,78 +241,87 @@
   </div>
 </section>
 
+<!-- ===================== MANIFESTO ===================== -->
+<section class="manifesto" id="haus">
+  <div class="wrap">
+    <span class="label">ii. Das Haus</span>
+    <blockquote>„Kein Logo schreit. Der Stoff spricht.“</blockquote>
+    <div class="by">Luca Kolhoff</div>
+    <p class="body">Drei Silhouetten, konsequent zu Ende gedacht: der Quarter-Zip für den Übergang, das Polo für die Ruhe, die Chino für alles dazwischen. Merinowolle statt Synthetik, Perlmuttknopf statt Kunststoff — und ein Zeichen, das sich erst offenbart, wer genau hinsieht.</p>
+  </div>
+</section>
+
 <!-- ===================== KOLLEKTION ===================== -->
-<section class="block on-cream" id="kollektion">
+<section class="block" id="kollektion" style="border-top:none">
   <div class="wrap">
     <div class="sec-head">
-      <span class="num">ii.</span>
+      <span class="num">iii.</span>
       <h2>Die Kollektion</h2>
-      <p>Drei Stücke, ein Prinzip: schick genug fürs Büro, entspannt genug fürs Wochenende. Jede Kategorie trägt ihre eigene Farbe der Marke.</p>
+      <p>Drei Stücke, ein Prinzip: schick genug fürs Büro, ruhig genug fürs Wochenende.</p>
     </div>
     <div class="prod-grid">
-      <div class="prod qz">
-        <span class="ribbon">Neu</span>
+      <div class="prod">
         <span class="tag">Quarter-Zip</span>
         <div class="icon">
           <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
             <path d="M30 20 L15 34 L26 48 L34 40 L34 128 L86 128 L86 40 L94 48 L105 34 L90 20 C90 20 82 30 60 30 C38 30 30 20 30 20 Z"
-                  stroke="#D2571F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
-            <path d="M60 30 L60 128" stroke="#D2571F" stroke-width="2.4" stroke-dasharray="1 6" stroke-linecap="round"/>
-            <rect x="55.5" y="24" width="9" height="9" rx="2" fill="#D2571F"/>
+                  stroke="#171512" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M60 30 L60 128" stroke="#8C7A55" stroke-width="1.3" stroke-dasharray="1 6" stroke-linecap="round"/>
+            <rect x="56.5" y="24.5" width="7" height="7" rx="1.5" stroke="#8C7A55" stroke-width="1.1"/>
           </svg>
         </div>
         <h3>Der Quarter-Zip</h3>
-        <p class="desc">Feinstrick, hoher Stehkragen, halbe Reißverschlussleiste. Der Übergang zwischen Meeting und Feierabend.</p>
-        <div class="price"><b>€ 128</b><span>Merino-Mix</span></div>
+        <p class="desc">Feinstrick, hoher Stehkragen, halbe Reißverschlussleiste — der Übergang zwischen Meeting und Feierabend.</p>
+        <div class="price"><b>€ 340</b><span>Merinowolle</span></div>
       </div>
 
-      <div class="prod polo">
+      <div class="prod">
         <span class="tag">Polo</span>
         <div class="icon">
           <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
-            <path d="M46 18 L34 26 L44 40 L52 34 L52 34 L60 44 L68 34 L76 40 L86 26 L74 18 C74 18 68 26 60 26 C52 26 46 18 46 18 Z"
-                  stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M46 18 L34 26 L44 40 L52 34 L60 44 L68 34 L76 40 L86 26 L74 18 C74 18 68 26 60 26 C52 26 46 18 46 18 Z"
+                  stroke="#171512" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
             <path d="M18 40 L34 26 L44 40 L34 52 Z M102 40 L86 26 L76 40 L86 52 Z"
-                  stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
-            <path d="M44 40 L34 128 L86 128 L76 40" stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
-            <line x1="60" y1="44" x2="60" y2="70" stroke="#6C7A44" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="60" cy="52" r="2.6" fill="#6C7A44"/>
-            <circle cx="60" cy="62" r="2.6" fill="#6C7A44"/>
+                  stroke="#171512" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M44 40 L34 128 L86 128 L76 40" stroke="#171512" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="60" y1="44" x2="60" y2="70" stroke="#8C7A55" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="60" cy="52" r="2" stroke="#8C7A55" stroke-width="1.1"/>
+            <circle cx="60" cy="62" r="2" stroke="#8C7A55" stroke-width="1.1"/>
           </svg>
         </div>
         <h3>Das Polo</h3>
-        <p class="desc">Schwerer Piqué-Jersey, sauberer Kragen, kein Logo-Geprotze — nur die feine II am Saum.</p>
-        <div class="price"><b>€ 78</b><span>Baumwoll-Piqué</span></div>
+        <p class="desc">Schwerer Piqué, sauberer Kragen, kein Logo-Geprotze — nur die feine II am Saum.</p>
+        <div class="price"><b>€ 165</b><span>Baumwoll-Piqué</span></div>
       </div>
 
-      <div class="prod chino">
+      <div class="prod">
         <span class="tag">Chino</span>
         <div class="icon">
           <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
             <path d="M38 18 L82 18 L86 60 L98 128 L78 128 L62 66 L58 66 L46 128 L26 128 L34 60 Z"
-                  stroke="#B8934F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
-            <line x1="38" y1="18" x2="82" y2="18" stroke="#B8934F" stroke-width="3.2" stroke-linecap="round"/>
-            <path d="M46 26 L46 32" stroke="#B8934F" stroke-width="2.6" stroke-linecap="round"/>
-            <path d="M74 26 L74 32" stroke="#B8934F" stroke-width="2.6" stroke-linecap="round"/>
-            <line x1="27" y1="120" x2="45" y2="120" stroke="#B8934F" stroke-width="2.2" stroke-linecap="round"/>
-            <line x1="79" y1="120" x2="97" y2="120" stroke="#B8934F" stroke-width="2.2" stroke-linecap="round"/>
+                  stroke="#171512" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="38" y1="18" x2="82" y2="18" stroke="#171512" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M46 26 L46 32" stroke="#8C7A55" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M74 26 L74 32" stroke="#8C7A55" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="27" y1="120" x2="45" y2="120" stroke="#8C7A55" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="79" y1="120" x2="97" y2="120" stroke="#8C7A55" stroke-width="1.1" stroke-linecap="round"/>
           </svg>
         </div>
         <h3>Die Chino</h3>
-        <p class="desc">Schlanker Schnitt, softes Twill, dezenter Umschlag. Sitzt am Freitag genauso wie am Montag.</p>
-        <div class="price"><b>€ 98</b><span>Baumwoll-Twill</span></div>
+        <p class="desc">Schlanker Schnitt, softes Twill, dezenter Umschlag — sitzt am Freitag genauso wie am Montag.</p>
+        <div class="price"><b>€ 210</b><span>Baumwoll-Twill</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===================== APPLICATIONS ===================== -->
-<section class="block">
+<section class="block" id="angewandt">
   <div class="wrap">
     <div class="sec-head">
-      <span class="num">iii.</span>
+      <span class="num">iv.</span>
       <h2>Angewandt</h2>
-      <p>Siegel und Kragen-Patch tragen das volle Zeichen — gespiegeltes L und K, das sich als II liest. Die Wortmarke reduziert auf die reine II.</p>
+      <p>Siegel und Kragen-Patch tragen das volle Zeichen. Die Wortmarke reduziert auf die reine II.</p>
     </div>
     <div class="grid">
       <div class="card">
@@ -311,50 +330,45 @@
             <path id="arcTop" d="M150,150 m-112,0 a112,112 0 1,1 224,0" />
             <path id="arcBot" d="M150,150 m112,0 a112,112 0 1,1 -224,0" />
           </defs>
-          <circle cx="150" cy="150" r="138" stroke="#D2571F" stroke-width="1.3"/>
-          <circle cx="150" cy="150" r="120" stroke="#D2571F" stroke-width="0.7" opacity="0.7"/>
-          <g class="ringspin">
-            <circle cx="150" cy="150" r="129" stroke="#D2571F" stroke-width="1" stroke-dasharray="2 9" opacity="0.8"/>
-          </g>
-          <text font-family="Space Grotesk, sans-serif" font-size="12.5" letter-spacing="5.5" fill="#D2571F">
+          <circle cx="150" cy="150" r="138" stroke="#8C7A55" stroke-width="0.9"/>
+          <circle cx="150" cy="150" r="120" stroke="#8C7A55" stroke-width="0.5" opacity="0.7"/>
+          <text font-family="Inter, sans-serif" font-size="12" letter-spacing="5.5" fill="#8C7A55">
             <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LUCA · KOLHOFF</textPath>
           </text>
-          <text font-family="Space Grotesk, sans-serif" font-size="12" letter-spacing="7" fill="#D2571F">
-            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">MODE · SS26</textPath>
+          <text font-family="Inter, sans-serif" font-size="11" letter-spacing="7" fill="#8C7A55">
+            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">MAISON · MMXXVI</textPath>
           </text>
-          <rect x="22" y="146" width="6" height="6" transform="rotate(45 25 149)" fill="#D2571F"/>
-          <rect x="272" y="146" width="6" height="6" transform="rotate(45 275 149)" fill="#D2571F"/>
           <g transform="translate(238,0) scale(-1,1)">
             <text x="119" y="190" text-anchor="middle" font-family="Fraunces, serif"
-                  font-weight="600" font-size="112" fill="#F4ECDD">L</text>
+                  font-weight="400" font-size="112" fill="#171512">L</text>
           </g>
           <text x="185" y="190" text-anchor="middle" font-family="Fraunces, serif"
-                font-weight="600" font-size="112" fill="#F4ECDD">K</text>
+                font-weight="400" font-size="112" fill="#171512">K</text>
         </svg>
-        <div class="cap"><span class="label">Hangtag / Siegel</span></div>
+        <div class="cap"><span class="label">Hangtag · Siegel</span></div>
       </div>
       <div class="card">
-        <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Kragen-Patch">
-          <rect x="2" y="2" width="116" height="116" rx="28" fill="#201C15" stroke="#D2571F" stroke-width="1.2"/>
+        <svg width="110" height="110" viewBox="0 0 120 120" aria-label="Kragen-Patch">
+          <rect x="2" y="2" width="116" height="116" rx="6" fill="none" stroke="#8C7A55" stroke-width="1"/>
           <g>
             <g transform="translate(96,0) scale(-1,1)">
               <text x="48" y="84" text-anchor="middle" font-family="Fraunces, serif"
-                    font-weight="600" font-size="56" fill="#F4ECDD">L</text>
+                    font-weight="400" font-size="56" fill="#171512">L</text>
             </g>
             <text x="81" y="84" text-anchor="middle" font-family="Fraunces, serif"
-                  font-weight="600" font-size="56" fill="#F4ECDD">K</text>
+                  font-weight="400" font-size="56" fill="#171512">K</text>
           </g>
         </svg>
         <div class="cap"><span class="label">Kragen-Patch</span></div>
       </div>
-      <div class="card light" style="background:var(--paper);border-color:var(--line)">
-        <svg width="180" height="140" viewBox="0 0 260 180" aria-label="Wortmarke auf Hell">
-          <text x="60" y="128" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="120" letter-spacing="12" fill="#201C15">II</text>
-          <line x1="118" y1="44" x2="118" y2="132" stroke="#D2571F" stroke-width="1.2"/>
-          <text x="134" y="84" font-family="Fraunces, serif" font-weight="500" font-size="22" letter-spacing="2" fill="#201C15">Luca</text>
-          <text x="134" y="112" font-family="Fraunces, serif" font-weight="500" font-size="22" letter-spacing="2" fill="#201C15">Kolhoff</text>
+      <div class="card">
+        <svg width="180" height="140" viewBox="0 0 260 180" aria-label="Wortmarke">
+          <text x="60" y="128" text-anchor="middle" font-family="Fraunces, serif" font-weight="400" font-size="120" letter-spacing="12" fill="#171512">II</text>
+          <line x1="118" y1="44" x2="118" y2="132" stroke="#8C7A55" stroke-width="0.9"/>
+          <text x="134" y="84" font-family="Inter, sans-serif" font-weight="400" font-size="16" letter-spacing="3" fill="#171512">LUCA</text>
+          <text x="134" y="112" font-family="Inter, sans-serif" font-weight="400" font-size="16" letter-spacing="3" fill="#171512">KOLHOFF</text>
         </svg>
-        <div class="cap"><span class="label">Wortmarke · auf Hell</span></div>
+        <div class="cap"><span class="label">Wortmarke</span></div>
       </div>
     </div>
   </div>
@@ -363,7 +377,7 @@
 <footer>
   <div class="wrap">
     <div class="fmark">II</div>
-    <div class="fnote">Luca Kolhoff · Quarter-Zips, Polos &amp; Chinos · SS26</div>
+    <div class="fnote">Luca Kolhoff · Quarter-Zips, Polos &amp; Chinos · MMXXVI</div>
   </div>
 </footer>
 
