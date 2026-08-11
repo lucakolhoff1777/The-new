@@ -4,6 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Luca Kolhoff — Mode</title>
+<meta name="description" content="Luca Kolhoff — Maison II. Quarter-Zips, Polos und Chinos für den Übergang zwischen Meeting und Wochenende. British Racing Green Edition, SS26.">
+<meta property="og:title" content="Luca Kolhoff — Maison II">
+<meta property="og:description" content="Quarter-Zips, Polos & Chinos — gefertigt für die, die kein Logo brauchen, um erkannt zu werden.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23051810'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='32' text-anchor='middle' fill='%23C7A362'%3EII%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -183,6 +188,39 @@
   .plate .cap-line{position:absolute;left:26px;bottom:58px;width:26px;height:1px;background:var(--gold);transform:scaleX(1);transform-origin:left;transition:width .5s ease}
   .plate:hover .cap-line{width:44px}
 
+  /* ---------- HANDWERK ---------- */
+  .craft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .craft{background:var(--g850);padding:44px 36px;position:relative}
+  .craft-num{display:block;font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:36px;color:var(--gold);opacity:.55;margin-bottom:20px}
+  .craft h3{font-family:'Fraunces',serif;font-weight:400;font-size:21px;color:var(--cream);margin-bottom:12px}
+  .craft p{font-size:13px;color:var(--cream-dim);line-height:1.85;font-weight:300}
+  .craft-grid .craft:nth-child(1){transition-delay:0s}
+  .craft-grid .craft:nth-child(2){transition-delay:.15s}
+  .craft-grid .craft:nth-child(3){transition-delay:.3s}
+
+  /* ---------- GRÖSSE & PFLEGE ---------- */
+  .accordion{max-width:720px;margin:0 auto}
+  .accordion details{border-bottom:1px solid var(--line);padding:22px 4px}
+  .accordion details:first-child{border-top:1px solid var(--line)}
+  .accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;
+    font-family:'Fraunces',serif;font-size:18px;color:var(--cream);font-weight:400;transition:color .3s}
+  .accordion summary::-webkit-details-marker{display:none}
+  .accordion summary:hover{color:var(--gold-soft)}
+  .accordion .chev{flex:none;font-family:'Inter',sans-serif;font-size:20px;font-weight:300;color:var(--gold);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+  .accordion details[open] .chev{transform:rotate(45deg)}
+  .accordion .acc-body{padding-top:14px}
+  .accordion .acc-body p{font-size:13.5px;color:var(--cream-dim);line-height:1.9;font-weight:300;max-width:560px}
+
+  /* ---------- SOCIAL ---------- */
+  .insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line)}
+  .insta{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(155deg,var(--g800),var(--g950))}
+  .insta svg{position:absolute;inset:0;margin:auto;width:38%;height:38%;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+  .insta:hover svg{transform:scale(1.15)}
+  .insta .scrim{position:absolute;inset:0;background:rgba(5,24,16,0);display:flex;align-items:center;justify-content:center;transition:background .35s ease}
+  .insta .scrim span{opacity:0;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream);transition:opacity .35s ease}
+  .insta:hover .scrim{background:rgba(5,24,16,.6)}
+  .insta:hover .scrim span{opacity:1}
+
   /* ---------- MANIFESTO ---------- */
   .manifesto{padding:150px 0;text-align:center;background:var(--g950);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .manifesto blockquote{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:clamp(24px,4vw,40px);color:var(--cream);max-width:760px;margin:0 auto;line-height:1.4}
@@ -208,6 +246,9 @@
   .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
   .foot-col a{color:var(--cream-dim);text-decoration:none;font-size:13px;transition:color .3s}
   .foot-col a:hover{color:var(--cream)}
+  .foot-legal{display:flex;flex-wrap:wrap;gap:24px;padding-bottom:26px;border-top:1px solid var(--line);padding-top:26px}
+  .foot-legal a{font-size:11px;letter-spacing:.06em;color:var(--cream-dim);text-decoration:none;transition:color .3s}
+  .foot-legal a:hover{color:var(--cream)}
   .foot-bottom{border-top:1px solid var(--line);padding:26px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   .foot-bottom span{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream-dim)}
 
@@ -216,15 +257,18 @@
     .plate{height:260px}
     .plate.a{grid-row:auto}
     .foot-grid{grid-template-columns:1fr 1fr}
+    .insta-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:760px){
     .prod-grid{grid-template-columns:1fr}
     .prod{aspect-ratio:4/5}
+    .craft-grid{grid-template-columns:1fr}
     .sec-head p{display:none}
     .nav{padding:22px 24px}
     section.block{padding:88px 0}
     .manifesto,.letter{padding:100px 0}
     .foot-grid{grid-template-columns:1fr;gap:34px}
+    .accordion summary{font-size:16px}
   }
   @media(max-width:600px){
     .info-card{display:none}
@@ -252,6 +296,7 @@
   <ul>
     <li><a href="#kollektion">Kollektion</a></li>
     <li><a href="#lookbook">Lookbook</a></li>
+    <li><a href="#handwerk">Handwerk</a></li>
     <li><a href="#haus">Das Haus</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
@@ -497,20 +542,92 @@
   </div>
 </section>
 
+<!-- ===================== HANDWERK ===================== -->
+<section class="block" id="handwerk">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">iii.</span>
+      <h2>Handwerk</h2>
+      <p>Drei Schritte zwischen Rohwolle und fertigem Stück.</p>
+    </div>
+    <div class="craft-grid">
+      <div class="craft reveal">
+        <span class="craft-num">01</span>
+        <h3>Auswahl</h3>
+        <p>Merinowolle aus kontrollierter Zucht, Perlmutt statt Kunststoff — jedes Material wird vor der Verarbeitung geprüft.</p>
+      </div>
+      <div class="craft reveal">
+        <span class="craft-num">02</span>
+        <h3>Konfektion</h3>
+        <p>Handgenähte Säume, verstärkte Nähte an Kragen und Bund — für ein Stück, das Saison für Saison hält.</p>
+      </div>
+      <div class="craft reveal">
+        <span class="craft-num">03</span>
+        <h3>Prüfung</h3>
+        <p>Jedes Teil verlässt das Atelier erst nach Sichtkontrolle — Passform, Verarbeitung, Fall des Stoffes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== MANIFESTO ===================== -->
 <section class="manifesto reveal" id="haus">
   <div class="wrap">
-    <span class="label">iii. Das Haus</span>
+    <span class="label">iv. Das Haus</span>
     <blockquote>„Kein Logo schreit. Der Stoff spricht.“</blockquote>
     <div class="by">Luca Kolhoff</div>
     <p class="body">Drei Silhouetten, konsequent zu Ende gedacht: der Quarter-Zip für den Übergang, das Polo für die Ruhe, die Chino für alles dazwischen. Merinowolle statt Synthetik, Perlmuttknopf statt Kunststoff — und ein Zeichen, das sich erst offenbart, wer genau hinsieht.</p>
   </div>
 </section>
 
+<!-- ===================== GRÖSSE & PFLEGE ===================== -->
+<section class="block" id="pflege" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">v.</span>
+      <h2>Größe &amp; Pflege</h2>
+      <p>Alles, was Sie vor dem Kauf wissen sollten.</p>
+    </div>
+    <div class="accordion reveal">
+      <details open>
+        <summary><span>Größentabelle</span><span class="chev">+</span></summary>
+        <div class="acc-body"><p>Quarter-Zip und Polo in S–XL, Chino in Bundweiten 44–52. Bei Zwischengrößen empfehlen wir die kleinere Größe für einen schlanken Sitz.</p></div>
+      </details>
+      <details>
+        <summary><span>Pflegehinweise</span><span class="chev">+</span></summary>
+        <div class="acc-body"><p>Merinowolle schonend bei 30 °C im Wollprogramm waschen, liegend trocknen. Baumwoll-Piqué und -Twill bei 30 °C, auf links gewendet.</p></div>
+      </details>
+      <details>
+        <summary><span>Versand &amp; Rückgabe</span><span class="chev">+</span></summary>
+        <div class="acc-body"><p>Versand innerhalb Deutschlands in 2–4 Werktagen. Rückgabe innerhalb von 30 Tagen, unbenutzt und mit Anhänger.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SOCIAL ===================== -->
+<section class="block" id="folgen" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="num">vi.</span>
+      <h2>@lucakolhoff</h2>
+      <p>Das Haus im Alltag — auf Instagram.</p>
+    </div>
+  </div>
+  <div class="insta-grid reveal">
+    <div class="insta"><svg viewBox="0 0 120 140" fill="none"><path d="M30 20 L15 34 L26 48 L34 40 L34 128 L86 128 L86 40 L94 48 L105 34 L90 20 C90 20 82 30 60 30 C38 30 30 20 30 20 Z" stroke="#E7D5A8" stroke-width="2"/></svg><div class="scrim"><span>Ansehen</span></div></div>
+    <div class="insta"><svg viewBox="0 0 120 140" fill="none"><path d="M46 18 L34 26 L44 40 L52 34 L60 44 L68 34 L76 40 L86 26 L74 18 C74 18 68 26 60 26 C52 26 46 18 46 18 Z" stroke="#E7D5A8" stroke-width="2"/><path d="M44 40 L34 128 L86 128 L76 40" stroke="#E7D5A8" stroke-width="2"/></svg><div class="scrim"><span>Ansehen</span></div></div>
+    <div class="insta"><svg viewBox="0 0 120 140" fill="none"><path d="M38 18 L82 18 L86 60 L98 128 L78 128 L62 66 L58 66 L46 128 L26 128 L34 60 Z" stroke="#E7D5A8" stroke-width="2"/></svg><div class="scrim"><span>Ansehen</span></div></div>
+    <div class="insta"><svg viewBox="0 0 200 200" fill="none"><text x="100" y="130" text-anchor="middle" font-family="Fraunces, serif" font-size="90" fill="#C7A362" opacity="0.7">II</text></svg><div class="scrim"><span>Ansehen</span></div></div>
+    <div class="insta"><svg viewBox="0 0 120 140" fill="none"><path d="M30 20 L15 34 L26 48 L34 40 L34 128 L86 128 L86 40 L94 48 L105 34 L90 20 C90 20 82 30 60 30 C38 30 30 20 30 20 Z" stroke="#E7D5A8" stroke-width="2"/></svg><div class="scrim"><span>Ansehen</span></div></div>
+    <div class="insta"><svg viewBox="0 0 120 140" fill="none"><path d="M46 18 L34 26 L44 40 L52 34 L60 44 L68 34 L76 40 L86 26 L74 18 C74 18 68 26 60 26 C52 26 46 18 46 18 Z" stroke="#E7D5A8" stroke-width="2"/><path d="M44 40 L34 128 L86 128 L76 40" stroke="#E7D5A8" stroke-width="2"/></svg><div class="scrim"><span>Ansehen</span></div></div>
+  </div>
+</section>
+
 <!-- ===================== NEWSLETTER ===================== -->
 <section class="letter reveal" id="kontakt">
   <div class="wrap">
-    <span class="label">iv. Kontakt</span>
+    <span class="label">vii. Kontakt</span>
     <h2 style="margin-top:18px">Bleiben Sie informiert</h2>
     <p>Neue Kapitel der Kollektion, vor allen anderen. Kein Spam, kein Lärm — nur, wenn es etwas zu zeigen gibt.</p>
     <form class="letter-form" onsubmit="return false">
@@ -539,17 +656,24 @@
         <h5>Haus</h5>
         <ul>
           <li><a href="#haus">Das Haus</a></li>
+          <li><a href="#handwerk">Handwerk</a></li>
           <li><a href="#lookbook">Lookbook</a></li>
-          <li><a href="#kontakt">Kontakt</a></li>
         </ul>
       </div>
       <div class="foot-col">
-        <h5>Folgen</h5>
+        <h5>Service</h5>
         <ul>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">Pinterest</a></li>
+          <li><a href="#pflege">Größe &amp; Pflege</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+          <li><a href="#folgen">Instagram</a></li>
         </ul>
       </div>
+    </div>
+    <div class="foot-legal">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">AGB</a>
+      <a href="#pflege">Versand &amp; Rückgabe</a>
     </div>
     <div class="foot-bottom">
       <span>Luca Kolhoff · Maison II · MMXXVI</span>
