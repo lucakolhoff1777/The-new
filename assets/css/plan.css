@@ -279,8 +279,20 @@ a { color: inherit; text-decoration: none; }
 }
 .appt.is-short { padding: 4px 10px; line-height: 1.22; }
 .appt.is-short .n { font-size: .8rem; }
-.appt.is-mini { padding: 4px 9px; }
+/* too flat for two lines — collapse to one row: time, name, initials */
+.appt.is-mini { padding: 3px 9px; display: flex; align-items: center; gap: 8px; }
+.appt.is-mini .t { font-size: .64rem; flex-shrink: 0; }
+.appt.is-mini .n { font-size: .74rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .appt.is-mini .s { display: none; }
+.appt.is-mini .who { position: static; order: 3; margin-left: auto; flex-shrink: 0; }
+/* half an hour: time and name share the first line, treatment sits below */
+.appt.is-tight {
+  padding: 3px 36px 3px 9px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 7px; line-height: 1.18;
+}
+.appt.is-tight .t { font-size: .62rem; }
+.appt.is-tight .n { font-size: .74rem; }
+.appt.is-tight .s { flex-basis: 100%; font-size: .64rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .appt.is-dim { opacity: .16; pointer-events: none; }
 
 /* -------------------------------------------------------------------------
