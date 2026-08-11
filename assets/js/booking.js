@@ -73,11 +73,12 @@
       }));
   }
 
-  function buildDays() {
+  // `keep` is set when the visitor picked the day themselves — jumping away
+  // from a fully booked day they just tapped would be maddening
+  function buildDays(keep) {
     const dates = P.nextDates(14);
     const counts = dates.map((d) => P.slotsFor(pick.svc.key, d, pick.ther || null).length);
-    // open on the first day that actually has something
-    if (!pick.date || !dates.includes(pick.date) || !counts[dates.indexOf(pick.date)]) {
+    if (!keep && (!pick.date || !dates.includes(pick.date) || !counts[dates.indexOf(pick.date)])) {
       const i = counts.findIndex((c) => c > 0);
       pick.date = i >= 0 ? dates[i] : dates[0];
     }
@@ -89,7 +90,7 @@
         <em>${counts[i] ? counts[i] + " frei" : "belegt"}</em>
       </button>`).join("");
     byId("dayStrip").querySelectorAll("[data-date]").forEach((b) =>
-      b.addEventListener("click", () => { pick.date = b.dataset.date; buildDays(); }));
+      b.addEventListener("click", () => { pick.date = b.dataset.date; buildDays(true); }));
     buildSlots();
   }
 
@@ -110,7 +111,8 @@
           ${pick.ther ? "<br>Ohne feste Therapeut:in gäbe es mehr Auswahl." : ""}
         </p>`;
       const jump = byId("slots").querySelector("[data-jump]");
-      if (jump) jump.addEventListener("click", () => { pick.date = jump.dataset.jump; buildDays(); });
+      if (jump) jump.addEventListener("click", () => { pick.date = jump.dataset.jump; buildDays(true); });
+      renderWaitOffer();
       return;
     }
 
@@ -135,6 +137,52 @@
         showSummary();
         goto(3);
       }));
+  }
+
+  /* A day with nothing free is where people give up. Offer the waiting list
+     right there instead of sending them to the phone. */
+  function renderWaitOffer() {
+    byId("slots").insertAdjacentHTML("beforeend", `
+      <form class="waitbox glass" id="waitForm">
+        <h3>Auf die Warteliste?</h3>
+        <p>Wird ein Termin frei, rufen wir dich an — meist noch am selben Tag.
+           Ohne Verpflichtung, jederzeit abbestellbar.</p>
+        <div class="form-row">
+          <label class="field"><span>Name *</span>
+            <input type="text" id="wName" autocomplete="name" required></label>
+          <label class="field"><span>Telefon *</span>
+            <input type="tel" id="wPhone" autocomplete="tel" required></label>
+        </div>
+        <label class="field"><span>Wann passt es dir?</span>
+          <input type="text" id="wWhen" placeholder="z. B. vormittags, oder ab 17 Uhr"></label>
+        <label class="check">
+          <input type="checkbox" id="wPrivacy" required>
+          <span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen. *</span>
+        </label>
+        <button type="submit" class="btn btn-primary btn-wide">Auf die Warteliste</button>
+        <p class="form-note" id="wMsg" role="status" aria-live="polite"></p>
+      </form>`);
+
+    byId("waitForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = byId("wMsg");
+      const name = byId("wName").value.trim();
+      const phone = byId("wPhone").value.trim();
+      const set = (t, err) => { msg.textContent = t; msg.className = "form-note" + (err ? " is-error" : " is-ok"); };
+      if (name.length < 2) return set("Bitte trag deinen Namen ein.", true);
+      if (phone.replace(/\D/g, "").length < 6) return set("Ohne Nummer können wir nicht anrufen.", true);
+      if (!byId("wPrivacy").checked) return set("Bitte bestätige die Datenschutzerklärung.", true);
+      P.addRequest({
+        kind: "rueckruf", name, phone, mail: "", type: pick.svc.name,
+        ther: pick.ther || "", date: "", start: "",
+        window: byId("wWhen").value.trim() || "egal",
+        note: `Warteliste für ${pick.svc.name}${pick.ther ? " bei " + P.therOf(pick.ther).name : ""}.`,
+        at: new Date().toISOString().slice(0, 16).replace("T", " "),
+        state: "offen",
+      });
+      e.target.reset();
+      set("Du stehst auf der Warteliste. Wir melden uns, sobald etwas frei wird.", false);
+    });
   }
 
   /* ------------------------------------------------------- 3. contact */
@@ -184,6 +232,23 @@
       <div><span>Wer</span><b>${t.name}</b></div>
       <div><span>Dauer</span><b>${pick.svc.min} Minuten</b></div>
       <div><span>Preis</span><b>${P.eur(P.priceFor(pick.svc))}</b></div>`;
+
+    // the calendar entry, right where it is useful
+    byId("icsBtn").onclick = () => {
+      const text = P.icsFor({
+        title: `${pick.svc.name} · Praxis Luca Kolhoff`,
+        dateISO: pick.date, start: pick.start, min: pick.svc.min,
+        description: "Bitte fünf Minuten vorher da sein. Absage bis 24 Stunden vorher kostenfrei.",
+      });
+      const url = URL.createObjectURL(new Blob([text], { type: "text/calendar;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `termin-${pick.date}-${pick.start.replace(":", "")}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
     goto(4);
   });
 

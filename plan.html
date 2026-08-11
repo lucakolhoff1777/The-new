@@ -64,6 +64,7 @@
       <button type="button" class="tab" data-tab="woche" role="tab" aria-selected="false">Woche</button>
       <button type="button" class="tab" data-tab="anfragen" role="tab" aria-selected="false">Anfragen <i class="badge" id="tabBadge"></i></button>
       <button type="button" class="tab" data-tab="patienten" role="tab" aria-selected="false">Patienten</button>
+      <button type="button" class="tab" data-tab="berichte" role="tab" aria-selected="false">Berichte <i class="badge" id="repBadge"></i></button>
       <button type="button" class="tab" data-tab="rezepte" role="tab" aria-selected="false">Rezepte</button>
       <button type="button" class="tab" data-tab="abrechnung" role="tab" aria-selected="false" data-roles="leitung">Abrechnung</button>
       <button type="button" class="tab" data-tab="team" role="tab" aria-selected="false">Team</button>
@@ -102,6 +103,13 @@
       </div>
     </section>
 
+    <div class="panel-head panel-head-flat">
+      <h2>Auslastung der nächsten zwei Wochen</h2>
+      <p>Wo es dünn wird, sieht man hier — früh genug, um Warteliste, Aktion oder
+         Werbung darauf zu setzen. Ein Klick auf einen Tag zeigt, was noch frei ist.</p>
+    </div>
+    <div class="ampel" id="ampel"></div>
+
     <section class="controls">
       <div class="days" id="days" role="tablist" aria-label="Wochentag"></div>
       <div class="control-right">
@@ -110,6 +118,7 @@
           <button type="button" class="vbtn is-on" data-view="raum">Räume</button>
           <button type="button" class="vbtn" data-view="liste">Liste</button>
         </div>
+        <button type="button" class="btn-line" id="dayClose">Tagesabschluss</button>
       </div>
     </section>
 
@@ -241,11 +250,51 @@
           <tr><th scope="col">Patient:in</th><th scope="col">Jahrgang</th>
               <th scope="col">Therapeut:in</th><th scope="col">Leistungen</th>
               <th scope="col" class="num">Termine</th><th scope="col">Verordnung</th>
-              <th scope="col">Erinnerung</th></tr>
+              <th scope="col">Zuverlässigkeit</th><th scope="col">Erinnerung</th></tr>
         </thead>
         <tbody id="patBody"></tbody>
       </table>
     </div>
+  </section>
+
+  <!-- ================= BERICHTE ================= -->
+  <section class="panel" data-panel="berichte" hidden>
+    <div class="panel-head">
+      <h2>Behandlungsberichte</h2>
+      <p>Nach jeder Einheit ein kurzer Bericht — diktiert oder getippt. Was hier steht,
+         ist die Dokumentation nach § 630f BGB und zugleich die Übergabe an die
+         Kolleg:innen.</p>
+    </div>
+
+    <section class="stats" aria-label="Kennzahlen der Dokumentation">
+      <div class="stat"><span class="stat-label">Offen</span>
+        <span class="stat-value" id="repOpen">—</span>
+        <span class="stat-note">Termine ohne Bericht</span>
+        <span class="meter" aria-hidden="true"><i id="repBar"></i></span></div>
+      <div class="stat"><span class="stat-label">Geschrieben</span>
+        <span class="stat-value" id="repDone">—</span>
+        <span class="stat-note">im Archiv</span></div>
+      <div class="stat"><span class="stat-label">Quote</span>
+        <span class="stat-value" id="repRate">—</span>
+        <span class="stat-note">dokumentierte Termine</span></div>
+      <div class="stat"><span class="stat-label">Diktat</span>
+        <span class="stat-value" id="repDictat">—</span>
+        <span class="stat-note" id="repDictatNote">Spracherkennung</span></div>
+    </section>
+
+    <div class="bill-controls">
+      <label class="search">
+        <span class="sr-only">In Berichten suchen</span>
+        <input type="search" id="repSearch" placeholder="Volltextsuche: Name, Leistung, Befund, Übergabe" autocomplete="off">
+      </label>
+      <div class="viewtoggle" role="group" aria-label="Filter">
+        <button type="button" class="vbtn is-on" data-repf="offen">Offen</button>
+        <button type="button" class="vbtn" data-repf="archiv">Archiv</button>
+        <button type="button" class="vbtn" data-repf="uebergabe">Übergaben</button>
+      </div>
+    </div>
+
+    <div class="rep-list" id="repList"></div>
   </section>
 
   <!-- ================= REZEPTE ================= -->
@@ -323,6 +372,29 @@
         <span class="stat-note" id="billHeadsNote">in dieser Woche</span>
       </div>
     </section>
+
+    <section class="stats" aria-label="Betriebswirtschaftliche Kennzahlen">
+      <div class="stat"><span class="stat-label">Umsatz je Raumstunde</span>
+        <span class="stat-value" id="kpiHour">—</span>
+        <span class="stat-note" id="kpiHourNote">über alle belegten Stunden</span></div>
+      <div class="stat"><span class="stat-label">Wiederkehrquote</span>
+        <span class="stat-value" id="kpiReturn">—</span>
+        <span class="stat-note" id="kpiReturnNote">Erstpatient:innen mit zweitem Termin</span>
+        <span class="meter" aria-hidden="true"><i id="kpiReturnBar"></i></span></div>
+      <div class="stat"><span class="stat-label">Ausfallquote</span>
+        <span class="stat-value" id="kpiNoshow">—</span>
+        <span class="stat-note" id="kpiNoshowNote">nicht erschienen oder zu spät abgesagt</span></div>
+      <div class="stat"><span class="stat-label">Entgangener Umsatz</span>
+        <span class="stat-value" id="kpiLost">—</span>
+        <span class="stat-note">durch Ausfälle in dieser Woche</span></div>
+    </section>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Leistungen nach Ertrag je Stunde</h2>
+      <p>Nicht der Preis entscheidet, sondern was eine belegte Raumstunde einbringt.
+         Die kurze Lymphdrainage kostet weniger — sie blockiert den Raum aber auch kürzer.</p>
+    </div>
+    <div class="bars" id="hourBars"></div>
 
     <div class="panel-head panel-head-sub">
       <h2>Umsatz im Verlauf</h2>
@@ -411,6 +483,21 @@
             <td class="num" id="billFoot">—</td>
           </tr>
         </tfoot>
+      </table>
+    </div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Lange nicht gesehen</h2>
+      <p>Wer vor mehr als drei Monaten zuletzt da war und keinen Termin hat. Eine kurze
+         Nachricht zur richtigen Zeit bringt mehr als jede Anzeige.</p>
+    </div>
+    <div class="matrix-wrap matrix-wrap-tall">
+      <table class="btable">
+        <caption class="sr-only">Patient:innen ohne Termin seit über drei Monaten</caption>
+        <thead><tr><th scope="col">Patient:in</th><th scope="col">Therapeut:in</th>
+                   <th scope="col">Zuletzt</th><th scope="col" class="num">Termine gesamt</th>
+                   <th scope="col">Kontakt</th><th scope="col"></th></tr></thead>
+        <tbody id="reactBody"></tbody>
       </table>
     </div>
 

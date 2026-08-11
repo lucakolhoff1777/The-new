@@ -447,11 +447,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-31",
-      "units": 10,
-      "done": 3,
-      "started": "2026-08-06",
-      "last": "2026-08-06"
+      "issued": "2026-07-24",
+      "units": 6,
+      "done": 1,
+      "started": "2026-07-31",
+      "last": "2026-07-31"
     },
     {
       "no": "HV-2026-1002",
@@ -459,11 +459,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "sh",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-31",
-      "units": 12,
-      "done": 6,
-      "started": "2026-08-03",
-      "last": "2026-08-03"
+      "issued": "2026-07-13",
+      "units": 10,
+      "done": 2,
+      "started": "2026-07-23",
+      "last": "2026-07-23"
     },
     {
       "no": "HV-2026-1003",
@@ -483,10 +483,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Kinesiotaping",
       "kind": "zuweis",
-      "issued": "2026-07-10",
-      "units": 6,
-      "done": 4,
-      "started": "2026-07-12",
+      "issued": "2026-07-25",
+      "units": 10,
+      "done": 2,
+      "started": null,
       "last": "2026-08-11"
     },
     {
@@ -495,10 +495,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "sh",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-30",
-      "units": 10,
-      "done": 3,
-      "started": "2026-08-09",
+      "issued": "2026-06-26",
+      "units": 6,
+      "done": 2,
+      "started": "2026-06-28",
       "last": "2026-08-10"
     },
     {
@@ -508,7 +508,7 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "type": "Krankengymnastik",
       "kind": "rezept",
       "issued": "2026-07-14",
-      "units": 10,
+      "units": 6,
       "done": 0,
       "started": null,
       "last": null
@@ -519,11 +519,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-15",
+      "issued": "2026-07-24",
       "units": 6,
       "done": 2,
-      "started": "2026-07-17",
-      "last": "2026-07-17"
+      "started": "2026-08-09",
+      "last": "2026-08-09"
     },
     {
       "no": "HV-2026-1008",
@@ -531,11 +531,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-07-07",
-      "units": 10,
-      "done": 4,
-      "started": "2026-07-11",
-      "last": "2026-07-11"
+      "issued": "2026-06-29",
+      "units": 12,
+      "done": 7,
+      "started": "2026-07-09",
+      "last": "2026-07-09"
     },
     {
       "no": "HV-2026-1009",
@@ -543,11 +543,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Kinesiotaping",
       "kind": "zuweis",
-      "issued": "2026-07-19",
-      "units": 10,
-      "done": 1,
-      "started": "2026-08-07",
-      "last": "2026-08-07"
+      "issued": "2026-06-29",
+      "units": 12,
+      "done": 9,
+      "started": "2026-07-05",
+      "last": "2026-07-05"
     },
     {
       "no": "HV-2026-1010",
@@ -555,10 +555,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Schienenbegleitung",
       "kind": "zuweis",
-      "issued": "2026-07-12",
+      "issued": "2026-07-30",
       "units": 10,
-      "done": 5,
-      "started": "2026-07-14",
+      "done": 1,
+      "started": null,
       "last": "2026-07-29"
     },
     {
@@ -567,11 +567,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-06-30",
-      "units": 12,
-      "done": 8,
-      "started": "2026-07-05",
-      "last": "2026-07-05"
+      "issued": "2026-07-22",
+      "units": 6,
+      "done": 4,
+      "started": "2026-08-02",
+      "last": "2026-08-02"
     },
     {
       "no": "HV-2026-1012",
@@ -579,11 +579,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-17",
-      "units": 12,
+      "issued": "2026-07-06",
+      "units": 6,
       "done": 2,
-      "started": "2026-07-20",
-      "last": "2026-07-20"
+      "started": "2026-07-09",
+      "last": "2026-07-09"
     },
     {
       "no": "HV-2026-1013",
@@ -591,10 +591,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-23",
-      "units": 6,
-      "done": 1,
-      "started": null,
+      "issued": "2026-06-27",
+      "units": 10,
+      "done": 2,
+      "started": "2026-06-30",
       "last": "2026-08-11"
     },
     {
@@ -603,10 +603,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "sh",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-06-30",
-      "units": 6,
-      "done": 1,
-      "started": "2026-07-18",
+      "issued": "2026-07-06",
+      "units": 10,
+      "done": 2,
+      "started": "2026-07-20",
       "last": "2026-07-25"
     },
     {
@@ -615,11 +615,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-04",
-      "units": 6,
-      "done": 1,
-      "started": "2026-07-10",
-      "last": "2026-07-10"
+      "issued": "2026-06-30",
+      "units": 10,
+      "done": 3,
+      "started": "2026-07-18",
+      "last": "2026-07-18"
     },
     {
       "no": "HV-2026-1016",
@@ -627,10 +627,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-18",
-      "units": 10,
-      "done": 3,
-      "started": "2026-08-03",
+      "issued": "2026-07-19",
+      "units": 6,
+      "done": 2,
+      "started": "2026-07-30",
       "last": "2026-08-10"
     },
     {
@@ -639,11 +639,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-10",
+      "issued": "2026-07-20",
       "units": 10,
-      "done": 3,
-      "started": "2026-07-13",
-      "last": "2026-07-13"
+      "done": 5,
+      "started": "2026-07-24",
+      "last": "2026-07-24"
     },
     {
       "no": "HV-2026-1018",
@@ -651,11 +651,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-02",
-      "units": 12,
-      "done": 11,
-      "started": "2026-07-05",
-      "last": "2026-07-05"
+      "issued": "2026-07-23",
+      "units": 6,
+      "done": 5,
+      "started": "2026-07-28",
+      "last": "2026-07-28"
     },
     {
       "no": "HV-2026-1019",
@@ -663,11 +663,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-05",
-      "units": 12,
-      "done": 2,
-      "started": "2026-07-19",
-      "last": "2026-07-19"
+      "issued": "2026-07-31",
+      "units": 6,
+      "done": 0,
+      "started": null,
+      "last": null
     },
     {
       "no": "HV-2026-1020",
@@ -675,11 +675,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-29",
+      "issued": "2026-07-02",
       "units": 6,
-      "done": 0,
-      "started": null,
-      "last": null
+      "done": 4,
+      "started": "2026-07-07",
+      "last": "2026-07-07"
     },
     {
       "no": "HV-2026-1021",
@@ -687,11 +687,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-07",
+      "issued": "2026-07-01",
       "units": 6,
-      "done": 3,
-      "started": "2026-07-12",
-      "last": "2026-07-12"
+      "done": 1,
+      "started": "2026-07-08",
+      "last": "2026-07-08"
     },
     {
       "no": "HV-2026-1022",
@@ -699,8 +699,8 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "sh",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-25",
-      "units": 12,
+      "issued": "2026-07-24",
+      "units": 6,
       "done": 0,
       "started": null,
       "last": "2026-07-30"
@@ -711,10 +711,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-07-17",
+      "issued": "2026-07-31",
       "units": 6,
-      "done": 4,
-      "started": "2026-07-30",
+      "done": 2,
+      "started": null,
       "last": "2026-08-11"
     },
     {
@@ -723,10 +723,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-01",
-      "units": 6,
+      "issued": "2026-07-24",
+      "units": 12,
       "done": 4,
-      "started": "2026-07-15",
+      "started": "2026-08-09",
       "last": "2026-08-10"
     },
     {
@@ -735,10 +735,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-08-05",
-      "units": 12,
-      "done": 2,
-      "started": null,
+      "issued": "2026-06-28",
+      "units": 10,
+      "done": 9,
+      "started": "2026-07-16",
       "last": "2026-08-11"
     },
     {
@@ -747,10 +747,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-06",
-      "units": 6,
-      "done": 4,
-      "started": "2026-07-12",
+      "issued": "2026-07-14",
+      "units": 10,
+      "done": 6,
+      "started": "2026-07-26",
       "last": "2026-08-11"
     },
     {
@@ -759,10 +759,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-26",
-      "units": 6,
-      "done": 4,
-      "started": "2026-07-30",
+      "issued": "2026-07-01",
+      "units": 10,
+      "done": 8,
+      "started": "2026-07-12",
       "last": "2026-08-11"
     },
     {
@@ -771,11 +771,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-07",
+      "issued": "2026-07-24",
       "units": 12,
       "done": 5,
-      "started": "2026-07-17",
-      "last": "2026-07-17"
+      "started": "2026-08-09",
+      "last": "2026-08-09"
     },
     {
       "no": "HV-2026-1029",
@@ -783,11 +783,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Kinesiotaping",
       "kind": "zuweis",
-      "issued": "2026-07-16",
-      "units": 10,
-      "done": 3,
-      "started": "2026-07-30",
-      "last": "2026-07-30"
+      "issued": "2026-07-08",
+      "units": 6,
+      "done": 1,
+      "started": "2026-07-15",
+      "last": "2026-07-15"
     },
     {
       "no": "HV-2026-1030",
@@ -795,10 +795,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "sh",
       "type": "Lymphdrainage",
       "kind": "rezept",
-      "issued": "2026-07-18",
-      "units": 6,
-      "done": 4,
-      "started": "2026-08-01",
+      "issued": "2026-07-17",
+      "units": 12,
+      "done": 3,
+      "started": "2026-07-26",
       "last": "2026-08-11"
     },
     {
@@ -808,10 +808,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "type": "Krankengymnastik",
       "kind": "rezept",
       "issued": "2026-07-17",
-      "units": 10,
-      "done": 2,
-      "started": "2026-07-31",
-      "last": "2026-07-31"
+      "units": 6,
+      "done": 1,
+      "started": "2026-07-28",
+      "last": "2026-07-28"
     },
     {
       "no": "HV-2026-1032",
@@ -831,11 +831,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-07-31",
-      "units": 12,
-      "done": 9,
-      "started": "2026-08-09",
-      "last": "2026-08-09"
+      "issued": "2026-07-04",
+      "units": 10,
+      "done": 2,
+      "started": "2026-07-16",
+      "last": "2026-07-16"
     },
     {
       "no": "HV-2026-1034",
@@ -843,10 +843,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-19",
+      "issued": "2026-07-17",
       "units": 10,
-      "done": 6,
-      "started": "2026-07-28",
+      "done": 4,
+      "started": "2026-07-19",
       "last": "2026-08-11"
     },
     {
@@ -856,10 +856,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "type": "Krankengymnastik",
       "kind": "rezept",
       "issued": "2026-07-20",
-      "units": 6,
+      "units": 12,
       "done": 3,
-      "started": "2026-07-29",
-      "last": "2026-07-29"
+      "started": "2026-08-03",
+      "last": "2026-08-03"
     },
     {
       "no": "HV-2026-1036",
@@ -867,10 +867,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-27",
+      "issued": "2026-07-26",
       "units": 6,
-      "done": 2,
-      "started": null,
+      "done": 3,
+      "started": "2026-08-02",
       "last": "2026-08-11"
     },
     {
@@ -879,11 +879,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-07-23",
-      "units": 6,
-      "done": 0,
-      "started": null,
-      "last": null
+      "issued": "2026-07-15",
+      "units": 10,
+      "done": 1,
+      "started": "2026-07-18",
+      "last": "2026-07-18"
     },
     {
       "no": "HV-2026-1038",
@@ -891,10 +891,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-28",
-      "units": 6,
-      "done": 2,
-      "started": null,
+      "issued": "2026-07-08",
+      "units": 10,
+      "done": 5,
+      "started": "2026-07-25",
       "last": "2026-08-11"
     },
     {
@@ -903,11 +903,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "CMD-Folge",
       "kind": "zuweis",
-      "issued": "2026-07-06",
-      "units": 6,
-      "done": 3,
-      "started": "2026-07-11",
-      "last": "2026-07-11"
+      "issued": "2026-07-03",
+      "units": 10,
+      "done": 5,
+      "started": "2026-07-05",
+      "last": "2026-07-05"
     },
     {
       "no": "HV-2026-1040",
@@ -915,10 +915,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Schienenbegleitung",
       "kind": "zuweis",
-      "issued": "2026-08-05",
-      "units": 12,
-      "done": 2,
-      "started": null,
+      "issued": "2026-06-30",
+      "units": 10,
+      "done": 3,
+      "started": "2026-07-18",
       "last": "2026-08-11"
     },
     {
@@ -927,11 +927,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "Kinesiotaping",
       "kind": "zuweis",
-      "issued": "2026-07-14",
+      "issued": "2026-07-20",
       "units": 6,
       "done": 6,
-      "started": "2026-08-02",
-      "last": "2026-08-02"
+      "started": "2026-07-24",
+      "last": "2026-07-24"
     },
     {
       "no": "HV-2026-1042",
@@ -939,10 +939,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-28",
-      "units": 12,
-      "done": 8,
-      "started": "2026-08-09",
+      "issued": "2026-07-29",
+      "units": 10,
+      "done": 2,
+      "started": null,
       "last": "2026-08-11"
     },
     {
@@ -951,10 +951,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-08-05",
-      "units": 6,
-      "done": 2,
-      "started": null,
+      "issued": "2026-07-01",
+      "units": 10,
+      "done": 8,
+      "started": "2026-07-06",
       "last": "2026-08-11"
     },
     {
@@ -963,11 +963,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-13",
+      "issued": "2026-07-04",
       "units": 10,
-      "done": 4,
-      "started": "2026-07-20",
-      "last": "2026-07-20"
+      "done": 3,
+      "started": "2026-07-22",
+      "last": "2026-07-22"
     },
     {
       "no": "HV-2026-1045",
@@ -975,10 +975,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Elektro & Ultraschall",
       "kind": "rezept",
-      "issued": "2026-07-13",
-      "units": 10,
-      "done": 6,
-      "started": "2026-07-21",
+      "issued": "2026-07-09",
+      "units": 6,
+      "done": 2,
+      "started": "2026-07-20",
       "last": "2026-08-10"
     },
     {
@@ -987,7 +987,7 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-07-25",
+      "issued": "2026-07-30",
       "units": 6,
       "done": 2,
       "started": null,
@@ -999,10 +999,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "lk",
       "type": "CMD-Ersttermin",
       "kind": "zuweis",
-      "issued": "2026-07-26",
+      "issued": "2026-07-07",
       "units": 10,
-      "done": 6,
-      "started": "2026-08-01",
+      "done": 9,
+      "started": "2026-07-25",
       "last": "2026-08-11"
     },
     {
@@ -1011,11 +1011,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-23",
-      "units": 12,
-      "done": 6,
-      "started": "2026-07-30",
-      "last": "2026-07-30"
+      "issued": "2026-08-07",
+      "units": 6,
+      "done": 0,
+      "started": null,
+      "last": null
     },
     {
       "no": "HV-2026-1049",
@@ -1023,11 +1023,11 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-06-30",
-      "units": 6,
-      "done": 3,
-      "started": "2026-07-11",
-      "last": "2026-07-11"
+      "issued": "2026-06-26",
+      "units": 12,
+      "done": 8,
+      "started": "2026-07-09",
+      "last": "2026-07-09"
     },
     {
       "no": "HV-2026-1050",
@@ -1035,10 +1035,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Manuelle Therapie",
       "kind": "rezept",
-      "issued": "2026-06-27",
-      "units": 12,
-      "done": 11,
-      "started": "2026-07-01",
+      "issued": "2026-06-30",
+      "units": 6,
+      "done": 3,
+      "started": "2026-07-16",
       "last": "2026-08-11"
     },
     {
@@ -1049,9 +1049,9 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "kind": "rezept",
       "issued": "2026-07-28",
       "units": 6,
-      "done": 0,
-      "started": null,
-      "last": null
+      "done": 3,
+      "started": "2026-08-09",
+      "last": "2026-08-09"
     },
     {
       "no": "HV-2026-1052",
@@ -1059,10 +1059,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "hw",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-06-29",
-      "units": 10,
-      "done": 5,
-      "started": "2026-07-07",
+      "issued": "2026-08-02",
+      "units": 6,
+      "done": 2,
+      "started": null,
       "last": "2026-08-11"
     },
     {
@@ -1071,10 +1071,10 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
       "ther": "jr",
       "type": "Krankengymnastik",
       "kind": "rezept",
-      "issued": "2026-07-16",
+      "issued": "2026-07-18",
       "units": 6,
       "done": 4,
-      "started": "2026-07-19",
+      "started": "2026-08-06",
       "last": "2026-08-11"
     }
   ];
@@ -1083,1190 +1083,1586 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
     {
       "name": "A. Demir",
       "ther": "hw",
-      "born": 1971,
-      "phone": "+49 000 662 75",
+      "born": 1987,
+      "phone": "+49 000 983 92",
       "mail": "demir@example.de",
-      "street": "Eichenkamp 50",
-      "since": "2024-06-13",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Ahornweg 11",
+      "since": "2025-07-09",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "9HHADE",
+      "firstAt": "2024-08-20",
+      "visitsAll": 43,
+      "noshows": 0
     },
     {
       "name": "A. Fuchs",
       "ther": "sh",
-      "born": 1996,
-      "phone": "+49 000 478 97",
+      "born": 1964,
+      "phone": "+49 000 135 85",
       "mail": "fuchs@example.de",
-      "street": "Birkenallee 28",
-      "since": "2025-07-24",
+      "street": "Birkenallee 70",
+      "since": "2025-09-09",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "M4HVTM",
+      "firstAt": "2025-10-25",
+      "visitsAll": 25,
+      "noshows": 0
     },
     {
       "name": "A. Okafor",
       "ther": "mb",
-      "born": 1981,
-      "phone": "+49 000 210 50",
+      "born": 2003,
+      "phone": "+49 000 343 18",
       "mail": "okafor@example.de",
-      "street": "Lindenstraße 69",
-      "since": "2026-01-08",
-      "remind": false,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Hafenstraße 21",
+      "since": "2026-01-24",
+      "remind": true,
+      "channel": "SMS",
+      "note": "",
+      "code": "DEJ7LU",
+      "firstAt": "2025-10-29",
+      "visitsAll": 27,
+      "noshows": 1
     },
     {
       "name": "A. Reiss",
       "ther": "lk",
-      "born": 1966,
-      "phone": "+49 000 243 74",
+      "born": 1986,
+      "phone": "+49 000 653 97",
       "mail": "reiss@example.de",
-      "street": "Hafenstraße 36",
-      "since": "2025-09-19",
+      "street": "Lindenstraße 83",
+      "since": "2024-08-25",
       "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "VFUTKN",
+      "firstAt": "2026-07-05",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "A. Riedel",
       "ther": "hw",
-      "born": 1990,
-      "phone": "+49 000 329 65",
+      "born": 1983,
+      "phone": "+49 000 714 46",
       "mail": "riedel@example.de",
-      "street": "Am Mühlbach 40",
-      "since": "2024-05-03",
+      "street": "Ahornweg 49",
+      "since": "2025-09-11",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "PR9E4W",
+      "firstAt": "2026-05-10",
+      "visitsAll": 5,
+      "noshows": 0
     },
     {
       "name": "B. Claus",
       "ther": "mb",
-      "born": 1978,
-      "phone": "+49 000 627 36",
+      "born": 1984,
+      "phone": "+49 000 229 59",
       "mail": "claus@example.de",
-      "street": "Sonnenhalde 11",
-      "since": "2024-09-03",
+      "street": "Sonnenhalde 45",
+      "since": "2025-12-10",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "EY7JXY",
+      "firstAt": "2024-08-11",
+      "visitsAll": 50,
+      "noshows": 7
     },
     {
       "name": "B. Duarte",
       "ther": "mb",
-      "born": 1993,
-      "phone": "+49 000 470 52",
+      "born": 2003,
+      "phone": "+49 000 368 36",
       "mail": "duarte@example.de",
-      "street": "Lindenstraße 37",
-      "since": "2026-06-05",
+      "street": "Sonnenhalde 47",
+      "since": "2025-04-16",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "PVHYUX",
+      "firstAt": "2024-10-15",
+      "visitsAll": 51,
+      "noshows": 2
     },
     {
       "name": "B. Frey",
       "ther": "lk",
-      "born": 1988,
-      "phone": "+49 000 653 32",
+      "born": 2001,
+      "phone": "+49 000 990 85",
       "mail": "frey@example.de",
-      "street": "Sonnenhalde 30",
-      "since": "2024-09-09",
-      "remind": true,
+      "street": "Rosenweg 69",
+      "since": "2025-02-04",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "9ADDTC",
+      "firstAt": "2025-04-04",
+      "visitsAll": 60,
+      "noshows": 4
     },
     {
       "name": "B. Ludwig",
       "ther": "mb",
-      "born": 1998,
-      "phone": "+49 000 855 24",
+      "born": 2008,
+      "phone": "+49 000 420 75",
       "mail": "ludwig@example.de",
-      "street": "Ahornweg 64",
-      "since": "2026-04-22",
-      "remind": false,
+      "street": "Rosenweg 44",
+      "since": "2024-02-24",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "JYDPKD",
+      "firstAt": "2026-06-26",
+      "visitsAll": 7,
+      "noshows": 1
     },
     {
       "name": "B. Neuhaus",
       "ther": "sh",
-      "born": 1973,
-      "phone": "+49 000 205 76",
+      "born": 1984,
+      "phone": "+49 000 510 80",
       "mail": "neuhaus@example.de",
-      "street": "Ahornweg 45",
-      "since": "2024-06-06",
+      "street": "Kirchplatz 42",
+      "since": "2024-11-08",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "7VWVUA",
+      "firstAt": "2025-03-03",
+      "visitsAll": 115,
+      "noshows": 0
     },
     {
       "name": "B. Riedel",
       "ther": "sh",
-      "born": 1977,
-      "phone": "+49 000 765 84",
+      "born": 1981,
+      "phone": "+49 000 715 21",
       "mail": "riedel@example.de",
-      "street": "Sonnenhalde 78",
-      "since": "2026-07-19",
+      "street": "Birkenallee 87",
+      "since": "2025-01-06",
       "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "FV9E7K",
+      "firstAt": "2026-01-09",
+      "visitsAll": 46,
+      "noshows": 4
     },
     {
       "name": "C. Amrein",
       "ther": "sh",
-      "born": 1974,
-      "phone": "+49 000 223 17",
+      "born": 1988,
+      "phone": "+49 000 143 22",
       "mail": "amrein@example.de",
-      "street": "Lindenstraße 53",
-      "since": "2025-03-05",
+      "street": "Am Mühlbach 39",
+      "since": "2025-10-04",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "CKMLDR",
+      "firstAt": "2025-03-08",
+      "visitsAll": 90,
+      "noshows": 0
     },
     {
       "name": "C. Arnold",
       "ther": "hw",
-      "born": 1958,
-      "phone": "+49 000 649 83",
+      "born": 1995,
+      "phone": "+49 000 640 85",
       "mail": "arnold@example.de",
-      "street": "Sonnenhalde 77",
-      "since": "2024-03-17",
-      "remind": true,
+      "street": "Sonnenhalde 31",
+      "since": "2024-06-07",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NFYEDR",
+      "firstAt": "2024-10-17",
+      "visitsAll": 111,
+      "noshows": 10
     },
     {
       "name": "C. Baumann",
       "ther": "jr",
-      "born": 1958,
-      "phone": "+49 000 660 21",
+      "born": 1995,
+      "phone": "+49 000 437 61",
       "mail": "baumann@example.de",
-      "street": "Birkenallee 43",
-      "since": "2024-08-09",
+      "street": "Kirchplatz 53",
+      "since": "2025-08-23",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "LYH93J",
+      "firstAt": "2023-12-04",
+      "visitsAll": 120,
+      "noshows": 7
     },
     {
       "name": "C. Bianchi",
       "ther": "hw",
-      "born": 1978,
-      "phone": "+49 000 826 34",
+      "born": 1959,
+      "phone": "+49 000 910 81",
       "mail": "bianchi@example.de",
-      "street": "Talblick 41",
-      "since": "2024-05-08",
+      "street": "Ahornweg 54",
+      "since": "2026-02-21",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "LW9C3D",
+      "firstAt": "2026-04-06",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "C. Hartwig",
       "ther": "lk",
-      "born": 2000,
-      "phone": "+49 000 175 24",
+      "born": 1982,
+      "phone": "+49 000 807 46",
       "mail": "hartwig@example.de",
-      "street": "Talblick 84",
-      "since": "2026-06-06",
+      "street": "Sonnenhalde 52",
+      "since": "2024-03-17",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "VEUK7D",
+      "firstAt": "2026-06-12",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "C. Krüger",
       "ther": "sh",
-      "born": 1966,
-      "phone": "+49 000 100 27",
+      "born": 2010,
+      "phone": "+49 000 183 56",
       "mail": "krueger@example.de",
-      "street": "Lindenstraße 33",
-      "since": "2026-06-05",
+      "street": "Rosenweg 83",
+      "since": "2024-09-07",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "V7ELP7",
+      "firstAt": "2025-03-03",
+      "visitsAll": 100,
+      "noshows": 6
     },
     {
       "name": "C. Ludwig",
       "ther": "sh",
-      "born": 1972,
-      "phone": "+49 000 221 49",
+      "born": 1963,
+      "phone": "+49 000 670 75",
       "mail": "ludwig@example.de",
-      "street": "Birkenallee 52",
-      "since": "2024-10-13",
+      "street": "Talblick 77",
+      "since": "2025-06-11",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "DMWDUP",
+      "firstAt": "2024-02-04",
+      "visitsAll": 115,
+      "noshows": 23
     },
     {
       "name": "C. Marchand",
       "ther": "lk",
-      "born": 1965,
-      "phone": "+49 000 686 52",
+      "born": 1994,
+      "phone": "+49 000 989 95",
       "mail": "marchand@example.de",
-      "street": "Hafenstraße 67",
-      "since": "2024-10-21",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Am Mühlbach 71",
+      "since": "2025-07-23",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "3R9PRY",
+      "firstAt": "2025-11-23",
+      "visitsAll": 47,
+      "noshows": 0
     },
     {
       "name": "C. Wagner",
       "ther": "lk",
-      "born": 1965,
-      "phone": "+49 000 445 50",
+      "born": 1990,
+      "phone": "+49 000 184 96",
       "mail": "wagner@example.de",
-      "street": "Eichenkamp 32",
-      "since": "2026-01-04",
+      "street": "Rosenweg 41",
+      "since": "2025-11-22",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NYY3XV",
+      "firstAt": "2024-12-10",
+      "visitsAll": 92,
+      "noshows": 13
     },
     {
       "name": "C. Ziegler",
       "ther": "lk",
-      "born": 2005,
-      "phone": "+49 000 510 85",
+      "born": 1966,
+      "phone": "+49 000 372 10",
       "mail": "ziegler@example.de",
-      "street": "Lindenstraße 50",
-      "since": "2026-04-07",
+      "street": "Rosenweg 21",
+      "since": "2025-08-03",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "C3AAX3",
+      "firstAt": "2025-06-26",
+      "visitsAll": 22,
+      "noshows": 1
     },
     {
       "name": "D. Behrend",
       "ther": "hw",
-      "born": 1955,
-      "phone": "+49 000 654 62",
+      "born": 2010,
+      "phone": "+49 000 572 85",
       "mail": "behrend@example.de",
-      "street": "Lindenstraße 68",
-      "since": "2024-04-15",
+      "street": "Talblick 48",
+      "since": "2025-12-02",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "KD447M",
+      "firstAt": "2023-10-02",
+      "visitsAll": 120,
+      "noshows": 5
     },
     {
       "name": "D. Mahler",
       "ther": "lk",
-      "born": 1960,
-      "phone": "+49 000 457 66",
+      "born": 1979,
+      "phone": "+49 000 263 50",
       "mail": "mahler@example.de",
-      "street": "Hafenstraße 69",
-      "since": "2026-06-24",
-      "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "street": "Am Mühlbach 14",
+      "since": "2024-08-05",
+      "remind": false,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "P4HDM9",
+      "firstAt": "2024-08-16",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "D. Nowak",
       "ther": "hw",
-      "born": 1957,
-      "phone": "+49 000 404 41",
+      "born": 1991,
+      "phone": "+49 000 644 39",
       "mail": "nowak@example.de",
-      "street": "Kirchplatz 42",
-      "since": "2024-11-30",
+      "street": "Talblick 10",
+      "since": "2024-07-10",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "W3LTKN",
+      "firstAt": "2025-07-30",
+      "visitsAll": 39,
+      "noshows": 8
     },
     {
       "name": "D. Sauer",
       "ther": "lk",
-      "born": 1964,
-      "phone": "+49 000 710 72",
+      "born": 1951,
+      "phone": "+49 000 564 23",
       "mail": "sauer@example.de",
-      "street": "Ahornweg 86",
-      "since": "2024-03-08",
-      "remind": false,
+      "street": "Ahornweg 47",
+      "since": "2025-07-07",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "9TXVRX",
+      "firstAt": "2025-04-30",
+      "visitsAll": 50,
+      "noshows": 3
     },
     {
       "name": "D. Vogel",
       "ther": "hw",
-      "born": 1997,
-      "phone": "+49 000 990 80",
+      "born": 1968,
+      "phone": "+49 000 904 54",
       "mail": "vogel@example.de",
-      "street": "Lindenstraße 56",
-      "since": "2024-04-12",
+      "street": "Lindenstraße 46",
+      "since": "2025-11-28",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "RTWPCX",
+      "firstAt": "2025-02-18",
+      "visitsAll": 32,
+      "noshows": 0
     },
     {
       "name": "E. Amrein",
       "ther": "mb",
-      "born": 2001,
-      "phone": "+49 000 518 97",
+      "born": 2009,
+      "phone": "+49 000 676 52",
       "mail": "amrein@example.de",
-      "street": "Lindenstraße 75",
-      "since": "2026-02-11",
+      "street": "Talblick 62",
+      "since": "2025-11-02",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "WWLMHV",
+      "firstAt": "2025-03-22",
+      "visitsAll": 79,
+      "noshows": 5
     },
     {
       "name": "E. Berger",
       "ther": "sh",
-      "born": 2008,
-      "phone": "+49 000 892 84",
+      "born": 2002,
+      "phone": "+49 000 785 86",
       "mail": "berger@example.de",
-      "street": "Ahornweg 10",
-      "since": "2024-05-08",
+      "street": "Sonnenhalde 85",
+      "since": "2026-02-23",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "NVAJ4U",
+      "firstAt": "2024-09-14",
+      "visitsAll": 100,
+      "noshows": 6
     },
     {
       "name": "E. Kovac",
       "ther": "jr",
-      "born": 1989,
-      "phone": "+49 000 554 31",
+      "born": 1959,
+      "phone": "+49 000 862 43",
       "mail": "kovac@example.de",
-      "street": "Ahornweg 19",
-      "since": "2026-05-12",
+      "street": "Sonnenhalde 61",
+      "since": "2025-09-08",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "PMY4DX",
+      "firstAt": "2024-10-20",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "F. Keller",
       "ther": "lk",
-      "born": 1973,
-      "phone": "+49 000 460 30",
+      "born": 1983,
+      "phone": "+49 000 516 35",
       "mail": "keller@example.de",
-      "street": "Birkenallee 16",
-      "since": "2024-10-12",
+      "street": "Ahornweg 60",
+      "since": "2026-06-22",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "44KLJC",
+      "firstAt": "2024-07-21",
+      "visitsAll": 120,
+      "noshows": 11
     },
     {
       "name": "F. Neuhaus",
       "ther": "lk",
-      "born": 1952,
-      "phone": "+49 000 761 60",
+      "born": 1978,
+      "phone": "+49 000 953 36",
       "mail": "neuhaus@example.de",
-      "street": "Talblick 6",
-      "since": "2025-11-24",
+      "street": "Lindenstraße 65",
+      "since": "2026-04-18",
       "remind": false,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "4DXD4Y",
+      "firstAt": "2026-06-27",
+      "visitsAll": 8,
+      "noshows": 0
     },
     {
       "name": "G. Kovac",
       "ther": "jr",
-      "born": 1963,
-      "phone": "+49 000 634 27",
+      "born": 1983,
+      "phone": "+49 000 772 12",
       "mail": "kovac@example.de",
-      "street": "Ahornweg 48",
-      "since": "2024-03-16",
+      "street": "Lindenstraße 74",
+      "since": "2025-10-02",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "HDPH9K",
+      "firstAt": "2024-03-20",
+      "visitsAll": 85,
+      "noshows": 17
     },
     {
       "name": "G. Möller",
       "ther": "hw",
-      "born": 2005,
-      "phone": "+49 000 451 52",
+      "born": 1984,
+      "phone": "+49 000 540 32",
       "mail": "moeller@example.de",
-      "street": "Ahornweg 19",
-      "since": "2024-03-04",
+      "street": "Sonnenhalde 55",
+      "since": "2025-01-09",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "W3FLFC",
+      "firstAt": "2025-02-18",
+      "visitsAll": 115,
+      "noshows": 16
     },
     {
       "name": "G. Roth",
       "ther": "lk",
-      "born": 2001,
-      "phone": "+49 000 600 66",
+      "born": 1957,
+      "phone": "+49 000 511 17",
       "mail": "roth@example.de",
-      "street": "Birkenallee 33",
-      "since": "2025-09-11",
+      "street": "Kirchplatz 44",
+      "since": "2024-07-01",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NJ3KRJ",
+      "firstAt": "2023-11-19",
+      "visitsAll": 93,
+      "noshows": 0
     },
     {
       "name": "G. Vogt",
       "ther": "lk",
-      "born": 1973,
-      "phone": "+49 000 885 88",
+      "born": 1971,
+      "phone": "+49 000 434 88",
       "mail": "vogt@example.de",
-      "street": "Birkenallee 50",
-      "since": "2025-04-07",
+      "street": "Eichenkamp 18",
+      "since": "2026-07-09",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "UWPJ7M",
+      "firstAt": "2026-05-19",
+      "visitsAll": 11,
+      "noshows": 0
     },
     {
       "name": "H. Bauer",
       "ther": "hw",
-      "born": 1994,
-      "phone": "+49 000 204 80",
+      "born": 1990,
+      "phone": "+49 000 510 90",
       "mail": "bauer@example.de",
-      "street": "Talblick 45",
-      "since": "2024-07-15",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Birkenallee 69",
+      "since": "2024-11-10",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "PLR4RE",
+      "firstAt": "2025-07-30",
+      "visitsAll": 48,
+      "noshows": 0
     },
     {
       "name": "H. Brandt",
       "ther": "jr",
-      "born": 1971,
-      "phone": "+49 000 473 54",
+      "born": 1949,
+      "phone": "+49 000 633 12",
       "mail": "brandt@example.de",
-      "street": "Eichenkamp 23",
-      "since": "2024-03-30",
-      "remind": true,
+      "street": "Eichenkamp 73",
+      "since": "2026-03-18",
+      "remind": false,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "TPMRCA",
+      "firstAt": "2024-11-14",
+      "visitsAll": 120,
+      "noshows": 5
     },
     {
       "name": "H. Fuchs",
       "ther": "hw",
-      "born": 1983,
-      "phone": "+49 000 209 67",
+      "born": 1961,
+      "phone": "+49 000 232 46",
       "mail": "fuchs@example.de",
-      "street": "Hafenstraße 81",
-      "since": "2026-06-01",
+      "street": "Rosenweg 85",
+      "since": "2025-11-18",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NCHYC4",
+      "firstAt": "2024-02-21",
+      "visitsAll": 116,
+      "noshows": 2
     },
     {
       "name": "H. Kessler",
       "ther": "sh",
-      "born": 1996,
-      "phone": "+49 000 614 88",
+      "born": 1977,
+      "phone": "+49 000 787 33",
       "mail": "kessler@example.de",
-      "street": "Lindenstraße 80",
-      "since": "2026-04-07",
+      "street": "Sonnenhalde 16",
+      "since": "2025-09-02",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "DCHNHM",
+      "firstAt": "2025-02-09",
+      "visitsAll": 66,
+      "noshows": 0
     },
     {
       "name": "H. Kuhn",
       "ther": "hw",
-      "born": 1994,
-      "phone": "+49 000 449 91",
+      "born": 1987,
+      "phone": "+49 000 261 24",
       "mail": "kuhn@example.de",
-      "street": "Eichenkamp 33",
-      "since": "2025-10-11",
+      "street": "Eichenkamp 67",
+      "since": "2025-06-29",
       "remind": false,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "CUAX3J",
+      "firstAt": "2025-06-06",
+      "visitsAll": 83,
+      "noshows": 0
     },
     {
       "name": "H. Möller",
       "ther": "mb",
-      "born": 1969,
-      "phone": "+49 000 774 75",
+      "born": 1956,
+      "phone": "+49 000 869 46",
       "mail": "moeller@example.de",
-      "street": "Hafenstraße 2",
-      "since": "2025-07-17",
-      "remind": false,
+      "street": "Am Mühlbach 40",
+      "since": "2026-03-20",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "AXXFYC",
+      "firstAt": "2025-06-13",
+      "visitsAll": 64,
+      "noshows": 0
     },
     {
       "name": "H. Nowak",
       "ther": "sh",
-      "born": 1951,
-      "phone": "+49 000 567 16",
+      "born": 1966,
+      "phone": "+49 000 905 34",
       "mail": "nowak@example.de",
-      "street": "Sonnenhalde 50",
-      "since": "2025-12-03",
+      "street": "Eichenkamp 69",
+      "since": "2026-03-26",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "LCXY7A",
+      "firstAt": "2025-05-25",
+      "visitsAll": 93,
+      "noshows": 19
     },
     {
       "name": "I. Amrein",
       "ther": "mb",
-      "born": 1976,
-      "phone": "+49 000 296 98",
+      "born": 1981,
+      "phone": "+49 000 877 32",
       "mail": "amrein@example.de",
-      "street": "Eichenkamp 38",
-      "since": "2024-11-19",
-      "remind": true,
+      "street": "Rosenweg 54",
+      "since": "2024-09-11",
+      "remind": false,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "7J73MY",
+      "firstAt": "2024-07-12",
+      "visitsAll": 120,
+      "noshows": 17
     },
     {
       "name": "I. Baumann",
       "ther": "lk",
       "born": 1979,
-      "phone": "+49 000 246 17",
+      "phone": "+49 000 358 73",
       "mail": "baumann@example.de",
-      "street": "Am Mühlbach 26",
-      "since": "2024-09-19",
+      "street": "Eichenkamp 80",
+      "since": "2025-10-31",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "FFPKWK",
+      "firstAt": "2026-03-23",
+      "visitsAll": 10,
+      "noshows": 0
     },
     {
       "name": "I. Behrend",
       "ther": "hw",
-      "born": 1955,
-      "phone": "+49 000 692 36",
+      "born": 1993,
+      "phone": "+49 000 165 46",
       "mail": "behrend@example.de",
-      "street": "Sonnenhalde 60",
-      "since": "2025-07-06",
+      "street": "Birkenallee 34",
+      "since": "2024-07-30",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "XY4KER",
+      "firstAt": "2025-05-18",
+      "visitsAll": 38,
+      "noshows": 5
     },
     {
       "name": "I. Ferreira",
       "ther": "sh",
-      "born": 2006,
-      "phone": "+49 000 820 73",
+      "born": 1973,
+      "phone": "+49 000 860 68",
       "mail": "ferreira@example.de",
-      "street": "Talblick 14",
-      "since": "2025-06-30",
+      "street": "Lindenstraße 50",
+      "since": "2025-04-22",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "K4FDCK",
+      "firstAt": "2026-05-07",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "I. Frey",
       "ther": "sh",
-      "born": 1994,
-      "phone": "+49 000 954 61",
+      "born": 1972,
+      "phone": "+49 000 400 60",
       "mail": "frey@example.de",
-      "street": "Kirchplatz 29",
-      "since": "2026-06-25",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Rosenweg 2",
+      "since": "2026-06-24",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "N9ULLA",
+      "firstAt": "2026-01-25",
+      "visitsAll": 34,
+      "noshows": 1
     },
     {
       "name": "I. Sauer",
       "ther": "sh",
-      "born": 1985,
-      "phone": "+49 000 635 61",
+      "born": 1958,
+      "phone": "+49 000 175 71",
       "mail": "sauer@example.de",
-      "street": "Am Mühlbach 8",
-      "since": "2025-02-21",
-      "remind": true,
+      "street": "Kirchplatz 67",
+      "since": "2026-02-19",
+      "remind": false,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "7VPWUX",
+      "firstAt": "2026-03-25",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "J. Aksoy",
       "ther": "mb",
-      "born": 1958,
-      "phone": "+49 000 718 44",
+      "born": 1999,
+      "phone": "+49 000 208 52",
       "mail": "aksoy@example.de",
-      "street": "Am Mühlbach 3",
-      "since": "2024-08-05",
-      "remind": false,
+      "street": "Eichenkamp 9",
+      "since": "2025-04-22",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "CR9HWW",
+      "firstAt": "2024-10-25",
+      "visitsAll": 36,
+      "noshows": 2
     },
     {
       "name": "J. Zeller",
       "ther": "jr",
-      "born": 2006,
-      "phone": "+49 000 827 58",
+      "born": 1978,
+      "phone": "+49 000 635 35",
       "mail": "zeller@example.de",
-      "street": "Birkenallee 25",
-      "since": "2025-01-21",
+      "street": "Talblick 82",
+      "since": "2024-03-18",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "VERKVK",
+      "firstAt": "2024-01-06",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "K. Marchand",
       "ther": "lk",
-      "born": 1984,
-      "phone": "+49 000 720 40",
+      "born": 1958,
+      "phone": "+49 000 454 12",
       "mail": "marchand@example.de",
-      "street": "Lindenstraße 77",
-      "since": "2024-12-21",
+      "street": "Lindenstraße 5",
+      "since": "2025-05-15",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "CJUDCJ",
+      "firstAt": "2023-11-02",
+      "visitsAll": 55,
+      "noshows": 2
     },
     {
       "name": "K. Roth",
       "ther": "hw",
-      "born": 1954,
-      "phone": "+49 000 259 42",
+      "born": 1983,
+      "phone": "+49 000 795 45",
       "mail": "roth@example.de",
-      "street": "Hafenstraße 13",
-      "since": "2025-01-18",
+      "street": "Eichenkamp 60",
+      "since": "2024-09-27",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "EYP4XN",
+      "firstAt": "2023-09-05",
+      "visitsAll": 96,
+      "noshows": 0
     },
     {
       "name": "L. Behrend",
       "ther": "mb",
-      "born": 1984,
-      "phone": "+49 000 813 35",
+      "born": 2010,
+      "phone": "+49 000 785 43",
       "mail": "behrend@example.de",
-      "street": "Ahornweg 75",
-      "since": "2026-01-22",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Hafenstraße 29",
+      "since": "2025-12-21",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "D7PH4V",
+      "firstAt": "2025-02-07",
+      "visitsAll": 43,
+      "noshows": 2
     },
     {
       "name": "L. Winkler",
       "ther": "jr",
-      "born": 1964,
-      "phone": "+49 000 713 85",
+      "born": 1983,
+      "phone": "+49 000 525 45",
       "mail": "winkler@example.de",
-      "street": "Rosenweg 17",
-      "since": "2024-09-15",
+      "street": "Talblick 25",
+      "since": "2025-01-20",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "DEAAUU",
+      "firstAt": "2025-04-28",
+      "visitsAll": 92,
+      "noshows": 2
     },
     {
       "name": "M. Marchand",
       "ther": "mb",
-      "born": 1950,
-      "phone": "+49 000 795 48",
+      "born": 2005,
+      "phone": "+49 000 627 45",
       "mail": "marchand@example.de",
-      "street": "Eichenkamp 15",
-      "since": "2025-11-20",
+      "street": "Am Mühlbach 19",
+      "since": "2026-05-13",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "XUL9LJ",
+      "firstAt": "2024-08-28",
+      "visitsAll": 80,
+      "noshows": 7
     },
     {
       "name": "M. Sperling",
       "ther": "mb",
       "born": 1997,
-      "phone": "+49 000 505 22",
+      "phone": "+49 000 182 79",
       "mail": "sperling@example.de",
-      "street": "Sonnenhalde 56",
-      "since": "2026-03-13",
+      "street": "Ahornweg 43",
+      "since": "2024-05-06",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NETHXX",
+      "firstAt": "2026-05-13",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "N. Aydin",
       "ther": "hw",
-      "born": 1979,
-      "phone": "+49 000 831 44",
+      "born": 1969,
+      "phone": "+49 000 989 15",
       "mail": "aydin@example.de",
-      "street": "Sonnenhalde 51",
-      "since": "2026-05-22",
+      "street": "Am Mühlbach 84",
+      "since": "2024-07-04",
       "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "UPHCV4",
+      "firstAt": "2023-09-21",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "N. Dietrich",
       "ther": "jr",
-      "born": 2002,
-      "phone": "+49 000 805 25",
+      "born": 1978,
+      "phone": "+49 000 821 10",
       "mail": "dietrich@example.de",
-      "street": "Lindenstraße 79",
-      "since": "2024-06-26",
+      "street": "Kirchplatz 49",
+      "since": "2026-01-28",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "CD747W",
+      "firstAt": "2025-10-15",
+      "visitsAll": 24,
+      "noshows": 3
     },
     {
       "name": "N. Frey",
       "ther": "hw",
-      "born": 1987,
-      "phone": "+49 000 892 60",
+      "born": 1952,
+      "phone": "+49 000 804 98",
       "mail": "frey@example.de",
-      "street": "Lindenstraße 18",
-      "since": "2025-06-27",
+      "street": "Eichenkamp 14",
+      "since": "2025-06-30",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "YRJA4D",
+      "firstAt": "2024-09-11",
+      "visitsAll": 120,
+      "noshows": 7
     },
     {
       "name": "N. Okafor",
       "ther": "mb",
-      "born": 1956,
-      "phone": "+49 000 608 55",
+      "born": 1957,
+      "phone": "+49 000 886 29",
       "mail": "okafor@example.de",
-      "street": "Lindenstraße 75",
-      "since": "2025-01-27",
-      "remind": true,
+      "street": "Sonnenhalde 17",
+      "since": "2025-04-25",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "7DFH79",
+      "firstAt": "2026-03-25",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "N. Tran",
       "ther": "mb",
-      "born": 1997,
-      "phone": "+49 000 348 24",
+      "born": 1993,
+      "phone": "+49 000 888 26",
       "mail": "tran@example.de",
-      "street": "Kirchplatz 61",
-      "since": "2025-01-25",
-      "remind": false,
+      "street": "Lindenstraße 3",
+      "since": "2024-11-12",
+      "remind": true,
       "channel": "E-Mail",
-      "note": ""
+      "note": "",
+      "code": "KA7VTP",
+      "firstAt": "2023-11-20",
+      "visitsAll": 120,
+      "noshows": 17
     },
     {
       "name": "O. Hübner",
       "ther": "sh",
-      "born": 2007,
-      "phone": "+49 000 960 61",
+      "born": 1993,
+      "phone": "+49 000 363 64",
       "mail": "huebner@example.de",
-      "street": "Lindenstraße 87",
-      "since": "2024-04-25",
+      "street": "Kirchplatz 13",
+      "since": "2025-08-12",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "RHNE3P",
+      "firstAt": "2025-09-19",
+      "visitsAll": 53,
+      "noshows": 0
     },
     {
       "name": "O. Vogt",
       "ther": "lk",
-      "born": 1999,
-      "phone": "+49 000 731 33",
+      "born": 1966,
+      "phone": "+49 000 854 33",
       "mail": "vogt@example.de",
-      "street": "Ahornweg 10",
-      "since": "2025-07-07",
+      "street": "Talblick 52",
+      "since": "2024-11-29",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "VEUMAE",
+      "firstAt": "2024-07-02",
+      "visitsAll": 113,
+      "noshows": 0
     },
     {
       "name": "O. Yilmaz",
       "ther": "lk",
-      "born": 1973,
-      "phone": "+49 000 444 73",
+      "born": 1979,
+      "phone": "+49 000 723 90",
       "mail": "yilmaz@example.de",
-      "street": "Kirchplatz 57",
-      "since": "2024-07-14",
-      "remind": false,
+      "street": "Birkenallee 6",
+      "since": "2025-11-25",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "3LDRVU",
+      "firstAt": "2026-07-17",
+      "visitsAll": 2,
+      "noshows": 0
     },
     {
       "name": "P. Mahler",
       "ther": "sh",
-      "born": 1992,
-      "phone": "+49 000 739 52",
+      "born": 1952,
+      "phone": "+49 000 322 79",
       "mail": "mahler@example.de",
-      "street": "Lindenstraße 10",
-      "since": "2026-06-02",
-      "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "street": "Eichenkamp 60",
+      "since": "2024-07-16",
+      "remind": false,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "XRJVLA",
+      "firstAt": "2023-09-28",
+      "visitsAll": 71,
+      "noshows": 0
     },
     {
       "name": "P. Reiss",
       "ther": "hw",
-      "born": 1988,
-      "phone": "+49 000 199 19",
+      "born": 1965,
+      "phone": "+49 000 467 65",
       "mail": "reiss@example.de",
-      "street": "Eichenkamp 27",
-      "since": "2024-04-10",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Ahornweg 39",
+      "since": "2025-01-16",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "VEVHCL",
+      "firstAt": "2026-03-30",
+      "visitsAll": 11,
+      "noshows": 0
     },
     {
       "name": "R. Duarte",
       "ther": "jr",
-      "born": 1968,
-      "phone": "+49 000 789 39",
+      "born": 1996,
+      "phone": "+49 000 724 56",
       "mail": "duarte@example.de",
-      "street": "Ahornweg 28",
-      "since": "2024-08-23",
+      "street": "Eichenkamp 7",
+      "since": "2024-12-13",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "JJWDNA",
+      "firstAt": "2024-01-15",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "R. Haas",
       "ther": "lk",
-      "born": 1964,
-      "phone": "+49 000 725 12",
+      "born": 1958,
+      "phone": "+49 000 191 21",
       "mail": "haas@example.de",
-      "street": "Am Mühlbach 22",
-      "since": "2024-07-30",
+      "street": "Rosenweg 49",
+      "since": "2024-09-07",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "TXWFF3",
+      "firstAt": "2024-12-26",
+      "visitsAll": 56,
+      "noshows": 1
     },
     {
       "name": "R. Hofmann",
       "ther": "mb",
-      "born": 1949,
-      "phone": "+49 000 131 66",
+      "born": 1992,
+      "phone": "+49 000 913 65",
       "mail": "hofmann@example.de",
-      "street": "Talblick 16",
-      "since": "2025-01-22",
+      "street": "Sonnenhalde 86",
+      "since": "2025-11-29",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "MAYECE",
+      "firstAt": "2024-12-07",
+      "visitsAll": 81,
+      "noshows": 0
     },
     {
       "name": "R. Wendler",
       "ther": "mb",
-      "born": 1986,
-      "phone": "+49 000 240 88",
+      "born": 1998,
+      "phone": "+49 000 875 38",
       "mail": "wendler@example.de",
-      "street": "Talblick 29",
-      "since": "2024-08-11",
+      "street": "Talblick 55",
+      "since": "2024-07-23",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "UX4KT9",
+      "firstAt": "2024-07-23",
+      "visitsAll": 68,
+      "noshows": 0
     },
     {
       "name": "R. Yilmaz",
       "ther": "mb",
-      "born": 1967,
-      "phone": "+49 000 979 37",
+      "born": 1982,
+      "phone": "+49 000 368 47",
       "mail": "yilmaz@example.de",
-      "street": "Am Mühlbach 3",
-      "since": "2024-11-30",
-      "remind": true,
+      "street": "Lindenstraße 11",
+      "since": "2026-01-02",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "H44H9X",
+      "firstAt": "2024-10-14",
+      "visitsAll": 61,
+      "noshows": 0
     },
     {
       "name": "S. Kirsch",
       "ther": "jr",
-      "born": 1972,
-      "phone": "+49 000 113 12",
+      "born": 1967,
+      "phone": "+49 000 963 72",
       "mail": "kirsch@example.de",
-      "street": "Hafenstraße 67",
-      "since": "2024-11-21",
+      "street": "Kirchplatz 56",
+      "since": "2026-01-26",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "XPH4DR",
+      "firstAt": "2025-09-26",
+      "visitsAll": 60,
+      "noshows": 2
     },
     {
       "name": "S. Kramer",
       "ther": "mb",
-      "born": 1994,
-      "phone": "+49 000 210 57",
+      "born": 1949,
+      "phone": "+49 000 884 82",
       "mail": "kramer@example.de",
-      "street": "Birkenallee 48",
-      "since": "2025-03-22",
+      "street": "Hafenstraße 16",
+      "since": "2025-12-07",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "AJHCMW",
+      "firstAt": "2025-07-20",
+      "visitsAll": 49,
+      "noshows": 7
     },
     {
       "name": "S. Marchand",
       "ther": "jr",
-      "born": 1972,
-      "phone": "+49 000 233 24",
+      "born": 1987,
+      "phone": "+49 000 307 54",
       "mail": "marchand@example.de",
-      "street": "Rosenweg 1",
-      "since": "2024-06-26",
-      "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "street": "Lindenstraße 62",
+      "since": "2025-02-13",
+      "remind": false,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "KAHLFA",
+      "firstAt": "2025-01-31",
+      "visitsAll": 107,
+      "noshows": 0
     },
     {
       "name": "S. Wendler",
       "ther": "sh",
-      "born": 2010,
-      "phone": "+49 000 523 63",
+      "born": 1988,
+      "phone": "+49 000 862 31",
       "mail": "wendler@example.de",
-      "street": "Eichenkamp 29",
-      "since": "2024-04-09",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Birkenallee 66",
+      "since": "2025-03-26",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "3JJY4A",
+      "firstAt": "2024-06-20",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "S. Ziegler",
       "ther": "hw",
-      "born": 1981,
-      "phone": "+49 000 103 68",
+      "born": 2006,
+      "phone": "+49 000 312 88",
       "mail": "ziegler@example.de",
-      "street": "Talblick 14",
-      "since": "2025-11-23",
+      "street": "Rosenweg 73",
+      "since": "2024-10-31",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "KHAUKV",
+      "firstAt": "2025-09-10",
+      "visitsAll": 63,
+      "noshows": 9
     },
     {
       "name": "T. Mahler",
       "ther": "hw",
-      "born": 1961,
-      "phone": "+49 000 290 94",
+      "born": 2006,
+      "phone": "+49 000 566 95",
       "mail": "mahler@example.de",
-      "street": "Lindenstraße 66",
-      "since": "2024-11-15",
+      "street": "Eichenkamp 69",
+      "since": "2024-10-28",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "C3A739",
+      "firstAt": "2025-09-16",
+      "visitsAll": 31,
+      "noshows": 2
     },
     {
       "name": "T. Marchand",
       "ther": "sh",
-      "born": 1972,
-      "phone": "+49 000 187 61",
+      "born": 2009,
+      "phone": "+49 000 476 80",
       "mail": "marchand@example.de",
-      "street": "Birkenallee 3",
-      "since": "2025-07-31",
-      "remind": true,
+      "street": "Am Mühlbach 73",
+      "since": "2026-02-13",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "C3JMX4",
+      "firstAt": "2026-05-19",
+      "visitsAll": 13,
+      "noshows": 0
     },
     {
       "name": "T. Wendler",
       "ther": "jr",
-      "born": 1997,
-      "phone": "+49 000 845 86",
+      "born": 1998,
+      "phone": "+49 000 475 64",
       "mail": "wendler@example.de",
-      "street": "Birkenallee 45",
-      "since": "2024-12-04",
-      "remind": false,
+      "street": "Kirchplatz 58",
+      "since": "2025-07-23",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "W3KRCV",
+      "firstAt": "2025-01-02",
+      "visitsAll": 89,
+      "noshows": 8
     },
     {
       "name": "T. Ziegler",
       "ther": "hw",
-      "born": 1992,
-      "phone": "+49 000 253 57",
+      "born": 1965,
+      "phone": "+49 000 723 88",
       "mail": "ziegler@example.de",
-      "street": "Hafenstraße 13",
-      "since": "2024-07-20",
+      "street": "Ahornweg 29",
+      "since": "2024-07-10",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "9LWWWW",
+      "firstAt": "2024-01-08",
+      "visitsAll": 120,
+      "noshows": 2
     },
     {
       "name": "U. Adler",
       "ther": "lk",
-      "born": 1995,
-      "phone": "+49 000 298 85",
+      "born": 1999,
+      "phone": "+49 000 651 60",
       "mail": "adler@example.de",
-      "street": "Lindenstraße 37",
-      "since": "2026-07-08",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Kirchplatz 25",
+      "since": "2025-09-24",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "KN4DKT",
+      "firstAt": "2025-09-28",
+      "visitsAll": 60,
+      "noshows": 5
     },
     {
       "name": "U. Demir",
       "ther": "lk",
-      "born": 1964,
-      "phone": "+49 000 713 85",
+      "born": 1992,
+      "phone": "+49 000 220 34",
       "mail": "demir@example.de",
-      "street": "Rosenweg 17",
-      "since": "2024-09-15",
+      "street": "Talblick 83",
+      "since": "2024-09-29",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "LJXFUE",
+      "firstAt": "2024-12-18",
+      "visitsAll": 59,
+      "noshows": 4
     },
     {
       "name": "U. Kolb",
       "ther": "lk",
-      "born": 1980,
-      "phone": "+49 000 104 60",
+      "born": 1975,
+      "phone": "+49 000 115 42",
       "mail": "kolb@example.de",
-      "street": "Ahornweg 69",
-      "since": "2025-11-30",
-      "remind": true,
+      "street": "Birkenallee 10",
+      "since": "2025-06-27",
+      "remind": false,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NTP3CT",
+      "firstAt": "2024-09-04",
+      "visitsAll": 72,
+      "noshows": 0
     },
     {
       "name": "V. Aydin",
       "ther": "jr",
-      "born": 2009,
-      "phone": "+49 000 109 50",
+      "born": 2004,
+      "phone": "+49 000 346 54",
       "mail": "aydin@example.de",
-      "street": "Eichenkamp 38",
-      "since": "2025-10-05",
-      "remind": false,
+      "street": "Sonnenhalde 56",
+      "since": "2025-10-10",
+      "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "XMAKPK",
+      "firstAt": "2024-10-06",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "V. Engel",
       "ther": "jr",
-      "born": 1976,
-      "phone": "+49 000 121 31",
+      "born": 2000,
+      "phone": "+49 000 536 67",
       "mail": "engel@example.de",
-      "street": "Kirchplatz 59",
-      "since": "2025-06-20",
-      "remind": false,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Ahornweg 59",
+      "since": "2025-08-09",
+      "remind": true,
+      "channel": "SMS",
+      "note": "",
+      "code": "LCPKR3",
+      "firstAt": "2024-02-15",
+      "visitsAll": 112,
+      "noshows": 0
     },
     {
       "name": "V. Thiel",
       "ther": "lk",
-      "born": 1995,
-      "phone": "+49 000 889 84",
+      "born": 1989,
+      "phone": "+49 000 847 26",
       "mail": "thiel@example.de",
-      "street": "Lindenstraße 52",
-      "since": "2024-07-07",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Kirchplatz 67",
+      "since": "2025-08-22",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "PVL9YK",
+      "firstAt": "2025-05-04",
+      "visitsAll": 50,
+      "noshows": 7
     },
     {
       "name": "V. Weiss",
       "ther": "jr",
-      "born": 1994,
-      "phone": "+49 000 868 46",
+      "born": 1977,
+      "phone": "+49 000 760 18",
       "mail": "weiss@example.de",
-      "street": "Eichenkamp 86",
-      "since": "2026-06-09",
+      "street": "Hafenstraße 38",
+      "since": "2025-12-11",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "JVFRT3",
+      "firstAt": "2024-05-10",
+      "visitsAll": 119,
+      "noshows": 11
     },
     {
       "name": "V. Yilmaz",
       "ther": "mb",
-      "born": 1968,
-      "phone": "+49 000 853 38",
+      "born": 1985,
+      "phone": "+49 000 856 52",
       "mail": "yilmaz@example.de",
-      "street": "Birkenallee 33",
-      "since": "2026-02-27",
+      "street": "Kirchplatz 5",
+      "since": "2025-08-07",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "C9FYER",
+      "firstAt": "2026-02-14",
+      "visitsAll": 25,
+      "noshows": 2
     },
     {
       "name": "V. Zeller",
       "ther": "sh",
-      "born": 1988,
-      "phone": "+49 000 692 40",
+      "born": 1969,
+      "phone": "+49 000 580 89",
       "mail": "zeller@example.de",
-      "street": "Ahornweg 80",
-      "since": "2026-01-12",
+      "street": "Lindenstraße 51",
+      "since": "2024-11-06",
       "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "channel": "SMS",
+      "note": "",
+      "code": "ETPRTA",
+      "firstAt": "2023-08-07",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "W. Duarte",
       "ther": "jr",
-      "born": 1980,
-      "phone": "+49 000 443 23",
+      "born": 1974,
+      "phone": "+49 000 703 24",
       "mail": "duarte@example.de",
-      "street": "Talblick 61",
-      "since": "2025-10-10",
+      "street": "Am Mühlbach 13",
+      "since": "2025-02-19",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "FNR3HF",
+      "firstAt": "2026-04-20",
+      "visitsAll": 1,
+      "noshows": 0
     },
     {
       "name": "W. Kettler",
       "ther": "hw",
-      "born": 1957,
-      "phone": "+49 000 744 98",
+      "born": 1975,
+      "phone": "+49 000 985 14",
       "mail": "kettler@example.de",
-      "street": "Talblick 69",
-      "since": "2024-02-26",
-      "remind": false,
-      "channel": "SMS",
-      "note": ""
+      "street": "Rosenweg 24",
+      "since": "2024-03-03",
+      "remind": true,
+      "channel": "E-Mail",
+      "note": "",
+      "code": "9YXX7C",
+      "firstAt": "2023-10-01",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "W. Obermann",
       "ther": "lk",
-      "born": 2008,
-      "phone": "+49 000 265 75",
+      "born": 1966,
+      "phone": "+49 000 566 88",
       "mail": "obermann@example.de",
-      "street": "Birkenallee 77",
-      "since": "2026-01-10",
+      "street": "Lindenstraße 21",
+      "since": "2024-05-31",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "KFKHPU",
+      "firstAt": "2025-09-08",
+      "visitsAll": 48,
+      "noshows": 4
     },
     {
       "name": "W. Sauer",
       "ther": "jr",
-      "born": 1950,
-      "phone": "+49 000 139 87",
+      "born": 1975,
+      "phone": "+49 000 896 47",
       "mail": "sauer@example.de",
-      "street": "Hafenstraße 60",
-      "since": "2024-03-09",
+      "street": "Am Mühlbach 49",
+      "since": "2025-04-26",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "HNLREU",
+      "firstAt": "2023-10-31",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "Y. Ilic",
       "ther": "hw",
-      "born": 1984,
-      "phone": "+49 000 417 29",
+      "born": 1997,
+      "phone": "+49 000 350 45",
       "mail": "ilic@example.de",
-      "street": "Sonnenhalde 42",
-      "since": "2026-04-21",
+      "street": "Eichenkamp 59",
+      "since": "2024-05-15",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "NU93YV",
+      "firstAt": "2024-03-23",
+      "visitsAll": 116,
+      "noshows": 5
     },
     {
       "name": "Y. Kolb",
       "ther": "hw",
-      "born": 1974,
-      "phone": "+49 000 953 15",
+      "born": 1949,
+      "phone": "+49 000 718 45",
       "mail": "kolb@example.de",
-      "street": "Kirchplatz 50",
-      "since": "2024-04-01",
+      "street": "Sonnenhalde 30",
+      "since": "2026-02-07",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "PEDJN7",
+      "firstAt": "2024-10-31",
+      "visitsAll": 120,
+      "noshows": 17
     },
     {
       "name": "Y. Lorenz",
       "ther": "mb",
-      "born": 1991,
-      "phone": "+49 000 443 10",
+      "born": 1994,
+      "phone": "+49 000 277 60",
       "mail": "lorenz@example.de",
-      "street": "Lindenstraße 19",
-      "since": "2024-12-19",
+      "street": "Talblick 73",
+      "since": "2026-05-31",
       "remind": true,
-      "channel": "SMS",
-      "note": ""
+      "channel": "E-Mail",
+      "note": "",
+      "code": "J9R9KC",
+      "firstAt": "2025-02-08",
+      "visitsAll": 100,
+      "noshows": 0
     },
     {
       "name": "Y. Mertens",
       "ther": "hw",
-      "born": 1972,
-      "phone": "+49 000 533 97",
+      "born": 1999,
+      "phone": "+49 000 165 61",
       "mail": "mertens@example.de",
-      "street": "Rosenweg 35",
-      "since": "2024-12-18",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Talblick 1",
+      "since": "2024-04-08",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "LKFHKE",
+      "firstAt": "2023-10-30",
+      "visitsAll": 120,
+      "noshows": 0
     },
     {
       "name": "Z. Arnold",
       "ther": "hw",
-      "born": 1994,
-      "phone": "+49 000 584 39",
+      "born": 1988,
+      "phone": "+49 000 879 14",
       "mail": "arnold@example.de",
-      "street": "Sonnenhalde 42",
-      "since": "2024-11-23",
-      "remind": true,
-      "channel": "E-Mail",
-      "note": ""
+      "street": "Lindenstraße 25",
+      "since": "2024-09-22",
+      "remind": false,
+      "channel": "SMS",
+      "note": "",
+      "code": "EHAUFV",
+      "firstAt": "2025-05-05",
+      "visitsAll": 50,
+      "noshows": 0
     },
     {
       "name": "Z. Ludwig",
       "ther": "jr",
-      "born": 2005,
-      "phone": "+49 000 206 65",
+      "born": 1972,
+      "phone": "+49 000 519 34",
       "mail": "ludwig@example.de",
-      "street": "Sonnenhalde 26",
-      "since": "2025-06-08",
+      "street": "Ahornweg 56",
+      "since": "2026-06-21",
       "remind": true,
       "channel": "SMS",
-      "note": ""
+      "note": "",
+      "code": "A494RK",
+      "firstAt": "2025-11-22",
+      "visitsAll": 55,
+      "noshows": 2
     }
   ];
 
@@ -2518,6 +2914,1012 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
   ];
 
   /* ---------------------------------------------------------------------
+     Attendance, exercise plans and finished reports
+     --------------------------------------------------------------------- */
+
+  // outcome per appointment index; only days that already happened have one
+  const ATTEND_KIND = { kam: "gekommen", spaet: "zu spät", abgesagt: "kurzfristig abgesagt",
+                        noshow: "nicht erschienen" };
+  const ATTEND = {
+    "0": "kam",
+    "1": "kam",
+    "2": "kam",
+    "3": "kam",
+    "4": "spaet",
+    "5": "kam",
+    "6": "kam",
+    "7": "kam",
+    "8": "kam",
+    "9": "kam",
+    "10": "kam",
+    "11": "kam",
+    "12": "kam",
+    "13": "kam",
+    "14": "kam",
+    "15": "kam",
+    "16": "kam",
+    "17": "kam",
+    "18": "kam",
+    "19": "kam",
+    "20": "kam",
+    "21": "kam",
+    "22": "kam",
+    "23": "kam",
+    "24": "kam",
+    "25": "abgesagt",
+    "26": "kam",
+    "27": "kam",
+    "28": "abgesagt",
+    "29": "kam",
+    "30": "kam",
+    "31": "kam",
+    "32": "kam",
+    "33": "kam",
+    "34": "kam",
+    "35": "abgesagt",
+    "36": "kam",
+    "37": "kam",
+    "38": "abgesagt",
+    "39": "kam",
+    "40": "kam",
+    "41": "kam",
+    "42": "kam",
+    "43": "kam",
+    "44": "noshow",
+    "45": "kam",
+    "46": "kam",
+    "47": "kam",
+    "48": "kam",
+    "49": "kam",
+    "50": "kam",
+    "51": "kam",
+    "52": "noshow",
+    "53": "kam",
+    "54": "noshow",
+    "55": "noshow",
+    "56": "kam",
+    "57": "kam",
+    "58": "kam",
+    "59": "noshow",
+    "60": "kam",
+    "61": "kam",
+    "62": "kam",
+    "63": "kam",
+    "64": "kam",
+    "65": "abgesagt",
+    "66": "noshow",
+    "67": "kam",
+    "68": "kam",
+    "69": "kam",
+    "70": "kam",
+    "71": "kam",
+    "72": "kam",
+    "73": "spaet",
+    "74": "spaet",
+    "75": "kam",
+    "76": "kam",
+    "77": "kam",
+    "78": "kam",
+    "79": "kam",
+    "80": "kam"
+  };
+
+  const EXERCISES = [
+    {
+      "key": "brueck",
+      "name": "Brücke",
+      "dose": "3 × 12",
+      "note": "Becken langsam abrollen, Rippen unten lassen."
+    },
+    {
+      "key": "clam",
+      "name": "Muschel",
+      "dose": "3 × 15 je Seite",
+      "note": "Becken senkrecht halten, nicht nach hinten kippen."
+    },
+    {
+      "key": "birddog",
+      "name": "Vierfüßler diagonal",
+      "dose": "3 × 10 je Seite",
+      "note": "Rücken bleibt ein Brett, kein Hohlkreuz."
+    },
+    {
+      "key": "wall",
+      "name": "Wandsitz",
+      "dose": "3 × 40 Sek.",
+      "note": "Knie über der Fußmitte, Fersen belastet."
+    },
+    {
+      "key": "calf",
+      "name": "Wadenheben einbeinig",
+      "dose": "3 × 15",
+      "note": "Oben zwei Sekunden halten, langsam ablassen."
+    },
+    {
+      "key": "band",
+      "name": "Außenrotation am Band",
+      "dose": "3 × 15",
+      "note": "Ellbogen am Körper, Handtuch dazwischen."
+    },
+    {
+      "key": "scap",
+      "name": "Schulterblatt-Retraktion",
+      "dose": "3 × 12",
+      "note": "Schultern nach hinten unten, nicht hochziehen."
+    },
+    {
+      "key": "nack",
+      "name": "Nackenretraktion",
+      "dose": "10 × 5 Sek.",
+      "note": "Doppelkinn machen, Blick bleibt waagerecht."
+    },
+    {
+      "key": "kiefer",
+      "name": "Kieferöffnung kontrolliert",
+      "dose": "10 × langsam",
+      "note": "Zunge am Gaumen, geradeaus öffnen ohne Knacken."
+    },
+    {
+      "key": "hueft",
+      "name": "Hüftbeuger-Dehnung",
+      "dose": "3 × 45 Sek. je Seite",
+      "note": "Gesäß anspannen, Becken aufrichten."
+    },
+    {
+      "key": "ischio",
+      "name": "Nordic Curls exzentrisch",
+      "dose": "3 × 6",
+      "note": "So langsam wie möglich ablassen."
+    },
+    {
+      "key": "balance",
+      "name": "Einbeinstand instabil",
+      "dose": "4 × 30 Sek.",
+      "note": "Blick geradeaus, später Augen zu."
+    }
+  ];
+
+  const PLANS = [
+    {
+      "patient": "A. Demir",
+      "ther": "hw",
+      "updated": "2026-07-31",
+      "goal": "Treppensteigen ohne Pause.",
+      "items": [
+        {
+          "key": "band",
+          "days": 5
+        },
+        {
+          "key": "kiefer",
+          "days": 3
+        },
+        {
+          "key": "scap",
+          "days": 4
+        },
+        {
+          "key": "brueck",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "A. Fuchs",
+      "ther": "sh",
+      "updated": "2026-08-07",
+      "goal": "Kiefer ohne Knacken öffnen können.",
+      "items": [
+        {
+          "key": "hueft",
+          "days": 5
+        },
+        {
+          "key": "band",
+          "days": 3
+        },
+        {
+          "key": "calf",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "A. Okafor",
+      "ther": "mb",
+      "updated": "2026-07-12",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "hueft",
+          "days": 4
+        },
+        {
+          "key": "scap",
+          "days": 5
+        },
+        {
+          "key": "kiefer",
+          "days": 7
+        },
+        {
+          "key": "band",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "A. Reiss",
+      "ther": "lk",
+      "updated": "2026-08-09",
+      "goal": "Treppensteigen ohne Pause.",
+      "items": [
+        {
+          "key": "brueck",
+          "days": 4
+        },
+        {
+          "key": "balance",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "A. Riedel",
+      "ther": "hw",
+      "updated": "2026-08-02",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "brueck",
+          "days": 7
+        },
+        {
+          "key": "balance",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "B. Claus",
+      "ther": "mb",
+      "updated": "2026-07-23",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "balance",
+          "days": 5
+        },
+        {
+          "key": "band",
+          "days": 4
+        },
+        {
+          "key": "nack",
+          "days": 7
+        },
+        {
+          "key": "kiefer",
+          "days": 3
+        }
+      ]
+    },
+    {
+      "patient": "B. Duarte",
+      "ther": "mb",
+      "updated": "2026-08-04",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "ischio",
+          "days": 4
+        },
+        {
+          "key": "brueck",
+          "days": 7
+        },
+        {
+          "key": "balance",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "B. Frey",
+      "ther": "lk",
+      "updated": "2026-08-10",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "brueck",
+          "days": 3
+        },
+        {
+          "key": "hueft",
+          "days": 7
+        },
+        {
+          "key": "band",
+          "days": 7
+        },
+        {
+          "key": "clam",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "B. Ludwig",
+      "ther": "mb",
+      "updated": "2026-08-08",
+      "goal": "Schmerzfrei durch den Arbeitstag kommen.",
+      "items": [
+        {
+          "key": "balance",
+          "days": 4
+        },
+        {
+          "key": "ischio",
+          "days": 7
+        },
+        {
+          "key": "band",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "B. Neuhaus",
+      "ther": "sh",
+      "updated": "2026-07-30",
+      "goal": "Kiefer ohne Knacken öffnen können.",
+      "items": [
+        {
+          "key": "band",
+          "days": 3
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "wall",
+          "days": 5
+        },
+        {
+          "key": "clam",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "B. Riedel",
+      "ther": "sh",
+      "updated": "2026-07-15",
+      "goal": "Schmerzfrei durch den Arbeitstag kommen.",
+      "items": [
+        {
+          "key": "band",
+          "days": 4
+        },
+        {
+          "key": "ischio",
+          "days": 7
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "balance",
+          "days": 4
+        },
+        {
+          "key": "nack",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "C. Amrein",
+      "ther": "sh",
+      "updated": "2026-08-05",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "ischio",
+          "days": 4
+        },
+        {
+          "key": "kiefer",
+          "days": 7
+        },
+        {
+          "key": "birddog",
+          "days": 3
+        },
+        {
+          "key": "clam",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "C. Arnold",
+      "ther": "hw",
+      "updated": "2026-08-02",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "kiefer",
+          "days": 4
+        },
+        {
+          "key": "balance",
+          "days": 4
+        },
+        {
+          "key": "ischio",
+          "days": 4
+        },
+        {
+          "key": "band",
+          "days": 3
+        },
+        {
+          "key": "wall",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "C. Baumann",
+      "ther": "jr",
+      "updated": "2026-08-06",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "nack",
+          "days": 3
+        },
+        {
+          "key": "balance",
+          "days": 4
+        },
+        {
+          "key": "brueck",
+          "days": 4
+        },
+        {
+          "key": "hueft",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "C. Bianchi",
+      "ther": "hw",
+      "updated": "2026-07-17",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "hueft",
+          "days": 7
+        },
+        {
+          "key": "birddog",
+          "days": 5
+        },
+        {
+          "key": "wall",
+          "days": 7
+        },
+        {
+          "key": "scap",
+          "days": 4
+        },
+        {
+          "key": "balance",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "C. Hartwig",
+      "ther": "lk",
+      "updated": "2026-07-12",
+      "goal": "Kiefer ohne Knacken öffnen können.",
+      "items": [
+        {
+          "key": "wall",
+          "days": 7
+        },
+        {
+          "key": "brueck",
+          "days": 5
+        },
+        {
+          "key": "birddog",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "C. Krüger",
+      "ther": "sh",
+      "updated": "2026-07-30",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "birddog",
+          "days": 3
+        },
+        {
+          "key": "ischio",
+          "days": 7
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "hueft",
+          "days": 5
+        },
+        {
+          "key": "clam",
+          "days": 3
+        }
+      ]
+    },
+    {
+      "patient": "C. Ludwig",
+      "ther": "sh",
+      "updated": "2026-08-01",
+      "goal": "Treppensteigen ohne Pause.",
+      "items": [
+        {
+          "key": "band",
+          "days": 3
+        },
+        {
+          "key": "brueck",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "C. Marchand",
+      "ther": "lk",
+      "updated": "2026-07-18",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "kiefer",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 7
+        },
+        {
+          "key": "ischio",
+          "days": 5
+        },
+        {
+          "key": "scap",
+          "days": 3
+        },
+        {
+          "key": "hueft",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "C. Wagner",
+      "ther": "lk",
+      "updated": "2026-07-26",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "calf",
+          "days": 4
+        },
+        {
+          "key": "brueck",
+          "days": 3
+        },
+        {
+          "key": "clam",
+          "days": 3
+        }
+      ]
+    },
+    {
+      "patient": "C. Ziegler",
+      "ther": "lk",
+      "updated": "2026-07-22",
+      "goal": "Schmerzfrei durch den Arbeitstag kommen.",
+      "items": [
+        {
+          "key": "ischio",
+          "days": 4
+        },
+        {
+          "key": "hueft",
+          "days": 5
+        },
+        {
+          "key": "kiefer",
+          "days": 3
+        },
+        {
+          "key": "calf",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "D. Behrend",
+      "ther": "hw",
+      "updated": "2026-07-29",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "birddog",
+          "days": 4
+        },
+        {
+          "key": "calf",
+          "days": 5
+        },
+        {
+          "key": "balance",
+          "days": 5
+        },
+        {
+          "key": "ischio",
+          "days": 4
+        },
+        {
+          "key": "brueck",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "D. Mahler",
+      "ther": "lk",
+      "updated": "2026-07-26",
+      "goal": "Wieder 5 km am Stück laufen.",
+      "items": [
+        {
+          "key": "clam",
+          "days": 7
+        },
+        {
+          "key": "balance",
+          "days": 7
+        },
+        {
+          "key": "band",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "D. Nowak",
+      "ther": "hw",
+      "updated": "2026-08-02",
+      "goal": "Wieder 5 km am Stück laufen.",
+      "items": [
+        {
+          "key": "birddog",
+          "days": 7
+        },
+        {
+          "key": "scap",
+          "days": 7
+        },
+        {
+          "key": "clam",
+          "days": 7
+        },
+        {
+          "key": "balance",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "D. Sauer",
+      "ther": "lk",
+      "updated": "2026-07-18",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "kiefer",
+          "days": 3
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "birddog",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 3
+        }
+      ]
+    },
+    {
+      "patient": "D. Vogel",
+      "ther": "hw",
+      "updated": "2026-07-18",
+      "goal": "Treppensteigen ohne Pause.",
+      "items": [
+        {
+          "key": "nack",
+          "days": 3
+        },
+        {
+          "key": "clam",
+          "days": 7
+        },
+        {
+          "key": "ischio",
+          "days": 5
+        },
+        {
+          "key": "wall",
+          "days": 3
+        }
+      ]
+    },
+    {
+      "patient": "E. Amrein",
+      "ther": "mb",
+      "updated": "2026-07-17",
+      "goal": "Zurück ins Mannschaftstraining ohne Einschränkung.",
+      "items": [
+        {
+          "key": "brueck",
+          "days": 7
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "scap",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "E. Berger",
+      "ther": "sh",
+      "updated": "2026-08-09",
+      "goal": "Schmerzfrei durch den Arbeitstag kommen.",
+      "items": [
+        {
+          "key": "birddog",
+          "days": 7
+        },
+        {
+          "key": "kiefer",
+          "days": 7
+        },
+        {
+          "key": "clam",
+          "days": 5
+        },
+        {
+          "key": "nack",
+          "days": 5
+        }
+      ]
+    },
+    {
+      "patient": "E. Kovac",
+      "ther": "jr",
+      "updated": "2026-08-01",
+      "goal": "Wieder 5 km am Stück laufen.",
+      "items": [
+        {
+          "key": "balance",
+          "days": 7
+        },
+        {
+          "key": "brueck",
+          "days": 4
+        },
+        {
+          "key": "scap",
+          "days": 4
+        },
+        {
+          "key": "nack",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "F. Keller",
+      "ther": "lk",
+      "updated": "2026-07-14",
+      "goal": "Wieder 5 km am Stück laufen.",
+      "items": [
+        {
+          "key": "wall",
+          "days": 4
+        },
+        {
+          "key": "calf",
+          "days": 3
+        },
+        {
+          "key": "scap",
+          "days": 3
+        },
+        {
+          "key": "clam",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "F. Neuhaus",
+      "ther": "lk",
+      "updated": "2026-07-17",
+      "goal": "Wieder 5 km am Stück laufen.",
+      "items": [
+        {
+          "key": "brueck",
+          "days": 5
+        },
+        {
+          "key": "clam",
+          "days": 5
+        },
+        {
+          "key": "scap",
+          "days": 4
+        },
+        {
+          "key": "balance",
+          "days": 4
+        }
+      ]
+    },
+    {
+      "patient": "G. Kovac",
+      "ther": "jr",
+      "updated": "2026-08-10",
+      "goal": "Schmerzfrei durch den Arbeitstag kommen.",
+      "items": [
+        {
+          "key": "nack",
+          "days": 5
+        },
+        {
+          "key": "band",
+          "days": 3
+        },
+        {
+          "key": "calf",
+          "days": 7
+        },
+        {
+          "key": "wall",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "G. Möller",
+      "ther": "hw",
+      "updated": "2026-07-28",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "calf",
+          "days": 4
+        },
+        {
+          "key": "nack",
+          "days": 5
+        },
+        {
+          "key": "hueft",
+          "days": 7
+        }
+      ]
+    },
+    {
+      "patient": "G. Roth",
+      "ther": "lk",
+      "updated": "2026-08-02",
+      "goal": "Nachts durchschlafen können.",
+      "items": [
+        {
+          "key": "wall",
+          "days": 3
+        },
+        {
+          "key": "nack",
+          "days": 5
+        },
+        {
+          "key": "hueft",
+          "days": 5
+        }
+      ]
+    }
+  ];
+
+  const SEED_REPORTS = [
+    {
+      "id": "B-4102",
+      "patient": "A. Okafor",
+      "ther": "mb",
+      "date": "2026-08-10",
+      "time": "09:00",
+      "type": "Athletik-Check",
+      "at": "2026-08-10 14:40",
+      "befund": "HWS-Rotation rechts weiterhin endgradig eingeschränkt, C2/C3 druckdolent. Kopfschmerz seit letzter Einheit von 6 auf 3 gesunken.",
+      "behandlung": "Mobilisation C2/C3 in Rotation, Weichteiltechnik M. trapezius descendens beidseits, abschließend Traktion in Rückenlage.",
+      "reaktion": "Gut vertragen, keine Schwindelsymptomatik. Rotation nach Behandlung seitengleich frei.",
+      "plan": "Nackenretraktion täglich fortführen, Dosis auf 10 × 5 Sekunden erhöht. Nächste Einheit Kräftigung tiefe Nackenmuskulatur.",
+      "uebergabe": "Bei Vertretung: keine Manipulation, nur Mobilisation — Patientin ist sehr sensibel am Übergang C0/C1."
+    },
+    {
+      "id": "B-4103",
+      "patient": "J. Aksoy",
+      "ther": "mb",
+      "date": "2026-08-10",
+      "time": "13:00",
+      "type": "Return-to-Sport",
+      "at": "2026-08-10 15:40",
+      "befund": "LWS-Extension schmerzhaft, Lasègue negativ. Schmerz aktuell VAS 4 von 10, vor zwei Wochen 7.",
+      "behandlung": "Mobilisation L4/L5, Weichteiltechnik Erector spinae, Anleitung Brücke und Vierfüßler diagonal.",
+      "reaktion": "Schmerzfrei nach der Einheit, Extension deutlich besser.",
+      "plan": "Übungsplan erweitert um Vierfüßler diagonal. Rezept läuft noch über vier Einheiten, Folgetermine stehen.",
+      "uebergabe": ""
+    },
+    {
+      "id": "B-4104",
+      "patient": "V. Yilmaz",
+      "ther": "mb",
+      "date": "2026-08-11",
+      "time": "09:00",
+      "type": "Sportphysiotherapie",
+      "at": "2026-08-11 16:40",
+      "befund": "Sprungkraft im Seitenvergleich bei 91 Prozent (Vorwoche 87). Kein Schmerz bei einbeiniger Landung.",
+      "behandlung": "Plyometrie-Progression Stufe 3, Landetechnik, abschließend Wadenheben einbeinig mit Zusatzlast.",
+      "reaktion": "Belastung gut toleriert, kein Erguss, keine Instabilität.",
+      "plan": "Ab nächster Woche Richtungswechsel unter Zeitdruck. Freigabe fürs Mannschaftstraining frühestens in drei Wochen.",
+      "uebergabe": "Kein Kontakttraining vor dem nächsten Recheck."
+    }
+  ];
+
+  /* ---------------------------------------------------------------------
      Helpers
      --------------------------------------------------------------------- */
 
@@ -2633,6 +4035,82 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
      needs a server here, see the note in plan.html.
      --------------------------------------------------------------------- */
 
+  /* ---------------------------------------------------------------------
+     Behandlungsberichte.
+
+     Seeded examples plus whatever this browser has written. A real practice
+     needs this on a server — a treatment record is a legal document under
+     § 630f BGB and has to survive a cleared browser cache.
+     --------------------------------------------------------------------- */
+
+  const REPORT_STORE = "lk-berichte";
+  function readStore(key) {
+    try { const v = JSON.parse(localStorage.getItem(key) || "[]"); return Array.isArray(v) ? v : []; }
+    catch (e) { return []; }
+  }
+  function writeStore(key, v) {
+    try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* private mode */ }
+  }
+  const readReports = () => SEED_REPORTS.concat(readStore(REPORT_STORE));
+  function saveReport(r) {
+    const mine = readStore(REPORT_STORE);
+    const known = mine.findIndex((x) => x.id === r.id);
+    if (known >= 0) mine[known] = r;
+    else { r.id = "B-" + (4200 + mine.length); mine.push(r); }
+    writeStore(REPORT_STORE, mine);
+    return r;
+  }
+
+  // appointments a patient cancelled or moved through the link in their
+  // reminder — kept apart from the practice's own diary
+  const CHANGE_STORE = "lk-terminaenderungen";
+  const readChanges = () => readStore(CHANGE_STORE);
+  function addChange(c) {
+    const mine = readStore(CHANGE_STORE);
+    mine.push(c);
+    writeStore(CHANGE_STORE, mine);
+    return c;
+  }
+
+  const patientByCode = (code) =>
+    PATIENTS.find((p) => p.code.toUpperCase() === String(code || "").trim().toUpperCase()) || null;
+  const planFor = (name) => PLANS.find((p) => p.patient === name) || null;
+  const exerciseOf = (key) => EXERCISES.find((e) => e.key === key);
+
+  /** Appointments of one patient from today on, newest last. */
+  function upcomingOf(name) {
+    const gone = new Set(readChanges().filter((c) => c.patient === name).map((c) => c.key));
+    return APPOINTMENTS
+      .map((a, i) => ({ a, i, date: addDays(WEEK0, a.day) }))
+      .filter((x) => x.a.patient === name && x.date >= TODAY)
+      .filter((x) => !gone.has(x.date + x.a.start))
+      .sort((x, y) => x.date.localeCompare(y.date) || toMin(x.a.start) - toMin(y.a.start));
+  }
+
+  /** An .ics file the patient can drop into their own calendar. */
+  function icsFor({ title, dateISO, start, min, location, description }) {
+    const CRLF = String.fromCharCode(13, 10);
+    const NL = String.fromCharCode(10);
+    const ESC_NL = String.fromCharCode(92) + "n";          // literal backslash-n
+    const stamp = (d, t) => d.split("-").join("") + "T" + t.split(":").join("") + "00";
+    const end = fmt(toMin(start) + min);
+    const fold = (s) => String(s || "").split(NL).join(ESC_NL);
+    return [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Luca Kolhoff//Praxis//DE",
+      "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "BEGIN:VEVENT",
+      "UID:" + stamp(dateISO, start) + "@lucakolhoff.de",
+      "DTSTAMP:" + stamp(dateISO, start),
+      "DTSTART;TZID=Europe/Berlin:" + stamp(dateISO, start),
+      "DTEND;TZID=Europe/Berlin:" + stamp(dateISO, end),
+      "SUMMARY:" + fold(title),
+      "LOCATION:" + fold(location || "Musterstraße 12, 00000 Musterstadt"),
+      "DESCRIPTION:" + fold(description),
+      "BEGIN:VALARM", "TRIGGER:-PT24H", "ACTION:DISPLAY",
+      "DESCRIPTION:Termin morgen in der Praxis Luca Kolhoff", "END:VALARM",
+      "END:VEVENT", "END:VCALENDAR",
+    ].join(CRLF);
+  }
+
   const STORE = "lk-anfragen";
   function readRequests() {
     let mine = [];
@@ -2654,6 +4132,8 @@ const PAYMENTS = ["Karte", "Überweisung", "Bar"];
     DAY_START, DAY_END, LUNCH, hasLunch, WEEK0, TODAY,
     SERVICES, SKILLS, SHIFTS, ABSENCES, ABSENCE_KIND, BLOCKS, BLOCK_KIND,
     PRESCRIPTIONS, PATIENTS, WAITLIST, MONTHS, REVIEWS,
+    ATTEND, ATTEND_KIND, EXERCISES, PLANS, planFor, exerciseOf, patientByCode,
+    readReports, saveReport, readChanges, addChange, upcomingOf, icsFor,
     toMin, fmt, therOf, svcOf, priceFor, absentOn,
     iso, addDays, daysBetween, weekday, deDate, DE_DAY,
     slotsFor, nextDates, loadFor, blocksFor, readRequests, addRequest,

@@ -1145,3 +1145,90 @@ body.sub { background: var(--moss); }
   .price-row { gap: 16px; }
   .cta-band { padding: 26px 24px; }
 }
+
+/* -------------------------------------------------------------------------
+   Patient self service — appointments and exercise plan
+   ------------------------------------------------------------------------- */
+
+.codeform { padding: 28px 30px; max-width: 460px; }
+.codeform .field, .codeform .btn, .codeform .form-note { position: relative; z-index: 1; }
+.codeform input { letter-spacing: .22em; text-transform: uppercase; font-size: 1.1rem; }
+.codeform .btn { margin-top: 6px; }
+.codeform .form-note { margin-top: 12px; }
+.codeform .form-note b { color: var(--aloe); letter-spacing: .1em; }
+
+.appt-cards { display: flex; flex-direction: column; gap: 14px; }
+.appt-card { display: flex; gap: 26px; flex-wrap: wrap; padding: 24px 28px; }
+.appt-when { position: relative; z-index: 1; flex: none; min-width: 120px; }
+.appt-when b { display: block; font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; color: var(--aloe); }
+.appt-when span { display: block; font-size: .84rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.appt-when em { display: block; margin-top: 6px; font-style: normal; font-size: 1.15rem; color: var(--aloe); font-variant-numeric: tabular-nums; }
+.appt-what { position: relative; z-index: 1; flex: 1 1 220px; }
+.appt-what h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; }
+.appt-what p { font-size: .86rem; color: var(--cedar-soft); }
+.appt-where { color: var(--cedar) !important; margin-top: 4px; }
+.appt-warn { margin-top: 10px; padding: 9px 13px; border-radius: 9px; font-size: .82rem !important;
+             color: #E0B063 !important; background: rgba(192,138,42,.1); border: 1px solid rgba(192,138,42,.3); }
+.appt-do { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.appt-do .btn-line { white-space: nowrap; }
+.btn-line {
+  padding: 9px 17px; border-radius: 999px; background: none;
+  border: 1px solid var(--glass-brd); color: var(--cedar-soft);
+  font-family: var(--font-body); font-size: .78rem; cursor: pointer;
+  transition: border-color .3s, color .3s;
+}
+.btn-line:hover { border-color: var(--glass-brd-lit); color: var(--aloe); }
+.btn-line.is-danger:hover { border-color: #C4574F; color: #E8998F; }
+
+.plan-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px 32px; margin-bottom: 20px; }
+.plan-head > div, .plan-head .btn { position: relative; z-index: 1; }
+.plan-for { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cedar); }
+.plan-head h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.3rem, 3vw, 1.9rem); margin: 4px 0 6px; }
+.plan-head p { font-size: .82rem; color: var(--cedar-soft); }
+
+.ex-list { display: flex; flex-direction: column; gap: 12px; }
+.ex { display: flex; gap: 20px; padding: 22px 26px; }
+.ex-num { position: relative; z-index: 1; font-family: var(--font-display); font-size: 1.6rem; color: var(--olive); flex: none; }
+.ex-body { position: relative; z-index: 1; }
+.ex-body h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; }
+.ex-dose { font-size: .84rem; color: var(--aloe); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.ex-note { font-size: .86rem; color: var(--cedar-soft); margin-top: 6px; }
+
+.week-check { padding: 26px 30px; margin-top: 22px; }
+.week-check h3, .week-check p, .week-grid { position: relative; z-index: 1; }
+.week-check h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; }
+.week-check > p { font-size: .84rem; color: var(--cedar-soft); margin-bottom: 16px; }
+.week-grid { display: flex; flex-direction: column; gap: 6px; overflow-x: auto; }
+.week-row { display: grid; grid-template-columns: minmax(140px, 1.6fr) repeat(7, minmax(34px, 1fr)); gap: 6px; align-items: center; }
+.week-head span { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--cedar); text-align: center; }
+.week-name { font-size: .84rem; color: var(--cedar-soft); }
+/* the box itself is the hit target, not a 13px checkbox next to it */
+.week-cell { position: relative; display: block; cursor: pointer; }
+.week-cell input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.week-cell span[aria-hidden] { display: block; height: 34px; border-radius: 9px; border: 1px solid var(--glass-brd); transition: background .25s, border-color .25s; }
+.week-cell:hover span[aria-hidden] { border-color: var(--glass-brd-lit); }
+.week-cell input:checked + span[aria-hidden] { background: rgba(110,158,112,.34); border-color: rgba(110,158,112,.7); }
+.week-cell input:focus-visible + span[aria-hidden] { outline: 2px solid var(--cedar-soft); outline-offset: 2px; }
+.week-check .form-note { margin-top: 14px; }
+
+@media (max-width: 700px) {
+  .appt-card { gap: 16px; }
+  .appt-do { flex-direction: row; flex-wrap: wrap; }
+}
+
+@media print {
+  body.sub { background: #fff; color: #14180F; }
+  .site-header, .sub-footer, .codeform, .plan-head .btn, .week-check, .cta-band, .sub-head p { display: none !important; }
+  .glass { background: none !important; border: 1px solid #C9D0C2 !important; box-shadow: none !important; backdrop-filter: none !important; }
+  .glass::before, .glass::after { display: none !important; }
+  .sub-main { padding: 0; }
+  .sub-head h1, .plan-head h2, .ex-body h3 { color: #14180F; }
+  .ex-note, .ex-dose, .plan-head p { color: #3B4433 !important; }
+  .ex-num { color: #6F7A62; }
+  @page { margin: 16mm; }
+}
+
+.waitbox { padding: 26px 28px; margin-top: 20px; max-width: 620px; }
+.waitbox h3, .waitbox p, .waitbox .form-row, .waitbox .field, .waitbox .check, .waitbox .btn, .waitbox .form-note { position: relative; z-index: 1; }
+.waitbox h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; }
+.waitbox > p { font-size: .86rem; color: var(--cedar-soft); margin: 5px 0 16px; }

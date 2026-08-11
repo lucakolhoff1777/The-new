@@ -15,9 +15,21 @@ python3 -m http.server 8000     # dann http://localhost:8000
 | `termin.html` | Online-Buchung mit Echtzeit-Verfügbarkeit |
 | `preise.html` | Öffentliche Preisliste |
 | `erster-termin.html` | Was mitbringen, was kostet es, Rückrufservice |
+| `termin-verwalten.html` | Termin absagen, verschieben, in den eigenen Kalender legen |
+| `uebungen.html` | Übungsplan für zwischen den Terminen, mit Wochenkontrolle |
 | `en.html` | English information |
 | `impressum.html`, `datenschutz.html` | Pflichtseiten |
-| `plan.html` | **Interner Bereich** — Tagesplan, Anfragen, Patienten, Rezepte, Abrechnung, Team |
+| `plan.html` | **Interner Bereich** — Tagesplan, Anfragen, Patienten, Berichte, Rezepte, Abrechnung, Team |
+
+### Patientenlinks
+
+`termin-verwalten.html` und `uebungen.html` öffnen sich mit `?c=CODE`. Der Code
+steht in `practice-data.js` bei jeder Patientin und jedem Patienten
+(`code`). Zum Ausprobieren: **9HHADE**.
+
+Er ersetzt hier ein Login. Für den echten Betrieb gehört pro Termin ein
+einmaliger Link verschickt, kein dauerhaft gültiger Code — sonst kommt jeder,
+der einmal einen Link bekommen hat, für immer an die Termine dieser Person.
 
 ## Daten
 
@@ -26,8 +38,10 @@ und Intranet lesen daraus, damit ein Termin nicht auf einer Seite frei und auf
 der anderen belegt sein kann. Darin stehen:
 
 Therapeut:innen · Räume · Schichtpläne · Leistungskatalog mit Preisen ·
-Beispielwoche · Abwesenheiten · Raumblocker · Verordnungen · Patientenstamm ·
-Warteliste · Monatsverlauf · Bewertungen — und die Verfügbarkeitsberechnung.
+Beispielwoche · Anwesenheit je Termin · Abwesenheiten · Raumblocker ·
+Verordnungen · Patientenstamm mit Ausfallhistorie · Übungskatalog und
+Übungspläne · Behandlungsberichte · Warteliste · Monatsverlauf ·
+Bewertungen — dazu die Verfügbarkeitsberechnung und der ICS-Export.
 
 **Alles darin ist Beispieldatenbestand.** Vor dem echten Einsatz ersetzen.
 
@@ -106,6 +120,32 @@ statische Seite grundsätzlich nicht leisten:
 - **Rollen absichern.** Leitung, Therapie und Empfang sehen unterschiedlich
   viel. Das ist eine Anzeigelogik, keine Zugriffskontrolle — die entsteht erst
   serverseitig.
+- **Berichte dauerhaft speichern.** Ein Behandlungsbericht ist nach § 630f BGB
+  zehn Jahre aufzubewahren und muss nachträgliche Änderungen nachvollziehbar
+  machen. Beides kann ein `localStorage` nicht: er hängt an einem Browser und
+  ist beim nächsten Cache-Leeren weg. Die Eingabemaske stimmt, die Ablage
+  gehört auf einen Server mit Änderungshistorie.
+- **Absagen und Verschiebungen wirklich eintragen.** Was über
+  `termin-verwalten.html` hereinkommt, landet als Anfrage im Intranet und
+  verschwindet aus der Terminliste dieses Browsers. Den Kalender ändert es
+  nicht — das kann nur ein Server.
+
+## Diktat
+
+Die Berichtsmaske hat neben jedem Feld ein Mikrofon. Es nutzt die
+Web-Speech-API des Browsers (`SpeechRecognition`), eingestellt auf Deutsch, mit
+Zwischenergebnissen während des Sprechens. Das läuft ohne zusätzlichen Dienst
+und ohne Kosten.
+
+Zwei Einschränkungen, die man kennen sollte:
+
+- **Nicht jeder Browser kann es.** Chrome, Edge und Safari ja, Firefox nicht.
+  Wo es fehlt, sind die Mikrofone deaktiviert und ein Hinweis steht darüber —
+  tippen geht immer.
+- **Chrome schickt das Audio zur Erkennung an Google.** Für Diktate über
+  Patienten ist das ohne Prüfung heikel. Wer das sauber lösen will, nimmt eine
+  lokale Erkennung (z. B. Whisper auf dem eigenen Server) — die Eingabemaske
+  bleibt dieselbe, nur die Quelle des Textes ändert sich.
 
 ## Deployment
 

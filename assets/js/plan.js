@@ -824,6 +824,7 @@
       const types = [...new Set(list.map((a) => a.type))];
       const rx = rxOf(p.name);
       const st = rx ? rxStatus(rx) : null;
+      const rel = reliability(p);
       return `<tr tabindex="0" role="button" data-pat="${esc(p.name)}">
         <td class="bp"><b>${esc(p.name)}</b><small>${p.phone}</small></td>
         <td class="bmuted">${p.born}</td>
@@ -831,9 +832,10 @@
         <td><span class="chips">${types.map((x) => `<span>${x}</span>`).join("") || "—"}</span></td>
         <td class="num">${list.length}</td>
         <td>${rx ? `<span class="pill is-${st.tone}">${st.short}</span>` : `<span class="bmuted">Selbstzahler</span>`}</td>
+        <td><span class="pill is-${rel.tone}">${rel.n ? "▲ " : "✓ "}${rel.label}</span></td>
         <td class="bmuted">${p.remind ? p.channel : "abgemeldet"}</td>
       </tr>`;
-    }).join("") || `<tr><td colspan="7">Keine Treffer.</td></tr>`;
+    }).join("") || `<tr><td colspan="8">Keine Treffer.</td></tr>`;
 
     byId("patBody").querySelectorAll("[data-pat]").forEach((tr) => {
       const open = () => openPatient(PATIENTS.find((p) => p.name === tr.dataset.pat));
@@ -869,6 +871,29 @@
         <p>${st.label}</p>
       </div>` : `<p class="drawer-hint">Keine laufende Verordnung — Selbstzahler.</p>`}
 
+      <div class="rel-box is-${reliability(p).tone}">
+        <div><b>${reliability(p).n === 0 ? "War immer da" : reliability(p).n + " Termine versäumt"}</b>
+          <span>${reliability(p).total} Termine insgesamt · Ausfallquote ${reliability(p).pct} %</span></div>
+        ${reliability(p).tone === "late"
+          ? `<p>Vor dem nächsten Termin anrufen — oder Anzahlung vereinbaren.</p>` : ""}
+      </div>
+
+      ${planFor(p.name) ? `<h3 class="drawer-sub">Übungsplan</h3>
+      <div class="planbox">
+        <p class="plan-goal">„${esc(planFor(p.name).goal)}“</p>
+        <ul>${planFor(p.name).items.map((it) => {
+          const ex = exerciseOf(it.key);
+          return `<li><b>${ex.name}</b><span>${ex.dose} · ${it.days}× pro Woche</span></li>`;
+        }).join("")}</ul>
+        <p class="drawer-hint">Aktualisiert ${deDate(planFor(p.name).updated)} ·
+          Patientenlink: <code>uebungen.html?c=${p.code}</code></p>
+      </div>` : ""}
+
+      <div class="drawer-actions">
+        <button type="button" class="btn-line" data-series="${esc(p.name)}">Serie anlegen</button>
+        <button type="button" class="btn-line" data-estimate="${esc(p.name)}">Kostenvoranschlag</button>
+      </div>
+
       <h3 class="drawer-sub">Behandlungen dieser Woche</h3>
       ${list.length ? `<table class="postable">
         <thead><tr><th scope="col">Tag</th><th scope="col">Leistung</th>
@@ -885,6 +910,13 @@
         <tfoot><tr><th scope="row" colspan="4">Gesamt</th>
                    <td class="num money">${eur(sum)}</td></tr></tfoot>
       </table>` : `<p class="drawer-empty">In dieser Beispielwoche kein Termin.</p>`}`;
+
+    const rx0 = rxOf(p.name);
+    const svcName = rx0 ? rx0.type : (list[0] ? list[0].type : "Manuelle Therapie");
+    drawerBody.querySelector("[data-series]").addEventListener("click",
+      () => openSeries(p.name, svcName, rx0 ? Math.max(1, rx0.units - rx0.done) : 6));
+    drawerBody.querySelector("[data-estimate]").addEventListener("click",
+      () => openEstimate(p.name, svcName, rx0 ? Math.max(1, rx0.units - rx0.done) : 6));
     drawer.hidden = false;
   }
 
@@ -994,8 +1026,13 @@
         <div><dt>Nächster Termin</dt><dd>${next ? `${deDate(next.date)} · ${next.a.start} Uhr` : "nicht gebucht"}</dd></div>
         ${pat ? `<div><dt>Telefon</dt><dd><a href="tel:${pat.phone.replace(/\s/g, "")}">${pat.phone}</a></dd></div>` : ""}
       </dl>
+      <div class="drawer-actions">
+        <button type="button" class="btn-line" id="rxSeries">Restliche Einheiten als Serie buchen</button>
+      </div>
       <p class="drawer-hint">Fristen nach Heilmittel-Richtlinie: Behandlungsbeginn innerhalb von
         ${RX_START_DAYS} Tagen nach Ausstellung, Unterbrechung höchstens ${RX_GAP_DAYS} Tage.</p>`;
+    byId("rxSeries").addEventListener("click",
+      () => openSeries(r.patient, r.type, Math.max(1, r.units - r.done)));
     drawer.hidden = false;
   }
 
@@ -1064,6 +1101,643 @@
       </tr>`).join("") || `<tr><td colspan="5">Keine Blocker eingetragen.</td></tr>`;
   }
 
+  /* =======================================================================
+     Anwesenheit und Zuverlässigkeit
+
+     A booked hour that nobody turns up for is the most expensive hour a
+     practice has: the room was blocked, the therapist waited, and nothing
+     was earned. So it gets counted.
+     ======================================================================= */
+
+  const { ATTEND, ATTEND_KIND, EXERCISES, PLANS, planFor, exerciseOf,
+          readReports, saveReport, upcomingOf, icsFor } = P;
+
+  const attendOf = (a) => ATTEND[APPOINTMENTS.indexOf(a)] || null;
+  const isLoss = (k) => k === "noshow" || k === "abgesagt";
+
+  function reliability(p) {
+    const total = Math.max(1, p.visitsAll);
+    const rate = p.noshows / total;
+    return {
+      rate, n: p.noshows, total,
+      tone: p.noshows === 0 ? "paid" : rate >= 0.12 ? "late" : rate >= 0.05 ? "open" : "paid",
+      label: p.noshows === 0 ? "immer da"
+           : `${p.noshows}× nicht da`,
+      pct: Math.round(rate * 100),
+    };
+  }
+
+  /* =======================================================================
+     Auslastungsampel — the next fortnight at a glance
+     ======================================================================= */
+
+  function renderAmpel() {
+    const dates = P.nextDates(14);
+    const rows = dates.map((d) => {
+      const wd = weekday(d);
+      const load = P.loadFor(d);
+      const mins = load.reduce((s, a) => s + a.min, 0);
+      const open = ((DAY_END - DAY_START) * 60 - (hasLunch(wd) ? 60 : 0)) * ROOMS.length;
+      const pct = Math.round((mins / open) * 100);
+      const away = THERAPISTS.filter((t) => absentOn(t.id, d));
+      return { d, wd, pct, mins, away };
+    });
+
+    byId("ampel").innerHTML = rows.map((r) => {
+      const tone = r.pct >= 75 ? "full" : r.pct >= 50 ? "ok" : r.pct >= 30 ? "thin" : "empty";
+      return `<button type="button" class="amp is-${tone}" data-amp="${r.d}"
+                title="${r.pct} % belegt${r.away.length ? " · " + r.away.map((t) => t.short).join(", ") + " abwesend" : ""}">
+        <span class="amp-day">${DE_DAY[r.wd].slice(0, 2)}</span>
+        <span class="amp-date">${deDate(r.d).slice(0, 6)}</span>
+        <span class="amp-bar"><i style="height:${Math.max(4, r.pct)}%"></i></span>
+        <span class="amp-pct">${r.pct} %</span>
+        ${r.away.length ? `<span class="amp-away">${r.away.map((t) => t.short).join(" ")}</span>` : ""}
+      </button>`;
+    }).join("");
+
+    byId("ampel").querySelectorAll("[data-amp]").forEach((b) =>
+      b.addEventListener("click", () => openFreeDay(b.dataset.amp)));
+  }
+
+  function openFreeDay(dateISO) {
+    const found = [];
+    SERVICES.filter((s) => s.book).forEach((svc) => {
+      const slots = slotsFor(svc.key, dateISO, null);
+      if (slots.length) found.push({ svc, slots });
+    });
+    byId("dTime").textContent = `${DE_DAY[weekday(dateISO)]}, ${deDate(dateISO)}`;
+    byId("dTitle").textContent = "Was ist noch frei?";
+    drawerBody.innerHTML = found.length ? `
+      <p class="drawer-hint">Dieselbe Verfügbarkeit, die die Online-Buchung anzeigt.</p>
+      <table class="postable">
+        <thead><tr><th scope="col">Leistung</th><th scope="col" class="num">Frei</th>
+                   <th scope="col">Erste Zeiten</th></tr></thead>
+        <tbody>${found.map((f) => `<tr>
+          <td>${f.svc.name}<small>${f.svc.min} Min.</small></td>
+          <td class="num">${f.slots.length}</td>
+          <td class="bmuted">${f.slots.slice(0, 5).map((s) => s.start).join(" · ")}</td>
+        </tr>`).join("")}</tbody>
+      </table>`
+      : `<p class="drawer-empty">Der Tag ist ausgebucht. Nichts zu tun.</p>`;
+    drawer.hidden = false;
+  }
+
+  /* =======================================================================
+     Behandlungsberichte
+
+     Structured so a report can be written in a minute between two patients:
+     four fields that answer what a colleague — or a court — would ask, plus
+     a handover line that shows up on the next appointment.
+     ======================================================================= */
+
+  const REP_FIELDS = [
+    ["befund", "Befund heute", "Was hast du gesehen, getastet, gemessen?"],
+    ["behandlung", "Behandlung", "Was hast du gemacht — Technik, Region, Dosis?"],
+    ["reaktion", "Reaktion", "Wie hat der Patient reagiert, direkt und danach?"],
+    ["plan", "Plan", "Was passiert beim nächsten Mal, was ändert sich am Übungsplan?"],
+    ["uebergabe", "Übergabe an Kolleg:innen", "Nur was jemand anderes wissen muss. Darf leer bleiben."],
+  ];
+
+  const repState = { filter: "offen", q: "" };
+  const keyOf = (a) => `${dateOfDay(a.day)}|${a.start}|${a.patient}`;
+
+  // every appointment that has already happened needs a report
+  function dueAppointments() {
+    return mine(APPOINTMENTS.filter((a) => dateOfDay(a.day) <= TODAY), "ther")
+      .filter((a) => attendOf(a) !== "noshow" && attendOf(a) !== "abgesagt");
+  }
+
+  /** The most recent handover note for a patient, from before this appointment. */
+  function handoverFor(a) {
+    return readReports()
+      .filter((r) => r.patient === a.patient && (r.uebergabe || "").trim())
+      .filter((r) => (r.date + r.time) < (dateOfDay(a.day) + a.start))
+      .sort((x, y) => (y.date + y.time).localeCompare(x.date + x.time))[0] || null;
+  }
+
+  const reportFor = (a) =>
+    readReports().find((r) => r.patient === a.patient && r.date === dateOfDay(a.day) && r.time === a.start) || null;
+
+  function renderReports() {
+    const due = dueAppointments();
+    const open = due.filter((a) => !reportFor(a));
+    const all = readReports();
+    const rate = due.length ? Math.round(((due.length - open.length) / due.length) * 100) : 100;
+
+    byId("repOpen").textContent = open.length;
+    byId("repDone").textContent = all.length;
+    byId("repRate").textContent = rate + " %";
+    byId("repBar").style.width = rate + "%";
+    const badge = byId("repBadge");
+    badge.textContent = open.length || "";
+    badge.hidden = !open.length;
+
+    const dictat = byId("repDictat");
+    dictat.textContent = speech.ok ? "bereit" : "—";
+    byId("repDictatNote").textContent = speech.ok
+      ? "Mikrofon je Feld, deutsch"
+      : "Browser ohne Spracherkennung — tippen geht immer";
+
+    const q = repState.q.trim().toLowerCase();
+    const hit = (t) => !q || String(t).toLowerCase().includes(q);
+
+    let html = "";
+    if (repState.filter === "offen") {
+      const rows = open.sort((a, b) => dateOfDay(b.day).localeCompare(dateOfDay(a.day)) ||
+                                        toMin(b.start) - toMin(a.start))
+        .filter((a) => hit(a.patient) || hit(a.type));
+      html = rows.map((a) => {
+        const t = therOf(a.ther);
+        return `<article class="rep is-open">
+          <div class="rep-top">
+            <span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span>
+            <b>${esc(a.patient)}</b>
+            <span class="rep-meta">${deDate(dateOfDay(a.day))} · ${a.start} · ${a.type}</span>
+            <button type="button" class="btn-line" data-write="${APPOINTMENTS.indexOf(a)}">Bericht schreiben</button>
+          </div>
+        </article>`;
+      }).join("") || `<p class="drawer-empty">Alles dokumentiert. Nichts offen.</p>`;
+    } else {
+      const rows = all
+        .filter((r) => !role.ther || r.ther === role.ther)
+        .filter((r) => repState.filter !== "uebergabe" || (r.uebergabe || "").trim())
+        .filter((r) => hit(r.patient) || hit(r.type) || hit(r.befund) || hit(r.behandlung) ||
+                       hit(r.reaktion) || hit(r.plan) || hit(r.uebergabe))
+        .sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+      html = rows.map((r) => {
+        const t = therOf(r.ther);
+        return `<article class="rep" tabindex="0" role="button" data-open="${r.id}">
+          <div class="rep-top">
+            <span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span>
+            <b>${esc(r.patient)}</b>
+            <span class="rep-meta">${deDate(r.date)} · ${r.time} · ${r.type}</span>
+            <span class="rep-id">${r.id}</span>
+          </div>
+          <p class="rep-line"><span>Befund</span>${esc(r.befund).slice(0, 180)}</p>
+          ${r.uebergabe ? `<p class="rep-hand"><span>Übergabe</span>${esc(r.uebergabe)}</p>` : ""}
+        </article>`;
+      }).join("") || `<p class="drawer-empty">Keine Berichte für „${esc(repState.q) || repState.filter}“.</p>`;
+    }
+    byId("repList").innerHTML = html;
+
+    byId("repList").querySelectorAll("[data-write]").forEach((b) =>
+      b.addEventListener("click", () => openReport(APPOINTMENTS[+b.dataset.write])));
+    byId("repList").querySelectorAll("[data-open]").forEach((el) => {
+      const open_ = () => showReport(all.find((r) => r.id === el.dataset.open));
+      el.addEventListener("click", open_);
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open_(); }
+      });
+    });
+  }
+
+  byId("repSearch").addEventListener("input", (e) => { repState.q = e.target.value; renderReports(); });
+  document.querySelectorAll("[data-repf]").forEach((b) =>
+    b.addEventListener("click", () => {
+      repState.filter = b.dataset.repf;
+      b.parentElement.querySelectorAll(".vbtn").forEach((x) => x.classList.toggle("is-on", x === b));
+      renderReports();
+    }));
+
+  /* --------------------------- dictation ------------------------------ */
+
+  const speech = (() => {
+    const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const api = { ok: !!Rec, active: null, rec: null };
+    if (!Rec) return api;
+
+    api.start = (target, button, onEnd) => {
+      api.stop();
+      const rec = new Rec();
+      rec.lang = "de-DE";
+      rec.continuous = true;
+      rec.interimResults = true;
+      let base = target.value;
+
+      rec.onresult = (e) => {
+        let done = "", live = "";
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const t = e.results[i][0].transcript;
+          if (e.results[i].isFinal) done += t;
+          else live += t;
+        }
+        if (done) base = (base ? base.replace(/\s+$/, "") + " " : "") + done.trim();
+        target.value = (base + (live ? " " + live : "")).replace(/\s+([.,;:!?])/g, "$1");
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+      };
+      rec.onerror = (e) => {
+        api.stop();
+        const note = byId("repNote");
+        if (note) {
+          note.textContent = e.error === "not-allowed"
+            ? "Das Mikrofon ist blockiert. Im Browser für diese Seite erlauben."
+            : "Diktat abgebrochen: " + e.error;
+          note.className = "form-note is-error";
+        }
+      };
+      rec.onend = () => { if (api.active === button) api.finish(); if (onEnd) onEnd(); };
+
+      api.rec = rec;
+      api.active = button;
+      button.classList.add("is-rec");
+      button.setAttribute("aria-pressed", "true");
+      document.body.classList.add("is-dictating");
+      try { rec.start(); } catch (e) { api.finish(); }
+    };
+
+    api.finish = () => {
+      if (api.active) {
+        api.active.classList.remove("is-rec");
+        api.active.setAttribute("aria-pressed", "false");
+      }
+      api.active = null;
+      api.rec = null;
+      document.body.classList.remove("is-dictating");
+    };
+
+    api.stop = () => {
+      if (api.rec) { try { api.rec.stop(); } catch (e) { /* already stopped */ } }
+      api.finish();
+    };
+    return api;
+  })();
+
+  /* ------------------------ writing a report --------------------------- */
+
+  function openReport(a, existing) {
+    const t = therOf(a.ther);
+    const r = existing || reportFor(a) || {};
+    const att = attendOf(a);
+    byId("dTime").textContent =
+      `${DE_DAY[a.day]} ${deDate(dateOfDay(a.day))} · ${a.start}–${fmt(toMin(a.start) + a.min)} · ${ROOMS[a.room].name}`;
+    byId("dTitle").textContent = a.patient;
+
+    drawerBody.innerHTML = `
+      <div class="rep-head">
+        <span class="who-cell" style="--c:${t.color}"><i></i>${t.name}</span>
+        <span class="rep-meta">${a.type} · ${a.min} Min.</span>
+        ${att ? `<span class="pill is-${att === "kam" ? "paid" : att === "spaet" ? "open" : "late"}">${ATTEND_KIND[att]}</span>` : ""}
+      </div>
+
+      ${(() => {
+        const h = handoverFor(a);
+        return h ? `<div class="handover">
+          <span>Übergabe von ${therOf(h.ther).short}, ${deDate(h.date)}</span>
+          <p>${esc(h.uebergabe)}</p>
+        </div>` : "";
+      })()}
+
+      ${speech.ok
+        ? `<p class="dictate-hint">Auf das Mikrofon tippen und sprechen — der Text landet im Feld
+             daneben. Nochmal tippen beendet die Aufnahme.</p>`
+        : `<p class="dictate-hint is-off">Dieser Browser kann nicht diktieren. In Chrome, Edge oder
+             Safari steht neben jedem Feld ein Mikrofon.</p>`}
+
+      <form class="rep-form" id="repForm">
+        ${REP_FIELDS.map(([key, label, hint]) => `
+          <div class="rep-field">
+            <label for="rf-${key}">${label}</label>
+            <span class="rep-hint">${hint}</span>
+            <div class="rep-input">
+              <textarea id="rf-${key}" name="${key}" rows="${key === "uebergabe" ? 2 : 3}"
+                        placeholder="…">${esc(r[key] || "")}</textarea>
+              <button type="button" class="mic" data-mic="rf-${key}"
+                      aria-pressed="false" aria-label="${label} diktieren"
+                      ${speech.ok ? "" : "disabled"}>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>`).join("")}
+
+        <div class="rep-actions">
+          <button type="submit" class="btn-line btn-wide">${r.id ? "Bericht aktualisieren" : "Bericht speichern"}</button>
+        </div>
+        <p class="form-note" id="repNote" role="status" aria-live="polite"></p>
+      </form>`;
+
+    drawerBody.querySelectorAll("[data-mic]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const target = byId(b.dataset.mic);
+        if (speech.active === b) { speech.stop(); return; }
+        target.focus();
+        speech.start(target, b);
+      });
+    });
+
+    byId("repForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      speech.stop();
+      const note = byId("repNote");
+      const data = {};
+      REP_FIELDS.forEach(([k]) => { data[k] = byId("rf-" + k).value.trim(); });
+      if (!data.befund && !data.behandlung) {
+        note.textContent = "Mindestens Befund oder Behandlung muss ausgefüllt sein.";
+        note.className = "form-note is-error";
+        return;
+      }
+      const now = new Date();
+      saveReport({
+        id: r.id, patient: a.patient, ther: a.ther,
+        date: dateOfDay(a.day), time: a.start, type: a.type,
+        at: `${now.toISOString().slice(0, 10)} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+        ...data,
+      });
+      note.textContent = "Gespeichert. Der Bericht steht jetzt im Archiv.";
+      note.className = "form-note is-ok";
+      renderReports();
+      renderPatients();
+    });
+    drawer.hidden = false;
+  }
+
+  function showReport(r) {
+    const t = therOf(r.ther);
+    byId("dTime").textContent = `${r.id} · ${deDate(r.date)} · ${r.time} Uhr`;
+    byId("dTitle").textContent = r.patient;
+    drawerBody.innerHTML = `
+      <div class="rep-head">
+        <span class="who-cell" style="--c:${t.color}"><i></i>${t.name}</span>
+        <span class="rep-meta">${r.type} · verfasst ${r.at.replace(" ", " um ")} Uhr</span>
+      </div>
+      ${REP_FIELDS.filter(([k]) => (r[k] || "").trim()).map(([k, label]) => `
+        <section class="rep-read">
+          <h3>${label}</h3>
+          <p>${esc(r[k]).split("\n").join("<br>")}</p>
+        </section>`).join("")}
+      <button type="button" class="btn-line btn-wide" id="repEdit">Bearbeiten</button>
+      <p class="drawer-hint">Nachträgliche Änderungen an einer Patientenakte müssen nach
+        § 630f BGB nachvollziehbar bleiben. Auf einem Server gehört hier eine Änderungshistorie
+        hin — im Browser gibt es die nicht.</p>`;
+    byId("repEdit").addEventListener("click", () => {
+      const a = APPOINTMENTS.find((x) => x.patient === r.patient &&
+        dateOfDay(x.day) === r.date && x.start === r.time);
+      if (a) openReport(a, r);
+    });
+    drawer.hidden = false;
+  }
+
+  /* =======================================================================
+     Serientermine — a prescription is booked in one go, not ten times
+     ======================================================================= */
+
+  function openSeries(patient, svcName, times) {
+    const svc = SERVICES.find((s) => s.name === svcName && s.book) ||
+                SERVICES.find((s) => s.name === svcName);
+    const rec = PATIENTS.find((p) => p.name === patient);
+    const wish = rec ? rec.ther : null;
+    const want = times || 6;
+
+    // two appointments a week, never two in the same week-day slot in a row
+    const found = [];
+    const usedDates = new Set();
+    for (const d of P.nextDates(28)) {
+      if (found.length >= want) break;
+      if (usedDates.has(d)) continue;
+      const slots = svc ? slotsFor(svc.key, d, wish) : [];
+      if (!slots.length) continue;
+      const last = found[found.length - 1];
+      if (last && daysBetween(last.date, d) < 2) continue;      // keep a day between
+      found.push({ date: d, ...slots[Math.floor(slots.length / 3)] });
+      usedDates.add(d);
+    }
+
+    byId("dTime").textContent = `Serie anlegen · ${svcName}`;
+    byId("dTitle").textContent = patient;
+    drawerBody.innerHTML = `
+      <p class="drawer-hint">Zweimal pro Woche, immer bei ${wish ? therOf(wish).name : "wem frei ist"},
+         mit mindestens einem Tag Abstand. Vorschlag aus der echten Verfügbarkeit —
+         abwählen, was nicht passt.</p>
+      ${found.length ? `<ul class="serieslist" id="seriesList">${found.map((f, i) => `
+        <li><label>
+          <input type="checkbox" checked data-i="${i}">
+          <b>${DE_DAY[weekday(f.date)].slice(0, 2)} ${deDate(f.date)}</b>
+          <span>${f.start} Uhr</span>
+          <em>${therOf(f.ther).name}</em>
+        </label></li>`).join("")}</ul>
+        <button type="button" class="btn-line btn-wide" id="seriesGo">Ausgewählte Termine anlegen</button>
+        <p class="form-note" id="seriesNote" role="status" aria-live="polite"></p>`
+        : `<p class="drawer-empty">In den nächsten vier Wochen findet sich keine passende Serie.
+           Ohne feste Therapeut:in gäbe es mehr Auswahl.</p>`}`;
+
+    const go = byId("seriesGo");
+    if (go) go.addEventListener("click", () => {
+      const picked = [...byId("seriesList").querySelectorAll("input:checked")].map((c) => found[+c.dataset.i]);
+      const note = byId("seriesNote");
+      if (!picked.length) {
+        note.textContent = "Kein Termin ausgewählt.";
+        note.className = "form-note is-error";
+        return;
+      }
+      note.innerHTML = `<b>${picked.length} Termine vorgemerkt.</b><br>
+        ${picked.map((f) => `${DE_DAY[weekday(f.date)].slice(0, 2)} ${deDate(f.date)} ${f.start}`).join(" · ")}
+        <br><span class="drawer-hint">Verbindlich eintragen kann das nur ein Server —
+        siehe README. Hier endet es als Vormerkung.</span>`;
+      note.className = "form-note is-ok";
+    });
+    drawer.hidden = false;
+  }
+
+  /* =======================================================================
+     Betriebswirtschaftliche Kennzahlen
+     ======================================================================= */
+
+  function renderKpi() {
+    const all = APPOINTMENTS;
+    const revenue = all.reduce((s, a) => s + priceOf(a), 0);
+    const hours = all.reduce((s, a) => s + a.min, 0) / 60;
+    byId("kpiHour").textContent = eur0(revenue / hours);
+    byId("kpiHourNote").textContent = `${hours.toFixed(0)} belegte Raumstunden`;
+
+    // a first-timer who came back at least once
+    const first = PATIENTS.filter((p) => daysBetween(p.firstAt, WEEK0) <= 180);
+    const back = first.filter((p) => p.visitsAll >= 2);
+    const rate = first.length ? Math.round((back.length / first.length) * 100) : 0;
+    byId("kpiReturn").textContent = rate + " %";
+    byId("kpiReturnBar").style.width = rate + "%";
+    byId("kpiReturnNote").textContent =
+      `${back.length} von ${first.length} Erstpatient:innen der letzten 6 Monate`;
+
+    const past = Object.entries(ATTEND);
+    const lost = past.filter(([, v]) => isLoss(v));
+    const pct = past.length ? Math.round((lost.length / past.length) * 100) : 0;
+    byId("kpiNoshow").textContent = pct + " %";
+    byId("kpiNoshowNote").textContent = `${lost.length} von ${past.length} vergangenen Terminen`;
+    byId("kpiLost").textContent = eur0(lost.reduce((s, [i]) => s + priceOf(APPOINTMENTS[+i]), 0));
+
+    // yield per occupied hour, by treatment — one measure, so one hue
+    const perType = Object.keys(PRICES).map((type) => {
+      const list = all.filter((a) => a.type === type);
+      if (!list.length) return null;
+      const h = list.reduce((s, a) => s + a.min, 0) / 60;
+      return { type, perHour: list.reduce((s, a) => s + priceOf(a), 0) / h, h, n: list.length };
+    }).filter(Boolean).sort((a, b) => b.perHour - a.perHour);
+
+    const peak = perType[0].perHour;
+    byId("hourBars").innerHTML = perType.map((r) => `
+      <div class="bar">
+        <span class="bar-label">${r.type}</span>
+        <span class="bar-track"><i style="width:${(r.perHour / peak) * 100}%"></i></span>
+        <span class="bar-val"><b>${eur0(r.perHour)}/h</b><small>${r.h.toFixed(1).replace(".", ",")} h</small></span>
+      </div>`).join("");
+
+    /* --- lange nicht gesehen --- */
+    const gone = mine(PATIENTS, "ther")
+      .filter((p) => !apptsOf(p.name).length)
+      .map((p) => ({ p, last: p.firstAt, days: daysBetween(p.firstAt, TODAY) }))
+      .filter((x) => x.days >= 90)
+      .sort((a, b) => a.days - b.days)
+      .slice(0, 30);
+
+    byId("reactBody").innerHTML = gone.map(({ p, days }) => {
+      const t = therOf(p.ther);
+      return `<tr>
+        <td class="bp"><b>${esc(p.name)}</b><small>Jg. ${p.born}</small></td>
+        <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span></td>
+        <td class="bmuted">vor ${Math.round(days / 30)} Monaten</td>
+        <td class="num">${p.visitsAll}</td>
+        <td class="bmuted">${p.remind ? p.channel : "keine Werbung"}</td>
+        <td><button type="button" class="btn-line" data-react="${esc(p.name)}">Nachricht entwerfen</button></td>
+      </tr>`;
+    }).join("") || `<tr><td colspan="6">Niemand ist länger als drei Monate weg.</td></tr>`;
+
+    byId("reactBody").querySelectorAll("[data-react]").forEach((b) =>
+      b.addEventListener("click", () => openReactivation(PATIENTS.find((p) => p.name === b.dataset.react))));
+  }
+
+  function openReactivation(p) {
+    const t = therOf(p.ther);
+    const text =
+      `Hallo ${p.name.split(". ")[1]},\n\n` +
+      `dein letzter Termin bei uns ist eine Weile her. Wenn du magst, schauen wir ` +
+      `einmal nach, wie es der Region inzwischen geht — ein Kontrolltermin dauert ` +
+      `45 Minuten und wir sehen schnell, ob etwas nachzujustieren ist.\n\n` +
+      `Freie Zeiten findest du unter lucakolhoff.de/termin — oder ruf einfach an.\n\n` +
+      `Viele Grüße\n${t.name}\nPraxis Luca Kolhoff`;
+    byId("dTime").textContent = `Zuletzt vor ${Math.round(daysBetween(p.firstAt, TODAY) / 30)} Monaten`;
+    byId("dTitle").textContent = p.name;
+    drawerBody.innerHTML = `
+      <dl class="drawer-list">
+        <div><dt>Kanal</dt><dd>${p.remind ? p.channel : "hat Werbung abbestellt"}</dd></div>
+        <div><dt>Kontakt</dt><dd>${p.remind ? p.phone : "—"}</dd></div>
+        <div><dt>Termine gesamt</dt><dd>${p.visitsAll}</dd></div>
+      </dl>
+      ${p.remind ? `
+        <h3 class="drawer-sub">Entwurf</h3>
+        <textarea class="draft" id="reactText" rows="12">${esc(text)}</textarea>
+        <button type="button" class="btn-line btn-wide" id="reactCopy">Text kopieren</button>
+        <p class="form-note" id="reactNote" role="status" aria-live="polite"></p>`
+      : `<p class="drawer-empty">Diese Person hat Nachrichten abbestellt. Nicht anschreiben.</p>`}
+      <p class="drawer-hint">Werbliche Ansprache braucht eine Einwilligung. Wer sie nicht
+        gegeben hat, steht hier ohne Entwurf.</p>`;
+    const copy = byId("reactCopy");
+    if (copy) copy.addEventListener("click", async () => {
+      const note = byId("reactNote");
+      try {
+        await navigator.clipboard.writeText(byId("reactText").value);
+        note.textContent = "In die Zwischenablage kopiert.";
+        note.className = "form-note is-ok";
+      } catch (e) {
+        byId("reactText").select();
+        note.textContent = "Markiert — bitte mit Strg+C kopieren.";
+        note.className = "form-note";
+      }
+    });
+    drawer.hidden = false;
+  }
+
+  /* =======================================================================
+     Tagesabschluss — one page for the folder and the tax adviser
+     ======================================================================= */
+
+  byId("dayClose").addEventListener("click", () => {
+    const day = state.day;
+    const list = APPOINTMENTS.filter((a) => a.day === day)
+      .sort((x, y) => toMin(x.start) - toMin(y.start));
+    const shown = list.filter((a) => !state.hidden.has(a.ther));
+    const sum = shown.reduce((s, a) => s + priceOf(a), 0);
+    const lost = shown.filter((a) => isLoss(attendOf(a)));
+    const open = shown.filter((a) => {
+      const inv = INVOICES.find((i) => i.patient === a.patient);
+      return inv && !inv.paid;
+    });
+
+    byId("dTime").textContent = `Tagesabschluss · ${DE_DAY[day]}, ${deDate(dateOfDay(day))}`;
+    byId("dTitle").textContent = "Luca Kolhoff Physiotherapie";
+    drawerBody.innerHTML = `
+      <div class="print-head">
+        <div><b>Luca Kolhoff · Privatpraxis für Physiotherapie</b>
+          <span>Musterstraße 12 · 00000 Musterstadt</span></div>
+        <div class="print-inv"><b>Tagesabschluss</b>
+          <span>${DE_DAY[day]}, ${deDate(dateOfDay(day))}</span></div>
+      </div>
+      <dl class="drawer-list">
+        <div><dt>Termine</dt><dd>${shown.length}</dd></div>
+        <div><dt>Behandlungszeit</dt><dd>${(shown.reduce((s, a) => s + a.min, 0) / 60).toFixed(1).replace(".", ",")} h</dd></div>
+        <div><dt>Tagesumsatz</dt><dd class="money">${eur(sum)}</dd></div>
+        <div><dt>Ausfälle</dt><dd>${lost.length}${lost.length ? ` · ${eur(lost.reduce((s, a) => s + priceOf(a), 0))} entgangen` : ""}</dd></div>
+        <div><dt>Berichte offen</dt><dd>${shown.filter((a) => dateOfDay(a.day) <= TODAY && !reportFor(a) && !isLoss(attendOf(a))).length}</dd></div>
+        <div><dt>Offene Rechnungen</dt><dd class="money">${open.length}</dd></div>
+      </dl>
+      <table class="postable">
+        <thead><tr><th scope="col">Zeit</th><th scope="col">Patient:in</th>
+                   <th scope="col">Leistung</th><th scope="col">Wer</th>
+                   <th scope="col">Status</th><th scope="col" class="num money">Betrag</th></tr></thead>
+        <tbody>${shown.map((a) => {
+          const t = therOf(a.ther), att = attendOf(a);
+          return `<tr>
+            <td>${a.start}<small>${a.min} Min.</small></td>
+            <td>${esc(a.patient)}</td>
+            <td>${a.type}</td>
+            <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span></td>
+            <td class="bmuted">${att ? ATTEND_KIND[att] : "geplant"}</td>
+            <td class="num money">${isLoss(att) ? "—" : eur(priceOf(a))}</td>
+          </tr>`;
+        }).join("")}</tbody>
+        <tfoot><tr><th scope="row" colspan="5">Summe</th>
+          <td class="num money">${eur(shown.filter((a) => !isLoss(attendOf(a))).reduce((s, a) => s + priceOf(a), 0))}</td></tr></tfoot>
+      </table>
+      <button type="button" class="btn-line btn-wide" id="dayPrint">Tagesabschluss drucken</button>`;
+    byId("dayPrint").addEventListener("click", () => window.print());
+    drawer.hidden = false;
+  });
+
+  /* =======================================================================
+     Kostenvoranschlag
+     ======================================================================= */
+
+  function openEstimate(patient, svcName, units) {
+    const svc = SERVICES.find((s) => s.name === svcName) || SERVICES[0];
+    const n = units || 6;
+    const each = priceFor(svc);
+    byId("dTime").textContent = `Kostenvoranschlag · ${deDate(TODAY)}`;
+    byId("dTitle").textContent = patient;
+    drawerBody.innerHTML = `
+      <div class="print-head">
+        <div><b>Luca Kolhoff · Privatpraxis für Physiotherapie</b>
+          <span>Musterstraße 12 · 00000 Musterstadt · +49 000 000 000</span></div>
+        <div class="print-inv"><b>Kostenvoranschlag</b><span>${deDate(TODAY)}</span></div>
+      </div>
+      <table class="postable">
+        <thead><tr><th scope="col">Leistung</th><th scope="col" class="num">Einheiten</th>
+                   <th scope="col" class="num">Einzeln</th><th scope="col" class="num">Gesamt</th></tr></thead>
+        <tbody><tr>
+          <td>${svc.name}<small>${svc.min} Minuten</small></td>
+          <td class="num">${n}</td><td class="num">${eur(each)}</td><td class="num">${eur(each * n)}</td>
+        </tr></tbody>
+        <tfoot><tr><th scope="row" colspan="3">Voraussichtlich gesamt</th>
+          <td class="num">${eur(each * n)}</td></tr></tfoot>
+      </table>
+      <p class="inv-terms">Unverbindliche Schätzung auf Grundlage der aktuellen Preisliste.
+        Als Heilbehandlung nach § 4 Nr. 14 UStG umsatzsteuerfrei. Die tatsächliche Anzahl der
+        Einheiten ergibt sich aus dem Verlauf und wird vorher besprochen.</p>
+      <button type="button" class="btn-line btn-wide" id="estPrint">Drucken / als PDF sichern</button>`;
+    byId("estPrint").addEventListener("click", () => window.print());
+    drawer.hidden = false;
+  }
+
   function render() {
     renderHead();
     renderBoard();
@@ -1079,6 +1753,9 @@
     renderPatients();
     renderRx();
     renderAbsences();
+    renderAmpel();
+    renderReports();
+    renderKpi();
   }
 
   /* =======================================================================
@@ -1099,11 +1776,22 @@
         <div><dt>Leistung</dt><dd>${a.type}</dd></div>
         <div><dt>Dauer</dt><dd>${a.min} Minuten</dd></div>
         <div><dt>Abrechnung</dt><dd>${BILL[a.bill] || "—"}</dd></div>
-        <div><dt>Betrag</dt><dd>${eur(priceOf(a))}</dd></div>
+        <div><dt>Betrag</dt><dd class="money">${eur(priceOf(a))}</dd></div>
+        ${attendOf(a) ? `<div><dt>Anwesenheit</dt><dd>${ATTEND_KIND[attendOf(a)]}</dd></div>` : ""}
+        ${reportFor(a) ? `<div><dt>Bericht</dt><dd>${reportFor(a).id}</dd></div>` : ""}
       </dl>
-      <button type="button" class="drawer-more" data-open-invoice="${a.patient}">
-        Ganze Abrechnung von ${a.patient} ansehen →
-      </button>`;
+      ${(() => {
+        const h = handoverFor(a);
+        return h ? `<div class="handover">
+          <span>Übergabe von ${therOf(h.ther).short}, ${deDate(h.date)}</span>
+          <p>${esc(h.uebergabe)}</p>
+        </div>` : "";
+      })()}
+      <div class="drawer-actions">
+        <button type="button" class="btn-line" data-report-now>Bericht schreiben</button>
+        <button type="button" class="btn-line" data-open-invoice="${a.patient}">Abrechnung</button>
+      </div>`;
+    drawerBody.querySelector("[data-report-now]").addEventListener("click", () => openReport(a));
     drawerBody.querySelector("[data-open-invoice]").addEventListener("click", () => {
       openInvoice(INVOICES.find((i) => i.patient === a.patient));
     });
@@ -1161,7 +1849,10 @@
     byId("invPrint").addEventListener("click", () => window.print());
     drawer.hidden = false;
   }
-  function closeDrawer() { drawer.hidden = true; }
+  function closeDrawer() {
+    if (typeof speech === "object" && speech.stop) speech.stop();
+    drawer.hidden = true;
+  }
   byId("drawerClose").addEventListener("click", closeDrawer);
   drawer.addEventListener("click", (e) => { if (e.target === drawer) closeDrawer(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });

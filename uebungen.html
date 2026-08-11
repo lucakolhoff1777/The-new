@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dein Übungsplan · Luca Kolhoff Physiotherapie</title>
+<meta name="description" content="Deine Übungen zwischen den Terminen — mit Dosierung, Hinweisen und einer Woche zum Abhaken.">
+<link rel="canonical" href="https://www.lucakolhoff.de/uebungen.html">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232C3424%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22%23DADED8%22 font-family=%22Georgia,serif%22>II</text></svg>">
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="sub">
+
+<header class="site-header is-solid">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mono" viewBox="126 66 306 274" aria-hidden="true">
+        <g transform="translate(402,0) scale(-1,1)">
+          <text x="201" y="270" text-anchor="middle" font-family="Cormorant, Georgia, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+        </g>
+        <text x="347" y="270" text-anchor="middle" font-family="Cormorant, Georgia, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
+      </svg>
+      <span class="logo-word">LUCA KOLHOFF<em>Physiotherapie · CMD</em></span>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html#leistungen" class="nav-link">Leistungen</a></li>
+        <li><a href="erster-termin.html" class="nav-link">Erster Termin</a></li>
+        <li><a href="index.html#kontakt" class="nav-link">Kontakt</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a href="termin.html" class="btn btn-primary btn-small">Termin buchen</a>
+    </div>
+  </div>
+</header>
+
+<main class="sub-main">
+  <div class="container">
+
+    <div class="sub-head">
+      <span class="num">Übungsplan</span>
+      <h1>Deine Übungen für zu Hause</h1>
+      <p>Was zwischen den Terminen passiert, entscheidet über das Ergebnis. Der Plan steht
+         hier immer aktuell — kein Zettel, der verloren geht.</p>
+    </div>
+
+    <form class="codeform glass" id="codeForm">
+      <label class="field"><span>Dein Code</span>
+        <input type="text" id="codeInput" placeholder="z. B. 9HHADE" autocomplete="off"
+               spellcheck="false" maxlength="8"></label>
+      <button type="submit" class="btn btn-primary">Plan anzeigen</button>
+      <p class="form-note" id="codeMsg" role="status" aria-live="polite">
+        Denselben Code wie für deine Termine. Zum Ausprobieren: <b>9HHADE</b></p>
+    </form>
+
+    <section id="planBox" hidden>
+      <div class="plan-head glass">
+        <div>
+          <span class="plan-for" id="planFor"></span>
+          <h2 id="planGoal"></h2>
+          <p id="planMeta"></p>
+        </div>
+        <button type="button" class="btn btn-glass" id="planPrint">Drucken</button>
+      </div>
+
+      <div class="ex-list" id="exList"></div>
+
+      <div class="week-check glass">
+        <h3>Diese Woche</h3>
+        <p>Hak ab, was du geschafft hast. Das bleibt auf deinem Gerät — wir sehen es nicht.</p>
+        <div class="week-grid" id="weekGrid"></div>
+        <p class="form-note" id="weekNote"></p>
+      </div>
+
+      <div class="cta-band glass">
+        <div>
+          <h2>Etwas tut weh oder klappt nicht?</h2>
+          <p>Nicht durchbeißen — kurz melden, dann passen wir an.</p>
+        </div>
+        <a href="erster-termin.html#rueckruf" class="btn btn-primary">Rückruf anfordern</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer sub-footer">
+  <div class="container footer-inner">
+    <p>© 2026 Luca Kolhoff · Privatpraxis für Physiotherapie</p>
+    <nav class="footer-nav">
+      <a href="termin.html">Termin buchen</a>
+      <a href="erster-termin.html">Erster Termin</a>
+      <a href="termin-verwalten.html">Termin verwalten</a>
+      <a href="uebungen.html">Übungsplan</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="en.html">English</a>
+      <a href="plan.html">Intern</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/js/practice-data.js"></script>
+<script src="assets/js/uebungen.js"></script>
+</body>
+</html>

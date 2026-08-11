@@ -773,3 +773,143 @@ body.no-money [data-roles] { display: none; }
   .pill { border-color: #C9D0C2 !important; color: #14180F !important; background: none !important; }
   @page { margin: 18mm; }
 }
+
+/* -------------------------------------------------------------------------
+   Auslastungsampel
+   ------------------------------------------------------------------------- */
+
+.panel-head-flat { margin: 26px 0 12px; }
+.ampel { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 22px; scrollbar-width: thin; }
+.amp {
+  flex: 1 1 0; min-width: 72px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 8px 8px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--line);
+  color: var(--cedar-soft); font-family: var(--font-body); cursor: pointer;
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.amp:hover { border-color: var(--line-strong); }
+.amp-day { font-size: .78rem; color: var(--aloe); }
+.amp-date { font-size: .66rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.amp-bar { display: block; width: 100%; height: 44px; margin: 3px 0; background: rgba(218,222,216,.07);
+           border-radius: 4px; display: flex; align-items: flex-end; overflow: hidden; }
+.amp-bar i { display: block; width: 100%; border-radius: 3px; transition: height .6s var(--ease); }
+.amp-pct { font-size: .7rem; font-variant-numeric: tabular-nums; }
+.amp-away { font-size: .6rem; letter-spacing: .1em; color: var(--cedar); }
+/* four states, and the number is printed under every bar — never colour alone */
+.amp.is-full  .amp-bar i { background: #3E9C6D; }
+.amp.is-ok    .amp-bar i { background: #6F9E70; }
+.amp.is-thin  .amp-bar i { background: #C08A2A; }
+.amp.is-empty .amp-bar i { background: #C4574F; }
+.amp.is-thin, .amp.is-empty { border-color: rgba(192,138,42,.4); }
+
+/* -------------------------------------------------------------------------
+   Berichte
+   ------------------------------------------------------------------------- */
+
+.rep-list { display: flex; flex-direction: column; gap: 10px; }
+.rep {
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 3px solid var(--olive); border-radius: 14px; padding: 15px 18px;
+  cursor: pointer; transition: border-color .25s var(--ease);
+}
+.rep:hover, .rep:focus-visible { border-color: var(--line-strong); }
+.rep.is-open { border-left-color: #C08A2A; cursor: default; }
+.rep-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rep-top b { font-weight: 400; color: var(--aloe); }
+.rep-meta { font-size: .76rem; color: var(--cedar); }
+.rep-id { margin-left: auto; font-size: .68rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.rep-top .btn-line { margin-left: auto; }
+.rep-line, .rep-hand { margin-top: 9px; font-size: .84rem; color: var(--cedar-soft); }
+.rep-line span, .rep-hand span {
+  display: inline-block; min-width: 74px; font-size: .64rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--cedar);
+}
+.rep-hand { padding: 8px 12px; border-radius: 9px; background: rgba(192,138,42,.09);
+            border: 1px solid rgba(192,138,42,.28); }
+
+.rep-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.dictate-hint { font-size: .78rem; color: var(--cedar); margin-bottom: 18px; }
+.dictate-hint.is-off { color: #E0B063; }
+
+.rep-form { display: flex; flex-direction: column; gap: 18px; }
+.rep-field label { display: block; font-size: .8rem; color: var(--aloe); }
+.rep-hint { display: block; font-size: .7rem; color: var(--cedar); margin-bottom: 7px; }
+.rep-input { display: flex; gap: 8px; align-items: flex-start; }
+.rep-input textarea {
+  flex: 1; padding: 10px 13px; border-radius: 11px; resize: vertical;
+  background: var(--surface-2); border: 1px solid var(--line);
+  color: var(--aloe); font-family: var(--font-body); font-size: .86rem; line-height: 1.5;
+}
+.rep-input textarea:focus { outline: none; border-color: var(--line-strong); }
+.mic {
+  flex: none; width: 40px; height: 40px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: var(--surface-2); border: 1px solid var(--line);
+  color: var(--cedar-soft); cursor: pointer;
+  transition: border-color .25s var(--ease), color .25s var(--ease), background .25s var(--ease);
+}
+.mic svg { width: 19px; height: 19px; }
+.mic:hover:not(:disabled) { border-color: var(--line-strong); color: var(--aloe); }
+.mic:disabled { opacity: .35; cursor: not-allowed; }
+.mic.is-rec { background: rgba(196,87,79,.2); border-color: #C4574F; color: #E8998F; }
+.mic.is-rec::after {
+  content: ""; position: absolute; width: 40px; height: 40px; border-radius: 11px;
+  border: 1px solid #C4574F; animation: micPulse 1.4s ease-out infinite;
+}
+@keyframes micPulse { to { transform: scale(1.35); opacity: 0; } }
+.mic { position: relative; }
+body.is-dictating .drawer-card { border-color: rgba(196,87,79,.4); }
+
+.rep-actions { margin-top: 4px; }
+.rep-read { margin-bottom: 18px; }
+.rep-read h3 { font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cedar); margin-bottom: 5px; }
+.rep-read p { font-size: .89rem; color: var(--cedar-soft); line-height: 1.6; }
+
+/* -------------------------------------------------------------------------
+   Patientenakte: Zuverlässigkeit, Übungsplan, Serien
+   ------------------------------------------------------------------------- */
+
+.rel-box { margin-top: 20px; padding: 13px 16px; border-radius: 12px; border: 1px solid var(--line); }
+.rel-box b { display: block; font-weight: 400; color: var(--aloe); }
+.rel-box span { font-size: .74rem; color: var(--cedar); }
+.rel-box p { margin-top: 7px; font-size: .8rem; color: #E0B063; }
+.rel-box.is-late { border-color: rgba(196,87,79,.45); background: rgba(196,87,79,.07); }
+.rel-box.is-open { border-color: rgba(192,138,42,.4); }
+
+.planbox { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.plan-goal { font-family: var(--font-display); font-size: 1.02rem; color: var(--aloe); margin-bottom: 11px; }
+.planbox ul { display: flex; flex-direction: column; gap: 7px; }
+.planbox li { display: flex; justify-content: space-between; gap: 14px; font-size: .84rem; color: var(--cedar-soft); }
+.planbox li b { font-weight: 400; color: var(--aloe); }
+.planbox li span { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.drawer-actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 20px; }
+.drawer-actions .btn-line { flex: 1 1 auto; }
+
+.serieslist { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.serieslist label { display: flex; align-items: baseline; gap: 11px; padding: 9px 13px;
+                    border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+                    font-size: .83rem; color: var(--cedar-soft); }
+.serieslist input { accent-color: var(--cedar-soft); }
+.serieslist b { color: var(--aloe); font-weight: 400; min-width: 92px; font-variant-numeric: tabular-nums; }
+.serieslist em { margin-left: auto; font-style: normal; color: var(--cedar); }
+
+.draft { width: 100%; padding: 13px 15px; border-radius: 12px; background: var(--surface-2);
+         border: 1px solid var(--line); color: var(--cedar-soft);
+         font-family: var(--font-body); font-size: .85rem; line-height: 1.6; resize: vertical; }
+.draft:focus { outline: none; border-color: var(--line-strong); }
+
+@media (max-width: 700px) {
+  .amp { min-width: 64px; }
+  .rep-top .btn-line, .rep-id { margin-left: 0; }
+}
+
+/* a handover note follows the patient, not the therapist */
+.handover {
+  margin: 18px 0; padding: 12px 15px; border-radius: 11px;
+  background: rgba(192,138,42,.1); border: 1px solid rgba(192,138,42,.32);
+}
+.handover span { display: block; font-size: .64rem; letter-spacing: .12em;
+                 text-transform: uppercase; color: #E0B063; margin-bottom: 5px; }
+.handover p { font-size: .86rem; color: var(--cedar-soft); }
