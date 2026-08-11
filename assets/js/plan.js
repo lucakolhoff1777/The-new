@@ -489,7 +489,7 @@
         <dl class="tcard-figs">
           <div><dt>Termine</dt><dd>${w.n}</dd></div>
           <div><dt>Stunden</dt><dd>${w.h.toFixed(1).replace(".", ",")}</dd></div>
-          <div><dt>Ø / Tag</dt><dd>${(w.n / DAYS.length).toFixed(1).replace(".", ",")}</dd></div>
+          <div><dt>Umsatz</dt><dd>${eur0(mine.reduce((s, a) => s + priceOf(a), 0))}</dd></div>
         </dl>
         <p class="tcard-rooms"><span>Räume</span>${rooms}</p>
         <div class="tcard-types">${types.map((x) => `<span>${x}</span>`).join("")}</div>
@@ -607,6 +607,130 @@
       </div>`).join("");
   }
 
+  /* =======================================================================
+     Umsatz je Therapeut:in — dieselben Positionen, nur anders gruppiert
+     ======================================================================= */
+
+  const therState = { split: "detail", hidden: new Set() };
+
+  // Gruppenschlüssel je Ansicht. `detail` ist die Dreierkombination
+  // Therapeut:in × Patient:in × Leistung, die anderen fassen eine Stufe zusammen.
+  const SPLITS = {
+    detail:   { key: (a) => [a.ther, a.patient, a.type],
+                head: ["Therapeut:in", "Patient:in", "Leistung"] },
+    patient:  { key: (a) => [a.ther, a.patient],
+                head: ["Therapeut:in", "Patient:in", "Leistungen"] },
+    leistung: { key: (a) => [a.ther, a.type],
+                head: ["Therapeut:in", "Leistung", "Patient:innen"] },
+  };
+
+  function therGroups() {
+    const split = SPLITS[therState.split];
+    const map = new Map();
+    APPOINTMENTS.forEach((a) => {
+      if (therState.hidden.has(a.ther)) return;
+      const k = split.key(a).join(" ");
+      if (!map.has(k)) {
+        map.set(k, { ther: a.ther, patient: a.patient, type: a.type,
+                     patients: new Set(), types: new Set(), n: 0, sum: 0 });
+      }
+      const g = map.get(k);
+      g.patients.add(a.patient);
+      g.types.add(a.type);
+      g.n += 1;
+      g.sum += priceOf(a);
+    });
+    // nach Therapeut:in in fester Reihenfolge, darin der größte Posten zuerst
+    const order = (id) => THERAPISTS.findIndex((t) => t.id === id);
+    return [...map.values()].sort((x, y) => order(x.ther) - order(y.ther) || y.sum - x.sum);
+  }
+
+  function renderTherRevenue() {
+    const per = THERAPISTS.map((t) => {
+      const mine = APPOINTMENTS.filter((a) => a.ther === t.id);
+      const sum = mine.reduce((s, a) => s + priceOf(a), 0);
+      const top = (pick) => {
+        const acc = {};
+        mine.forEach((a) => { acc[pick(a)] = (acc[pick(a)] || 0) + priceOf(a); });
+        return Object.entries(acc).sort((x, y) => y[1] - x[1])[0];
+      };
+      return { t, n: mine.length, sum,
+               heads: new Set(mine.map((a) => a.patient)).size,
+               topType: top((a) => a.type), topPat: top((a) => a.patient) };
+    }).sort((x, y) => y.sum - x.sum);
+
+    const grand = per.reduce((s, x) => s + x.sum, 0);
+
+    byId("therCards").innerHTML = per.map((r) => `
+      <article class="tr-card" style="--c:${r.t.color}">
+        <div class="tr-top">
+          <span class="tr-badge">${r.t.short}</span>
+          <div><h3>${r.t.name}</h3><p>${r.t.role}</p></div>
+        </div>
+        <span class="tr-sum">${eur0(r.sum)}</span>
+        <span class="meter" aria-hidden="true"><i style="width:${(r.sum / grand) * 100}%"></i></span>
+        <span class="tr-share">${Math.round((r.sum / grand) * 100)} % vom Wochenumsatz ·
+          ${r.n} Termine · ${r.heads} Patient:innen · Ø ${eur0(r.sum / r.n)}</span>
+        <dl class="tr-facts">
+          <div><dt>Stärkste Leistung</dt><dd>${r.topType[0]}<b>${eur0(r.topType[1])}</b></dd></div>
+          <div><dt>Stärkste:r Patient:in</dt><dd>${r.topPat[0]}<b>${eur0(r.topPat[1])}</b></dd></div>
+        </dl>
+      </article>`).join("");
+
+    const head = SPLITS[therState.split].head;
+    byId("therHead").innerHTML =
+      head.map((h) => `<th scope="col">${h}</th>`).join("") +
+      `<th scope="col" class="num">Termine</th><th scope="col" class="num">Umsatz</th>`;
+
+    const rows = therGroups();
+    byId("therBody").innerHTML = rows.map((g) => {
+      const t = therOf(g.ther);
+      const mid = {
+        detail:   `<td>${g.patient}</td><td>${g.type}</td>`,
+        patient:  `<td>${g.patient}</td>
+                   <td><span class="chips">${[...g.types].map((x) => `<span>${x}</span>`).join("")}</span></td>`,
+        leistung: `<td>${g.type}</td>
+                   <td class="bmuted">${g.patients.size} ${g.patients.size === 1 ? "Person" : "Personen"}</td>`,
+      }[therState.split];
+      return `<tr>
+        <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.name}</span></td>
+        ${mid}
+        <td class="num">${g.n}</td>
+        <td class="num sum">${eur(g.sum)}</td>
+      </tr>`;
+    }).join("") || `<tr><td colspan="5">Keine Therapeut:in ausgewählt.</td></tr>`;
+
+    byId("therFoot").textContent = eur(rows.reduce((s, g) => s + g.sum, 0));
+  }
+
+  // Filterknöpfe — dieselbe Mechanik wie die Legende im Tagesplan
+  const therPick = byId("therPick");
+  THERAPISTS.forEach((t) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "lg";
+    b.style.setProperty("--c", t.color);
+    b.setAttribute("aria-pressed", "true");
+    b.innerHTML = `<span class="dot"></span>${t.name}`;
+    b.addEventListener("click", () => {
+      if (therState.hidden.has(t.id)) therState.hidden.delete(t.id);
+      else therState.hidden.add(t.id);
+      const off = therState.hidden.has(t.id);
+      b.classList.toggle("is-off", off);
+      b.setAttribute("aria-pressed", String(!off));
+      renderTherRevenue();
+    });
+    therPick.appendChild(b);
+  });
+
+  document.querySelectorAll("[data-split]").forEach((b) => {
+    b.addEventListener("click", () => {
+      therState.split = b.dataset.split;
+      document.querySelectorAll("[data-split]").forEach((x) => x.classList.toggle("is-on", x === b));
+      renderTherRevenue();
+    });
+  });
+
   byId("billSearch").addEventListener("input", (e) => {
     billState.q = e.target.value;
     renderBill();
@@ -626,6 +750,7 @@
     renderStats();
     renderWeek();
     renderBill();
+    renderTherRevenue();
     renderTeam();
   }
 

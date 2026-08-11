@@ -187,6 +187,35 @@
     <div class="bars" id="billBars"></div>
 
     <div class="panel-head panel-head-sub">
+      <h2>Umsatz je Therapeut:in</h2>
+      <p>Wer wie viel erwirtschaftet hat — und woraus.</p>
+    </div>
+    <div class="tr-cards" id="therCards"></div>
+
+    <div class="bill-controls bill-controls-sub">
+      <div class="legend" id="therPick" role="group" aria-label="Therapeut:in ein- oder ausblenden"></div>
+      <div class="viewtoggle" role="group" aria-label="Aufschlüsselung">
+        <button type="button" class="vbtn is-on" data-split="detail">Patient:in &amp; Leistung</button>
+        <button type="button" class="vbtn" data-split="patient">nur Patient:in</button>
+        <button type="button" class="vbtn" data-split="leistung">nur Leistung</button>
+      </div>
+    </div>
+
+    <div class="matrix-wrap matrix-wrap-tall">
+      <table class="btable">
+        <caption class="sr-only">Umsatz je Therapeut:in, Patient:in und Leistung</caption>
+        <thead><tr id="therHead"></tr></thead>
+        <tbody id="therBody"></tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="4">Summe der angezeigten Zeilen</th>
+            <td class="num" id="therFoot">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="panel-head panel-head-sub">
       <h2>Nach Patient:in</h2>
       <p>Jede Zeile ist eine Rechnung über die Woche.</p>
     </div>

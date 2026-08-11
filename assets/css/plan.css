@@ -385,6 +385,7 @@ a { color: inherit; text-decoration: none; }
 .bar-val small { display: block; font-size: .68rem; color: var(--cedar); }
 
 .bill-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.bill-controls-sub { justify-content: space-between; margin-top: 18px; }
 .search { flex: 1 1 240px; }
 .search input {
   width: 100%; padding: 10px 16px;
@@ -432,6 +433,49 @@ a { color: inherit; text-decoration: none; }
 .pill small { font-size: .64rem; opacity: .8; }
 .pill.is-paid { background: rgba(62,156,109,.14); border-color: rgba(62,156,109,.4); color: #7FCFA6; }
 .pill.is-open { background: rgba(192,138,42,.14); border-color: rgba(192,138,42,.42); color: #E0B063; }
+
+/* revenue per therapist — the colour is the person's identity, same fixed
+   assignment as the board and the legend */
+.tr-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.tr-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px; padding: 18px 20px 16px;
+  border-top: 2px solid var(--c);
+}
+.tr-top { display: flex; align-items: center; gap: 11px; }
+.tr-badge {
+  width: 34px; height: 34px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 10px;
+  background: color-mix(in srgb, var(--c) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  font-size: .72rem; letter-spacing: .06em; color: var(--aloe);
+}
+.tr-top h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.05rem; line-height: 1.2; }
+.tr-top p { font-size: .7rem; color: var(--cedar); }
+.tr-sum {
+  display: block; margin-top: 14px;
+  font-family: var(--font-display); font-size: 1.9rem; line-height: 1;
+  color: var(--aloe); font-variant-numeric: tabular-nums;
+}
+.tr-card .meter { margin-top: 9px; }
+.tr-card .meter i { background: var(--c); }
+.tr-share { display: block; margin-top: 8px; font-size: .72rem; color: var(--cedar); }
+.tr-facts { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
+.tr-facts > div { padding-top: 9px; border-top: 1px solid rgba(218,222,216,.08); }
+.tr-facts dt { font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--cedar); }
+.tr-facts dd { display: flex; justify-content: space-between; gap: 12px; font-size: .82rem; color: var(--cedar-soft); margin-top: 2px; }
+.tr-facts dd b { font-weight: 400; color: var(--aloe); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* the three-way breakdown gets long — keep it in its own scroll box */
+.matrix-wrap-tall { max-height: 560px; overflow-y: auto; }
+.matrix-wrap-tall thead th { position: sticky; top: 0; z-index: 1; }
+.matrix-wrap-tall tfoot th, .matrix-wrap-tall tfoot td {
+  position: sticky; bottom: 0; background: var(--surface-2);
+}
+.btable .who-cell { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.btable .who-cell i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); display: block; flex-shrink: 0; }
+/* only the invoice rows open something */
+#therBody tr { cursor: default; }
 
 .pricelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
 .pr {
