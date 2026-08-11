@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luca Kolhoff — Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;0,900;1,500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Palette: Cream · Ink · Rust (Quarter-Zip) · Sage (Polo) · Sand (Chino) */
+    --cream:#F4ECDD;        /* Bühne */
+    --paper:#FBF6EC;        /* Karten hell */
+    --ink:#201C15;          /* Text & Bühne dunkel */
+    --ink-soft:#4A4335;     /* Sekundärtext */
+    --line:#D8C9AC;         /* Linien auf Cream */
+    --line-dark:#4E4834;    /* Linien auf Ink */
+    --rust:#D2571F;         /* Quarter-Zip */
+    --sage:#6C7A44;         /* Polo */
+    --sand:#B8934F;         /* Chino */
+    --bone:#F4ECDD;
+    --T:4.8s;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{background:var(--ink);color:var(--cream);font-family:'Space Grotesk',sans-serif;line-height:1.6;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+  .label{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+  ::selection{background:var(--rust);color:var(--cream)}
+
+  /* ---------- HERO ---------- */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:72px 32px;
+        background:radial-gradient(120% 90% at 50% 40%, rgba(210,87,31,.10), rgba(0,0,0,0) 55%), radial-gradient(130% 120% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.28));}
+  .hero-top{position:absolute;top:34px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 38px}
+  .hero-top .label{color:var(--rust)}
+  .corner{font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink-soft)}
+
+  .mark-stage{position:relative;display:inline-block}
+  .stage{display:block;width:min(470px,88vw);height:auto}
+
+  .sheen{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .sheen::before{content:'';position:absolute;top:-25%;left:-65%;width:42%;height:150%;
+    background:linear-gradient(105deg,transparent 30%,rgba(210,87,31,0) 42%,rgba(210,87,31,.5) 50%,rgba(210,87,31,0) 58%,transparent 70%);
+    transform:skewX(-12deg);filter:blur(2px);mix-blend-mode:screen;opacity:0}
+  .animate .sheen::before{animation:sweep var(--T) ease both}
+  @keyframes sweep{0%{left:-65%;opacity:0}55%{left:-65%;opacity:0}62%{opacity:1}80%{left:122%;opacity:1}88%{opacity:0}100%{left:122%;opacity:0}}
+
+  .l-clip{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}
+  .k-clip{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}
+  .glow{opacity:.85;transform-box:fill-box;transform-origin:center}
+  .underline{stroke-dasharray:96;stroke-dashoffset:0}
+  .tick{stroke-dasharray:50;stroke-dashoffset:0}
+
+  .animate .l-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, lReveal var(--T) cubic-bezier(.34,1.4,.34,1) both}
+  .animate .k-clip{animation:iiIn var(--T) both, iiFocus var(--T) ease both, kReveal var(--T) cubic-bezier(.34,1.4,.34,1) both}
+  .animate .glow{animation:glowBloom var(--T) ease both}
+  .animate .underline{animation:lineDraw var(--T) ease both}
+  .animate .tick{animation:tickDraw var(--T) ease both}
+
+  @keyframes iiIn{0%{opacity:0}8%{opacity:1}100%{opacity:1}}
+  @keyframes iiFocus{0%{filter:blur(7px)}11%{filter:blur(0)}100%{filter:blur(0)}}
+  @keyframes lReveal{0%{clip-path:inset(0 0 0 70%)}42%{clip-path:inset(0 0 0 70%)}68%{clip-path:inset(0 0 0 -6%)}80%{clip-path:inset(0 0 0 0%)}100%{clip-path:inset(0 0 0 0%)}}
+  @keyframes kReveal{0%{clip-path:inset(0 74% 0 0)}42%{clip-path:inset(0 74% 0 0)}68%{clip-path:inset(0 -6% 0 0)}80%{clip-path:inset(0 0% 0 0)}100%{clip-path:inset(0 0% 0 0)}}
+  @keyframes glowBloom{0%{opacity:0;transform:scale(.85)}42%{opacity:0;transform:scale(.85)}58%{opacity:1;transform:scale(1.1)}76%{opacity:.85;transform:scale(1)}100%{opacity:.85;transform:scale(1)}}
+  @keyframes lineDraw{0%{stroke-dashoffset:96}10%{stroke-dashoffset:96}26%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+  @keyframes tickDraw{0%{stroke-dashoffset:50}6%{stroke-dashoffset:50}20%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+
+  .name-block{margin-top:30px}
+  .name-block .name{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3.4vw,30px);letter-spacing:.42em;text-transform:uppercase;padding-left:.42em;color:var(--cream)}
+  .animate .name-block .name{animation:nameSettle var(--T) cubic-bezier(.2,.9,.15,1.2) both}
+  @keyframes nameSettle{0%{opacity:0;letter-spacing:1.1em;transform:translateY(10px) rotate(-1deg)}70%{opacity:0;letter-spacing:1.1em;transform:translateY(10px) rotate(-1deg)}90%{opacity:1;letter-spacing:.42em;transform:translateY(0) rotate(0)}100%{opacity:1;letter-spacing:.42em;transform:translateY(0) rotate(0)}}
+  .meta{opacity:1}
+  .animate .meta{animation:metaIn var(--T) ease both}
+  @keyframes metaIn{0%{opacity:0}80%{opacity:0}96%{opacity:1}100%{opacity:1}}
+  .rule{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px}
+  .rule .line{height:1px;width:58px;background:linear-gradient(90deg,transparent,var(--rust))}
+  .rule .line.r{background:linear-gradient(90deg,var(--rust),transparent)}
+  .rule .dot{width:4px;height:4px;background:var(--rust);transform:rotate(45deg)}
+  .rule .tag{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft)}
+  .concept{margin-top:13px;font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft)}
+
+  .cta{margin-top:34px;display:inline-flex;align-items:center;gap:10px;background:var(--rust);color:var(--cream);
+    font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
+    padding:14px 26px;border-radius:100px;text-decoration:none;transition:.25s ease}
+  .cta:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 10px 24px rgba(210,87,31,.35)}
+  .animate .cta{animation:metaIn var(--T) ease both}
+
+  .replay{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:transparent;border:1px solid var(--line-dark);color:var(--ink-soft);
+    font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;padding:9px 18px;cursor:pointer;transition:.3s;border-radius:100px}
+  .replay:hover{border-color:var(--rust);color:var(--rust)}
+
+  /* ---------- SECTIONS ---------- */
+  section.block{padding:90px 0;border-top:1px solid var(--line-dark)}
+  section.block.on-cream{background:var(--cream);color:var(--ink)}
+  .on-cream .label{color:var(--ink-soft)}
+  .on-cream .sec-head h2{color:var(--ink)}
+  .on-cream{border-top:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:22px;margin-bottom:48px;flex-wrap:wrap}
+  .sec-head .num{font-family:'Fraunces',serif;font-style:italic;font-size:24px;color:var(--rust)}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(24px,3.4vw,34px);color:var(--cream)}
+  .sec-head p{margin-left:auto;max-width:320px;font-size:13.5px;color:var(--ink-soft);text-align:right}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:rgba(255,255,255,.03);border:1px solid var(--line-dark);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;transition:.3s ease}
+  .on-cream .card{background:var(--paper);border-color:var(--line)}
+  .card:hover{transform:translateY(-4px) rotate(-.6deg)}
+  .card .cap{position:absolute;bottom:16px;left:0;right:0;text-align:center}
+  .seal{width:64%}
+
+  /* Product cards */
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .prod{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 26px 26px;position:relative;overflow:hidden;transition:.3s ease}
+  .prod:hover{transform:translateY(-6px) rotate(-.7deg);box-shadow:0 18px 34px rgba(32,28,21,.12)}
+  .prod::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent)}
+  .prod .icon{width:100%;height:150px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .prod .tag{display:inline-block;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--accent);
+    border:1px solid var(--accent);padding:5px 10px;border-radius:100px;margin-bottom:14px}
+  .prod h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;color:var(--ink);margin-bottom:8px}
+  .prod p.desc{font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;min-height:44px}
+  .prod .price{display:flex;align-items:baseline;justify-content:space-between;border-top:1px dashed var(--line);padding-top:14px}
+  .prod .price b{font-family:'Fraunces',serif;font-size:18px;color:var(--ink)}
+  .prod .price span{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .prod.qz{--accent:var(--rust)}
+  .prod.polo{--accent:var(--sage)}
+  .prod.chino{--accent:var(--sand)}
+
+  .ribbon{position:absolute;top:14px;right:-32px;background:var(--rust);color:var(--cream);font-size:9.5px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;padding:5px 38px;transform:rotate(38deg);box-shadow:0 4px 10px rgba(0,0,0,.15)}
+
+  footer{padding:54px 0 64px;border-top:1px solid var(--line-dark);text-align:center}
+  footer .fmark{font-family:'Fraunces',serif;font-weight:700;font-size:30px;letter-spacing:.32em;padding-left:.32em;color:var(--cream)}
+  footer .fnote{margin-top:14px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+
+  @media(max-width:760px){.grid,.prod-grid{grid-template-columns:1fr}.sec-head p{display:none}.hero-top{display:none}}
+  @media(prefers-reduced-motion:reduce){ .animate *{animation:none!important} .sheen{display:none} .replay{display:none} }
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero animate" id="hero">
+  <div class="hero-top">
+    <span class="label">Mode · Identität</span>
+    <span class="corner">SS · 26</span>
+  </div>
+
+  <div class="mark-stage">
+    <svg class="stage" viewBox="0 0 560 360" fill="none" aria-label="Luca Kolhoff — gespiegeltes L und K bilden die römische Zwei">
+      <defs>
+        <radialGradient id="ctr" cx="50%" cy="46%" r="52%">
+          <stop offset="0%" stop-color="#D2571F" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="#D2571F" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <ellipse class="glow" cx="284" cy="172" rx="118" ry="148" fill="url(#ctr)"/>
+
+      <g stroke="#D2571F" stroke-width="1.6" fill="none" stroke-linecap="round">
+        <path class="tick" d="M126 92 L126 66 L152 66"/>
+        <path class="tick" d="M408 66 L434 66 L434 92"/>
+        <path class="tick" d="M126 300 L126 326 L152 326"/>
+        <path class="tick" d="M408 326 L434 326 L434 300"/>
+      </g>
+
+      <g class="l-clip">
+        <g transform="translate(428,0) scale(-1,1)">
+          <text x="214" y="284" text-anchor="middle" font-family="Fraunces, serif"
+                font-weight="600" font-size="248" fill="#F4ECDD">L</text>
+        </g>
+      </g>
+
+      <g class="k-clip">
+        <text x="360" y="284" text-anchor="middle" font-family="Fraunces, serif"
+              font-weight="600" font-size="248" fill="#F4ECDD">K</text>
+      </g>
+
+      <line class="underline" x1="246" y1="310" x2="342" y2="310" stroke="#D2571F" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <div class="sheen"></div>
+  </div>
+
+  <div class="name-block">
+    <div class="name">Luca Kolhoff</div>
+    <div class="meta">
+      <div class="rule">
+        <span class="line"></span><span class="dot"></span>
+        <span class="tag">· II ·</span>
+        <span class="dot"></span><span class="line r"></span>
+      </div>
+      <div class="concept">Quarter-Zips, Polos &amp; Chinos — die Zwei, die aus L &amp; K entsteht</div>
+      <a href="#kollektion" class="cta">Kollektion entdecken ↓</a>
+    </div>
+  </div>
+
+  <button class="replay" id="replay" aria-label="Animation erneut abspielen">↻ Erneut abspielen</button>
+</header>
+
+<!-- ===================== KONSTRUKTION ===================== -->
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">i.</span>
+      <h2>Die Idee</h2>
+      <p>Gespiegeltes L, daneben das K — die langen Seiten stehen mit Abstand parallel und formen die II. Ein Zeichen, das genauso gut auf einem Kragen sitzt wie auf einem Siegel.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <svg width="150" height="150" viewBox="0 0 200 200" aria-label="L gespiegelt">
+          <g transform="translate(200,0) scale(-1,1)">
+            <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#D2571F">L</text>
+          </g>
+        </svg>
+        <div class="cap"><span class="label">1 · L falsch herum</span></div>
+      </div>
+      <div class="card">
+        <svg width="150" height="150" viewBox="0 0 200 200" aria-label="K">
+          <text x="100" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#D2571F">K</text>
+        </svg>
+        <div class="cap"><span class="label">2 · K daneben</span></div>
+      </div>
+      <div class="card">
+        <svg width="180" height="150" viewBox="0 0 280 200" aria-label="Ergebnis L + K = II">
+          <g transform="translate(238,0) scale(-1,1)">
+            <text x="119" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#F4ECDD">L</text>
+          </g>
+          <text x="190" y="158" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="170" fill="#F4ECDD">K</text>
+        </svg>
+        <div class="cap"><span class="label">3 · II entsteht</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KOLLEKTION ===================== -->
+<section class="block on-cream" id="kollektion">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">ii.</span>
+      <h2>Die Kollektion</h2>
+      <p>Drei Stücke, ein Prinzip: schick genug fürs Büro, entspannt genug fürs Wochenende. Jede Kategorie trägt ihre eigene Farbe der Marke.</p>
+    </div>
+    <div class="prod-grid">
+      <div class="prod qz">
+        <span class="ribbon">Neu</span>
+        <span class="tag">Quarter-Zip</span>
+        <div class="icon">
+          <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
+            <path d="M30 20 L15 34 L26 48 L34 40 L34 128 L86 128 L86 40 L94 48 L105 34 L90 20 C90 20 82 30 60 30 C38 30 30 20 30 20 Z"
+                  stroke="#D2571F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M60 30 L60 128" stroke="#D2571F" stroke-width="2.4" stroke-dasharray="1 6" stroke-linecap="round"/>
+            <rect x="55.5" y="24" width="9" height="9" rx="2" fill="#D2571F"/>
+          </svg>
+        </div>
+        <h3>Der Quarter-Zip</h3>
+        <p class="desc">Feinstrick, hoher Stehkragen, halbe Reißverschlussleiste. Der Übergang zwischen Meeting und Feierabend.</p>
+        <div class="price"><b>€ 128</b><span>Merino-Mix</span></div>
+      </div>
+
+      <div class="prod polo">
+        <span class="tag">Polo</span>
+        <div class="icon">
+          <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
+            <path d="M46 18 L34 26 L44 40 L52 34 L52 34 L60 44 L68 34 L76 40 L86 26 L74 18 C74 18 68 26 60 26 C52 26 46 18 46 18 Z"
+                  stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18 40 L34 26 L44 40 L34 52 Z M102 40 L86 26 L76 40 L86 52 Z"
+                  stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M44 40 L34 128 L86 128 L76 40" stroke="#6C7A44" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="60" y1="44" x2="60" y2="70" stroke="#6C7A44" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="60" cy="52" r="2.6" fill="#6C7A44"/>
+            <circle cx="60" cy="62" r="2.6" fill="#6C7A44"/>
+          </svg>
+        </div>
+        <h3>Das Polo</h3>
+        <p class="desc">Schwerer Piqué-Jersey, sauberer Kragen, kein Logo-Geprotze — nur die feine II am Saum.</p>
+        <div class="price"><b>€ 78</b><span>Baumwoll-Piqué</span></div>
+      </div>
+
+      <div class="prod chino">
+        <span class="tag">Chino</span>
+        <div class="icon">
+          <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
+            <path d="M38 18 L82 18 L86 60 L98 128 L78 128 L62 66 L58 66 L46 128 L26 128 L34 60 Z"
+                  stroke="#B8934F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="38" y1="18" x2="82" y2="18" stroke="#B8934F" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M46 26 L46 32" stroke="#B8934F" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M74 26 L74 32" stroke="#B8934F" stroke-width="2.6" stroke-linecap="round"/>
+            <line x1="27" y1="120" x2="45" y2="120" stroke="#B8934F" stroke-width="2.2" stroke-linecap="round"/>
+            <line x1="79" y1="120" x2="97" y2="120" stroke="#B8934F" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Die Chino</h3>
+        <p class="desc">Schlanker Schnitt, softes Twill, dezenter Umschlag. Sitzt am Freitag genauso wie am Montag.</p>
+        <div class="price"><b>€ 98</b><span>Baumwoll-Twill</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== APPLICATIONS ===================== -->
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">iii.</span>
+      <h2>Angewandt</h2>
+      <p>Siegel und Kragen-Patch tragen das volle Zeichen — gespiegeltes L und K, das sich als II liest. Die Wortmarke reduziert auf die reine II.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <svg class="seal" viewBox="0 0 300 300" fill="none" aria-label="Siegel / Hangtag">
+          <defs>
+            <path id="arcTop" d="M150,150 m-112,0 a112,112 0 1,1 224,0" />
+            <path id="arcBot" d="M150,150 m112,0 a112,112 0 1,1 -224,0" />
+          </defs>
+          <circle cx="150" cy="150" r="138" stroke="#D2571F" stroke-width="1.3"/>
+          <circle cx="150" cy="150" r="120" stroke="#D2571F" stroke-width="0.7" opacity="0.7"/>
+          <g class="ringspin">
+            <circle cx="150" cy="150" r="129" stroke="#D2571F" stroke-width="1" stroke-dasharray="2 9" opacity="0.8"/>
+          </g>
+          <text font-family="Space Grotesk, sans-serif" font-size="12.5" letter-spacing="5.5" fill="#D2571F">
+            <textPath href="#arcTop" startOffset="50%" text-anchor="middle">LUCA · KOLHOFF</textPath>
+          </text>
+          <text font-family="Space Grotesk, sans-serif" font-size="12" letter-spacing="7" fill="#D2571F">
+            <textPath href="#arcBot" startOffset="50%" text-anchor="middle">MODE · SS26</textPath>
+          </text>
+          <rect x="22" y="146" width="6" height="6" transform="rotate(45 25 149)" fill="#D2571F"/>
+          <rect x="272" y="146" width="6" height="6" transform="rotate(45 275 149)" fill="#D2571F"/>
+          <g transform="translate(238,0) scale(-1,1)">
+            <text x="119" y="190" text-anchor="middle" font-family="Fraunces, serif"
+                  font-weight="600" font-size="112" fill="#F4ECDD">L</text>
+          </g>
+          <text x="185" y="190" text-anchor="middle" font-family="Fraunces, serif"
+                font-weight="600" font-size="112" fill="#F4ECDD">K</text>
+        </svg>
+        <div class="cap"><span class="label">Hangtag / Siegel</span></div>
+      </div>
+      <div class="card">
+        <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Kragen-Patch">
+          <rect x="2" y="2" width="116" height="116" rx="28" fill="#201C15" stroke="#D2571F" stroke-width="1.2"/>
+          <g>
+            <g transform="translate(96,0) scale(-1,1)">
+              <text x="48" y="84" text-anchor="middle" font-family="Fraunces, serif"
+                    font-weight="600" font-size="56" fill="#F4ECDD">L</text>
+            </g>
+            <text x="81" y="84" text-anchor="middle" font-family="Fraunces, serif"
+                  font-weight="600" font-size="56" fill="#F4ECDD">K</text>
+          </g>
+        </svg>
+        <div class="cap"><span class="label">Kragen-Patch</span></div>
+      </div>
+      <div class="card light" style="background:var(--paper);border-color:var(--line)">
+        <svg width="180" height="140" viewBox="0 0 260 180" aria-label="Wortmarke auf Hell">
+          <text x="60" y="128" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="120" letter-spacing="12" fill="#201C15">II</text>
+          <line x1="118" y1="44" x2="118" y2="132" stroke="#D2571F" stroke-width="1.2"/>
+          <text x="134" y="84" font-family="Fraunces, serif" font-weight="500" font-size="22" letter-spacing="2" fill="#201C15">Luca</text>
+          <text x="134" y="112" font-family="Fraunces, serif" font-weight="500" font-size="22" letter-spacing="2" fill="#201C15">Kolhoff</text>
+        </svg>
+        <div class="cap"><span class="label">Wortmarke · auf Hell</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fmark">II</div>
+    <div class="fnote">Luca Kolhoff · Quarter-Zips, Polos &amp; Chinos · SS26</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var hero = document.getElementById('hero'), btn = document.getElementById('replay');
+    btn.addEventListener('click', function(){
+      hero.classList.remove('animate'); void hero.offsetWidth; hero.classList.add('animate');
+    });
+  })();
+</script>
+
+</body>
+</html>
