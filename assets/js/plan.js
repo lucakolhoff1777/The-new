@@ -2,330 +2,33 @@
   "use strict";
 
   /* =======================================================================
-     Reference data — example week, replace with the practice's own records
+     Everything the intranet knows comes from assets/js/practice-data.js —
+     the same file the booking page reads, so a slot cannot be free there and
+     taken here.
      ======================================================================= */
 
-  // Fixed categorical order. Validated for the dark surface with
-  // scripts/validate_palette.js: lightness band, chroma floor, CVD
-  // separation, normal-vision floor and contrast all pass.
-  const THERAPISTS = [
-    { id: "lk", short: "LK", name: "Luca Kolhoff",    role: "Manuelle Therapie · CMD",        color: "#2E9A76" },
-    { id: "mb", short: "MB", name: "Mira Bergmann",   role: "Sportphysio · Athletik-Lab",     color: "#BE8418" },
-    { id: "jr", short: "JR", name: "Jonas Reither",   role: "Krankengymnastik · Elektro",     color: "#4489BE" },
-    { id: "sh", short: "SH", name: "Sophie Hartmann", role: "Lymphdrainage · Massage",        color: "#BC5570" },
-    { id: "hw", short: "HW", name: "Hanna Wiedemann", role: "Krankengymnastik · Manuelle Th.", color: "#7E77CE" },
-  ];
-
-  const ROOMS = [
-    { id: 0, name: "Raum I",       note: "Manuelle Therapie" },
-    { id: 1, name: "Raum II",      note: "Krankengymnastik" },
-    { id: 2, name: "Raum III",     note: "Massage · Lymphe" },
-    { id: 3, name: "Athletik-Lab", note: "Diagnostik · Training" },
-  ];
-
-  const DAYS = [
-    { key: 0, short: "Mo", date: "10.08." },
-    { key: 1, short: "Di", date: "11.08." },
-    { key: 2, short: "Mi", date: "12.08." },
-    { key: 3, short: "Do", date: "13.08." },
-    { key: 4, short: "Fr", date: "14.08." },
-    { key: 5, short: "Sa", date: "15.08." },
-  ];
-
-  const BILL = {
-    rezept: "Heilmittelverordnung",
-    privat: "Privat / Selbstzahler",
-    paket:  "Return-to-Sport Paket",
-    zuweis: "CMD · mit Zuweisung",
-  };
-
-  // day, room, start, minutes, therapist, patient, treatment, billing
-  const A = (day, room, start, min, ther, patient, type, bill) =>
-    ({ day, room, start, min, ther, patient, type, bill });
-
-  const APPOINTMENTS = [
-    /* ---- Montag ---- */
-    A(0, 0, "08:00", 60, "mb", "N. Tran", "Sportphysiotherapie", "privat"),
-    A(0, 1, "08:00", 45, "jr", "V. Aydin", "Manuelle Therapie", "rezept"),
-    A(0, 2, "08:00", 45, "lk", "B. Frey", "Schienenbegleitung", "zuweis"),
-    A(0, 1, "08:45", 60, "jr", "J. Zeller", "Krankengymnastik", "rezept"),
-    A(0, 2, "08:45", 45, "lk", "U. Demir", "Schienenbegleitung", "zuweis"),
-    A(0, 0, "09:00", 60, "sh", "S. Wendler", "Klassische Massage", "privat"),
-    A(0, 3, "09:00", 90, "mb", "A. Okafor", "Athletik-Check", "privat"),
-    A(0, 2, "09:30", 60, "lk", "F. Neuhaus", "Manuelle Therapie", "privat"),
-    A(0, 1, "09:45", 45, "jr", "N. Dietrich", "Manuelle Therapie", "rezept"),
-    A(0, 0, "10:00", 45, "hw", "W. Kettler", "Manuelle Therapie", "rezept"),
-    A(0, 1, "10:30", 20, "jr", "W. Duarte", "Elektro & Ultraschall", "rezept"),
-    A(0, 2, "10:30", 45, "sh", "T. Marchand", "Klassische Massage", "privat"),
-    A(0, 3, "10:30", 60, "lk", "V. Thiel", "Sportphysiotherapie", "privat"),
-    A(0, 0, "10:45", 60, "hw", "G. Möller", "Manuelle Therapie", "privat"),
-    A(0, 1, "11:00", 60, "mb", "V. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(0, 2, "11:15", 45, "sh", "P. Mahler", "Lymphdrainage", "rezept"),
-    A(0, 3, "11:30", 20, "lk", "O. Vogt", "Kinesiotaping", "privat"),
-    A(0, 0, "13:00", 45, "hw", "T. Mahler", "Manuelle Therapie", "rezept"),
-    A(0, 1, "13:00", 60, "sh", "H. Kessler", "Klassische Massage", "privat"),
-    A(0, 2, "13:00", 45, "jr", "Z. Ludwig", "Krankengymnastik", "rezept"),
-    A(0, 3, "13:00", 60, "mb", "J. Aksoy", "Return-to-Sport", "paket"),
-    A(0, 0, "13:45", 45, "jr", "G. Kovac", "Manuelle Therapie", "rezept"),
-    A(0, 2, "13:45", 60, "hw", "Z. Arnold", "Krankengymnastik", "rezept"),
-    A(0, 1, "14:00", 45, "sh", "C. Krüger", "Klassische Massage", "privat"),
-    A(0, 3, "14:00", 60, "lk", "C. Hartwig", "Sportphysiotherapie", "privat"),
-    A(0, 0, "14:30", 20, "jr", "V. Engel", "Elektro & Ultraschall", "rezept"),
-    A(0, 1, "14:45", 45, "hw", "Y. Kolb", "Manuelle Therapie", "rezept"),
-    A(0, 2, "14:45", 45, "sh", "B. Riedel", "Lymphdrainage", "rezept"),
-    A(0, 0, "15:00", 60, "mb", "M. Sperling", "Sportphysiotherapie", "privat"),
-    A(0, 3, "15:00", 60, "jr", "R. Duarte", "Krankengymnastik", "rezept"),
-    A(0, 1, "15:30", 60, "lk", "W. Obermann", "CMD-Ersttermin", "zuweis"),
-    A(0, 2, "15:30", 60, "hw", "H. Bauer", "Manuelle Therapie", "privat"),
-    A(0, 0, "16:00", 60, "sh", "C. Amrein", "Klassische Massage", "privat"),
-    A(0, 3, "16:00", 45, "mb", "B. Claus", "Leistungs-Recheck", "privat"),
-    A(0, 1, "16:30", 45, "jr", "L. Winkler", "Krankengymnastik", "rezept"),
-    A(0, 2, "16:30", 45, "hw", "K. Roth", "Lymphdrainage", "rezept"),
-    A(0, 0, "17:00", 45, "sh", "C. Ludwig", "Klassische Massage", "privat"),
-    A(0, 1, "17:15", 45, "jr", "S. Marchand", "Krankengymnastik", "rezept"),
-    A(0, 3, "17:15", 60, "hw", "T. Ziegler", "Krankengymnastik", "rezept"),
-    A(0, 0, "18:15", 45, "hw", "N. Aydin", "Lymphdrainage", "rezept"),
-
-    /* ---- Dienstag ---- */
-    A(1, 0, "08:00", 45, "sh", "P. Mahler", "Lymphdrainage", "rezept"),
-    A(1, 1, "08:00", 45, "jr", "V. Engel", "Krankengymnastik", "rezept"),
-    A(1, 1, "08:45", 45, "jr", "V. Aydin", "Manuelle Therapie", "rezept"),
-    A(1, 2, "08:45", 45, "sh", "T. Marchand", "Klassische Massage", "privat"),
-    A(1, 0, "09:00", 60, "mb", "V. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(1, 3, "09:00", 20, "lk", "F. Neuhaus", "Kinesiotaping", "privat"),
-    A(1, 1, "09:30", 60, "sh", "C. Amrein", "Klassische Massage", "privat"),
-    A(1, 2, "09:30", 60, "lk", "W. Obermann", "CMD-Ersttermin", "zuweis"),
-    A(1, 3, "09:30", 60, "jr", "J. Zeller", "Krankengymnastik", "rezept"),
-    A(1, 0, "10:00", 60, "hw", "T. Ziegler", "Krankengymnastik", "rezept"),
-    A(1, 1, "10:30", 45, "jr", "L. Winkler", "Krankengymnastik", "rezept"),
-    A(1, 2, "10:30", 60, "mb", "N. Tran", "Sportphysiotherapie", "privat"),
-    A(1, 3, "10:30", 60, "lk", "O. Vogt", "Sportphysiotherapie", "privat"),
-    A(1, 0, "11:00", 45, "hw", "Y. Kolb", "Manuelle Therapie", "rezept"),
-    A(1, 1, "11:15", 45, "sh", "C. Krüger", "Klassische Massage", "privat"),
-    A(1, 2, "11:30", 20, "mb", "M. Sperling", "Kinesiotaping", "privat"),
-    A(1, 3, "11:30", 20, "lk", "B. Frey", "Kinesiotaping", "privat"),
-    A(1, 0, "13:00", 60, "hw", "H. Bauer", "Manuelle Therapie", "privat"),
-    A(1, 1, "13:00", 20, "mb", "B. Claus", "Kinesiotaping", "privat"),
-    A(1, 2, "13:00", 60, "lk", "C. Hartwig", "Sportphysiotherapie", "privat"),
-    A(1, 3, "13:00", 20, "sh", "V. Zeller", "Kinesiotaping", "privat"),
-    A(1, 1, "13:30", 45, "jr", "S. Marchand", "Krankengymnastik", "rezept"),
-    A(1, 3, "13:30", 90, "mb", "A. Okafor", "Athletik-Check", "privat"),
-    A(1, 0, "14:00", 45, "hw", "W. Kettler", "Manuelle Therapie", "rezept"),
-    A(1, 2, "14:00", 60, "sh", "H. Kessler", "Klassische Massage", "privat"),
-    A(1, 1, "14:15", 45, "lk", "U. Demir", "Schienenbegleitung", "zuweis"),
-    A(1, 0, "14:45", 60, "hw", "G. Möller", "Manuelle Therapie", "privat"),
-    A(1, 1, "15:00", 45, "jr", "Z. Ludwig", "Krankengymnastik", "rezept"),
-    A(1, 2, "15:00", 60, "mb", "R. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(1, 3, "15:00", 60, "lk", "R. Haas", "Sportphysiotherapie", "privat"),
-    A(1, 0, "15:45", 60, "sh", "S. Wendler", "Klassische Massage", "privat"),
-    A(1, 1, "15:45", 45, "hw", "N. Aydin", "Lymphdrainage", "rezept"),
-    A(1, 2, "16:00", 45, "jr", "N. Dietrich", "Manuelle Therapie", "rezept"),
-    A(1, 3, "16:00", 60, "mb", "J. Aksoy", "Return-to-Sport", "paket"),
-    A(1, 1, "16:30", 45, "hw", "T. Mahler", "Manuelle Therapie", "rezept"),
-    A(1, 2, "16:45", 45, "lk", "C. Ziegler", "Schienenbegleitung", "zuweis"),
-    A(1, 0, "17:00", 20, "mb", "M. Marchand", "Kinesiotaping", "privat"),
-    A(1, 3, "17:15", 60, "hw", "Z. Arnold", "Krankengymnastik", "rezept"),
-    A(1, 0, "17:30", 20, "mb", "R. Wendler", "Kinesiotaping", "privat"),
-    A(1, 2, "17:30", 20, "lk", "C. Marchand", "Kinesiotaping", "privat"),
-    A(1, 0, "18:15", 45, "hw", "D. Vogel", "Lymphdrainage", "rezept"),
-
-    /* ---- Mittwoch ---- */
-    A(2, 0, "08:00", 45, "sh", "T. Marchand", "Klassische Massage", "privat"),
-    A(2, 1, "08:00", 60, "hw", "T. Ziegler", "Krankengymnastik", "rezept"),
-    A(2, 2, "08:00", 45, "lk", "C. Ziegler", "Schienenbegleitung", "zuweis"),
-    A(2, 2, "08:45", 60, "lk", "C. Marchand", "Manuelle Therapie", "privat"),
-    A(2, 3, "08:45", 20, "sh", "H. Nowak", "Kinesiotaping", "privat"),
-    A(2, 0, "09:00", 60, "mb", "R. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(2, 1, "09:00", 45, "jr", "Z. Ludwig", "Krankengymnastik", "rezept"),
-    A(2, 3, "09:15", 60, "hw", "D. Nowak", "Krankengymnastik", "rezept"),
-    A(2, 1, "09:45", 45, "jr", "S. Marchand", "Krankengymnastik", "rezept"),
-    A(2, 2, "09:45", 45, "sh", "V. Zeller", "Klassische Massage", "privat"),
-    A(2, 0, "10:00", 60, "mb", "R. Wendler", "Sportphysiotherapie", "privat"),
-    A(2, 3, "10:15", 60, "lk", "R. Haas", "Sportphysiotherapie", "privat"),
-    A(2, 1, "10:30", 60, "sh", "H. Kessler", "Klassische Massage", "privat"),
-    A(2, 2, "10:30", 45, "jr", "G. Kovac", "Manuelle Therapie", "rezept"),
-    A(2, 0, "11:00", 60, "mb", "V. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(2, 2, "11:15", 45, "hw", "D. Vogel", "Lymphdrainage", "rezept"),
-    A(2, 3, "11:15", 20, "lk", "U. Kolb", "Kinesiotaping", "privat"),
-    A(2, 1, "11:30", 20, "jr", "J. Zeller", "Elektro & Ultraschall", "rezept"),
-    A(2, 0, "13:00", 45, "jr", "W. Duarte", "Krankengymnastik", "rezept"),
-    A(2, 1, "13:00", 45, "hw", "W. Kettler", "Manuelle Therapie", "rezept"),
-    A(2, 2, "13:00", 45, "sh", "C. Krüger", "Klassische Massage", "privat"),
-    A(2, 3, "13:00", 90, "mb", "M. Marchand", "Athletik-Check", "privat"),
-    A(2, 0, "13:45", 45, "hw", "A. Demir", "Lymphdrainage", "rezept"),
-    A(2, 1, "13:45", 60, "lk", "F. Neuhaus", "Manuelle Therapie", "privat"),
-    A(2, 2, "13:45", 45, "jr", "V. Engel", "Krankengymnastik", "rezept"),
-    A(2, 0, "14:30", 20, "hw", "C. Bianchi", "Elektro & Ultraschall", "rezept"),
-    A(2, 2, "14:30", 60, "sh", "C. Amrein", "Klassische Massage", "privat"),
-    A(2, 3, "14:30", 60, "jr", "T. Wendler", "Krankengymnastik", "rezept"),
-    A(2, 1, "14:45", 45, "lk", "B. Frey", "Schienenbegleitung", "zuweis"),
-    A(2, 0, "15:00", 60, "mb", "H. Möller", "Sportphysiotherapie", "privat"),
-    A(2, 1, "15:30", 60, "jr", "E. Kovac", "Krankengymnastik", "rezept"),
-    A(2, 2, "15:30", 60, "sh", "S. Wendler", "Klassische Massage", "privat"),
-    A(2, 3, "15:30", 20, "lk", "U. Adler", "Kinesiotaping", "privat"),
-    A(2, 0, "16:00", 60, "mb", "S. Kramer", "Sportphysiotherapie", "privat"),
-    A(2, 2, "16:30", 30, "sh", "A. Fuchs", "Lymphdrainage", "rezept"),
-    A(2, 3, "16:30", 60, "jr", "H. Brandt", "Krankengymnastik", "rezept"),
-    A(2, 0, "17:00", 60, "mb", "B. Ludwig", "Sportphysiotherapie", "privat"),
-    A(2, 2, "17:30", 20, "jr", "S. Kirsch", "Elektro & Ultraschall", "rezept"),
-
-    /* ---- Donnerstag ---- */
-    A(3, 0, "08:00", 60, "mb", "H. Möller", "Sportphysiotherapie", "privat"),
-    A(3, 0, "09:00", 60, "jr", "H. Brandt", "Krankengymnastik", "rezept"),
-    A(3, 1, "09:00", 45, "hw", "D. Vogel", "Lymphdrainage", "rezept"),
-    A(3, 2, "09:00", 60, "mb", "S. Kramer", "Sportphysiotherapie", "privat"),
-    A(3, 1, "09:45", 60, "hw", "C. Bianchi", "Manuelle Therapie", "privat"),
-    A(3, 0, "10:00", 45, "lk", "U. Adler", "CMD-Folge", "zuweis"),
-    A(3, 2, "10:00", 30, "sh", "A. Fuchs", "Lymphdrainage", "rezept"),
-    A(3, 3, "10:00", 60, "jr", "T. Wendler", "Krankengymnastik", "rezept"),
-    A(3, 2, "10:30", 45, "sh", "H. Nowak", "Klassische Massage", "privat"),
-    A(3, 0, "10:45", 60, "hw", "D. Nowak", "Krankengymnastik", "rezept"),
-    A(3, 1, "10:45", 45, "lk", "U. Kolb", "Schienenbegleitung", "zuweis"),
-    A(3, 3, "11:00", 45, "mb", "B. Claus", "Leistungs-Recheck", "privat"),
-    A(3, 2, "11:15", 45, "sh", "V. Zeller", "Klassische Massage", "privat"),
-    A(3, 1, "11:30", 20, "lk", "A. Reiss", "Kinesiotaping", "privat"),
-    A(3, 0, "13:00", 45, "lk", "C. Ziegler", "Schienenbegleitung", "zuweis"),
-    A(3, 1, "13:00", 45, "sh", "C. Ludwig", "Klassische Massage", "privat"),
-    A(3, 2, "13:00", 60, "jr", "E. Kovac", "Krankengymnastik", "rezept"),
-    A(3, 3, "13:00", 60, "mb", "R. Wendler", "Sportphysiotherapie", "privat"),
-    A(3, 0, "13:45", 45, "hw", "A. Demir", "Lymphdrainage", "rezept"),
-    A(3, 1, "13:45", 60, "lk", "R. Haas", "Sportphysiotherapie", "privat"),
-    A(3, 2, "14:00", 45, "sh", "B. Riedel", "Lymphdrainage", "rezept"),
-    A(3, 3, "14:00", 60, "jr", "W. Sauer", "Krankengymnastik", "rezept"),
-    A(3, 0, "14:30", 45, "hw", "D. Behrend", "Krankengymnastik", "rezept"),
-    A(3, 1, "14:45", 45, "sh", "E. Berger", "Lymphdrainage", "rezept"),
-    A(3, 2, "14:45", 60, "lk", "C. Marchand", "Manuelle Therapie", "privat"),
-    A(3, 3, "15:00", 90, "mb", "A. Okafor", "Athletik-Check", "privat"),
-    A(3, 0, "15:15", 45, "jr", "S. Kirsch", "Krankengymnastik", "rezept"),
-    A(3, 1, "15:30", 45, "hw", "A. Riedel", "Lymphdrainage", "rezept"),
-    A(3, 2, "15:45", 45, "sh", "O. Hübner", "Klassische Massage", "privat"),
-    A(3, 0, "16:00", 45, "lk", "O. Yilmaz", "Schienenbegleitung", "zuweis"),
-    A(3, 1, "16:15", 45, "jr", "W. Duarte", "Krankengymnastik", "rezept"),
-    A(3, 2, "16:30", 45, "sh", "B. Neuhaus", "Klassische Massage", "privat"),
-    A(3, 3, "16:30", 60, "hw", "C. Arnold", "Krankengymnastik", "rezept"),
-    A(3, 0, "16:45", 60, "lk", "F. Keller", "Manuelle Therapie", "privat"),
-    A(3, 1, "17:00", 45, "jr", "V. Weiss", "Krankengymnastik", "rezept"),
-    A(3, 2, "17:15", 45, "sh", "I. Frey", "Klassische Massage", "privat"),
-    A(3, 1, "17:45", 45, "lk", "I. Baumann", "Manuelle Therapie", "rezept"),
-    A(3, 0, "18:00", 60, "sh", "I. Ferreira", "Klassische Massage", "privat"),
-    A(3, 2, "18:30", 20, "lk", "D. Sauer", "Kinesiotaping", "privat"),
-
-    /* ---- Freitag ---- */
-    A(4, 0, "08:00", 45, "sh", "B. Neuhaus", "Klassische Massage", "privat"),
-    A(4, 1, "08:00", 60, "lk", "A. Reiss", "Manuelle Therapie", "privat"),
-    A(4, 2, "08:00", 45, "jr", "V. Weiss", "Krankengymnastik", "rezept"),
-    A(4, 0, "08:45", 45, "sh", "I. Frey", "Klassische Massage", "privat"),
-    A(4, 2, "08:45", 20, "jr", "T. Wendler", "Elektro & Ultraschall", "rezept"),
-    A(4, 1, "09:00", 60, "mb", "S. Kramer", "Sportphysiotherapie", "privat"),
-    A(4, 3, "09:00", 20, "lk", "O. Yilmaz", "Kinesiotaping", "privat"),
-    A(4, 2, "09:15", 60, "jr", "H. Brandt", "Krankengymnastik", "rezept"),
-    A(4, 0, "09:30", 60, "sh", "I. Ferreira", "Klassische Massage", "privat"),
-    A(4, 3, "09:30", 60, "lk", "G. Roth", "Sportphysiotherapie", "privat"),
-    A(4, 1, "10:00", 45, "hw", "A. Demir", "Lymphdrainage", "rezept"),
-    A(4, 2, "10:15", 60, "mb", "R. Yilmaz", "Sportphysiotherapie", "privat"),
-    A(4, 0, "10:30", 45, "lk", "U. Kolb", "Schienenbegleitung", "zuweis"),
-    A(4, 3, "10:30", 60, "jr", "W. Sauer", "Krankengymnastik", "rezept"),
-    A(4, 1, "10:45", 60, "hw", "P. Reiss", "Krankengymnastik", "rezept"),
-    A(4, 0, "11:15", 20, "mb", "R. Hofmann", "Kinesiotaping", "privat"),
-    A(4, 2, "11:15", 45, "sh", "E. Berger", "Lymphdrainage", "rezept"),
-    A(4, 3, "11:30", 20, "lk", "G. Vogt", "Kinesiotaping", "privat"),
-    A(4, 0, "13:00", 60, "hw", "S. Ziegler", "Krankengymnastik", "rezept"),
-    A(4, 1, "13:00", 60, "mb", "E. Amrein", "Sportphysiotherapie", "privat"),
-    A(4, 2, "13:00", 60, "jr", "E. Kovac", "Krankengymnastik", "rezept"),
-    A(4, 3, "13:00", 60, "lk", "K. Marchand", "Sportphysiotherapie", "privat"),
-    A(4, 0, "14:00", 45, "hw", "H. Fuchs", "Krankengymnastik", "rezept"),
-    A(4, 1, "14:00", 45, "sh", "H. Nowak", "Klassische Massage", "privat"),
-    A(4, 2, "14:00", 60, "mb", "B. Duarte", "Sportphysiotherapie", "privat"),
-    A(4, 3, "14:00", 60, "jr", "C. Baumann", "Krankengymnastik", "rezept"),
-    A(4, 0, "14:45", 45, "sh", "O. Hübner", "Klassische Massage", "privat"),
-    A(4, 1, "14:45", 45, "hw", "N. Frey", "Lymphdrainage", "rezept"),
-    A(4, 2, "15:00", 60, "mb", "I. Amrein", "Sportphysiotherapie", "privat"),
-    A(4, 3, "15:00", 60, "lk", "D. Mahler", "Sportphysiotherapie", "privat"),
-    A(4, 0, "15:30", 60, "hw", "H. Kuhn", "Krankengymnastik", "rezept"),
-    A(4, 1, "15:30", 45, "sh", "B. Riedel", "Lymphdrainage", "rezept"),
-    A(4, 2, "16:00", 60, "mb", "N. Okafor", "Sportphysiotherapie", "privat"),
-    A(4, 3, "16:00", 20, "lk", "C. Wagner", "Kinesiotaping", "privat"),
-    A(4, 1, "16:15", 45, "sh", "I. Sauer", "Lymphdrainage", "rezept"),
-    A(4, 3, "16:30", 60, "hw", "Y. Mertens", "Krankengymnastik", "rezept"),
-    A(4, 0, "17:00", 20, "mb", "L. Behrend", "Kinesiotaping", "privat"),
-    A(4, 2, "17:30", 45, "hw", "I. Behrend", "Krankengymnastik", "rezept"),
-    A(4, 3, "17:30", 20, "mb", "Y. Lorenz", "Kinesiotaping", "privat"),
-    A(4, 0, "18:15", 45, "hw", "Y. Ilic", "Manuelle Therapie", "rezept"),
-
-    /* ---- Samstag ---- */
-    A(5, 0, "09:00", 45, "hw", "H. Fuchs", "Krankengymnastik", "rezept"),
-    A(5, 1, "09:00", 45, "lk", "O. Yilmaz", "Schienenbegleitung", "zuweis"),
-    A(5, 2, "09:00", 60, "mb", "B. Duarte", "Sportphysiotherapie", "privat"),
-    A(5, 1, "09:45", 45, "hw", "I. Behrend", "Krankengymnastik", "rezept"),
-    A(5, 3, "09:45", 60, "lk", "K. Marchand", "Sportphysiotherapie", "privat"),
-    A(5, 0, "10:00", 60, "mb", "I. Amrein", "Sportphysiotherapie", "privat"),
-    A(5, 2, "10:30", 60, "hw", "P. Reiss", "Krankengymnastik", "rezept"),
-    A(5, 1, "10:45", 45, "lk", "C. Wagner", "Schienenbegleitung", "zuweis"),
-    A(5, 0, "11:00", 60, "mb", "E. Amrein", "Sportphysiotherapie", "privat"),
-    A(5, 2, "11:30", 60, "lk", "A. Reiss", "Manuelle Therapie", "privat"),
-    A(5, 3, "11:30", 60, "hw", "Y. Mertens", "Krankengymnastik", "rezept"),
-    A(5, 0, "12:00", 60, "mb", "N. Okafor", "Sportphysiotherapie", "privat"),
-    A(5, 2, "12:30", 20, "lk", "G. Vogt", "Kinesiotaping", "privat"),
-  ];
-
-  /* =======================================================================
-     Preisliste — Privatsätze der Praxis.
-     `unit` ist die Dauer, für die `eur` gilt; abweichende Dauern werden
-     anteilig berechnet und auf 50 Cent gerundet, so wie auf der Rechnung.
-     ======================================================================= */
-
-  const PRICES = {
-    "Manuelle Therapie":    { unit: 30, eur: 46 },
-    "Krankengymnastik":     { unit: 30, eur: 38 },
-    "Sportphysiotherapie":  { unit: 30, eur: 49 },
-    "Klassische Massage":   { unit: 30, eur: 36 },
-    "Lymphdrainage":        { unit: 30, eur: 42 },
-    "Elektro & Ultraschall":{ unit: 20, eur: 12 },
-    "Kinesiotaping":        { unit: 20, eur: 24 },
-    "CMD-Ersttermin":       { unit: 60, eur: 135 },
-    "CMD-Folge":            { unit: 45, eur: 98 },
-    "Schienenbegleitung":   { unit: 45, eur: 86 },
-    "Return-to-Sport":      { unit: 60, eur: 125 },
-    "Leistungs-Recheck":    { unit: 45, eur: 95 },
-    "Athletik-Check":       { unit: 90, eur: 215 },
-  };
-
-  const priceOf = (a) => {
-    const p = PRICES[a.type];
-    if (!p) return 0;
-    return Math.round((p.eur * a.min) / p.unit * 2) / 2;   // auf 50 Cent
-  };
-
-  const eur = (n) =>
-    n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
-  const eur0 = (n) => Math.round(n).toLocaleString("de-DE") + " €";
-
-  // Jede Rechnung braucht einen Zahlungsstand. Die Beispieldaten leiten ihn
-  // fest aus dem Namen ab, damit die Zahlen bei jedem Laden dieselben sind.
-  const hash = (s) => {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h;
-  };
-  const PAYMENTS = ["Karte", "Überweisung", "Bar"];
-
+  const P = window.PRAXIS;
+  const {
+    THERAPISTS, ROOMS, DAYS, BILL, APPOINTMENTS, PRICES, priceOf, eur, eur0,
+    PAYMENTS, hash, SERVICES, SKILLS, SHIFTS, ABSENCES, ABSENCE_KIND, BLOCKS,
+    BLOCK_KIND, PRESCRIPTIONS, PATIENTS, WAITLIST, MONTHS, WEEK0, TODAY,
+    toMin, fmt, svcOf, priceFor, absentOn, addDays, daysBetween, weekday,
+    deDate, DE_DAY, slotsFor, readRequests,
+  } = P;
   /* =======================================================================
      Helpers
      ======================================================================= */
 
-  const DAY_START = 8, DAY_END = 19;
-  // One break for the whole house, Monday to Friday (ArbZG). Saturday
-  // shifts stay under six hours, so no break is required there.
-  const LUNCH = [12 * 60, 13 * 60];
-  const hasLunch = (day) => day < 5;
+  const { DAY_START, DAY_END, LUNCH, hasLunch } = P;
   // One source of truth for the row height — CSS reads it back off :root,
   // so the grid lines and the blocks can never drift apart.
   const HOUR_PX = 82;
   document.documentElement.style.setProperty("--hour", HOUR_PX + "px");
   const byId = (id) => document.getElementById(id);
-  const therOf = (id) => THERAPISTS.find((t) => t.id === id);
-  const toMin = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + m; };
-  const fmt = (mins) => `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
+  const therOf = P.therOf;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const dateOfDay = (d) => addDays(WEEK0, d);
 
   const state = { day: 0, hidden: new Set(), view: "raum" };
 
@@ -334,24 +37,27 @@
      The session flag only saves re-typing while the tab is open.
      ======================================================================= */
 
-  const PASSWORD = "2026";
   const SESSION_KEY = "lk-intranet";
   const gate = byId("gate"), app = byId("app");
 
-  function signIn() {
+  function signIn(key) {
+    roleKey = ROLES[key] ? key : "leitung";
+    role = ROLES[roleKey];
     gate.classList.add("is-open");
     app.hidden = false;
-    try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) { /* private mode */ }
+    try { sessionStorage.setItem(SESSION_KEY, roleKey); } catch (e) { /* private mode */ }
+    applyRole();
     render();
   }
 
   byId("gateForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const note = byId("gateNote");
-    if (byId("gateInput").value.trim() === PASSWORD) {
-      signIn();
+    const key = byId("gateRole").value;
+    if (byId("gateInput").value.trim() === ROLES[key].pw) {
+      signIn(key);
     } else {
-      note.textContent = "Passwort stimmt nicht — Demo-Passwort ist 2026.";
+      note.textContent = `Passwort stimmt nicht — für ${ROLES[key].label} ist es „${ROLES[key].pw}“.`;
       note.classList.add("is-error");
       byId("gateInput").select();
     }
@@ -478,6 +184,7 @@
               <span class="s">${a.type}</span>
             </button>`;
         });
+      html += blocksHtml(room.id);
       html += `</div>`;
     });
     if (hasLunch(state.day)) {
@@ -870,6 +577,493 @@
     });
   });
 
+  /* =======================================================================
+     Roles. Three people look at this page and they do not need the same
+     things: the practice owner sees the money, a therapist sees their own
+     patients, reception sees the diary and the contact details.
+     ======================================================================= */
+
+  const ROLES = {
+    leitung:  { pw: "2026",    label: "Praxisleitung", ther: null, money: true  },
+    therapie: { pw: "team26",  label: "Therapie",      ther: "hw", money: false },
+    empfang:  { pw: "front26", label: "Empfang",       ther: null, money: false },
+  };
+  let role = ROLES.leitung, roleKey = "leitung";
+
+  function applyRole() {
+    const me = role.ther ? therOf(role.ther) : null;
+    byId("whoami").textContent = me ? `${me.name} · ${role.label}` : role.label;
+    document.querySelectorAll("[data-roles]").forEach((el) => {
+      el.hidden = !el.dataset.roles.split(" ").includes(roleKey);
+    });
+    document.body.classList.toggle("no-money", !role.money);
+    // a therapist's view starts filtered to their own diary
+    state.hidden = new Set(role.ther ? THERAPISTS.filter((t) => t.id !== role.ther).map((t) => t.id) : []);
+    legend.querySelectorAll(".lg").forEach((b, i) => {
+      const off = state.hidden.has(THERAPISTS[i].id);
+      b.classList.toggle("is-off", off);
+      b.setAttribute("aria-pressed", String(!off));
+    });
+    // if the active tab just disappeared, fall back to the day plan
+    const on = document.querySelector(".tab.is-on");
+    if (on && on.hidden) document.querySelector('.tab[data-tab="tagesplan"]').click();
+  }
+
+  const mine = (list, key) => (role.ther ? list.filter((x) => x[key || "ther"] === role.ther) : list);
+
+  /* =======================================================================
+     Room blocks — cleaning, servicing, deliveries. Not appointments, but
+     they occupy the room, so they belong on the board and they block the
+     online booking.
+     ======================================================================= */
+
+  function blocksHtml(roomId) {
+    return BLOCKS.filter((b) => b.day === state.day && b.room === roomId).map((b) => {
+      const top = ((toMin(b.start) - DAY_START * 60) / 60) * HOUR_PX;
+      const h = (b.min / 60) * HOUR_PX - 3;
+      const tier = b.min <= 20 ? " is-mini" : b.min <= 30 ? " is-tight" : " is-short";
+      return `<div class="appt blocker${tier}" style="top:${top}px; height:${h}px">
+          <span class="who">—</span>
+          <span class="t">${b.start}–${fmt(toMin(b.start) + b.min)}</span>
+          <span class="n">${BLOCK_KIND[b.kind]}</span>
+          <span class="s">${esc(b.note)}</span>
+        </div>`;
+    }).join("");
+  }
+
+  /* =======================================================================
+     Erinnerungen — 24 hours before the appointment
+     ======================================================================= */
+
+  const sentReminders = new Set();
+
+  function remindDay() {
+    // the reminders for the day after the one on screen
+    return Math.min(state.day + 1, DAYS.length - 1);
+  }
+
+  function reminderRows() {
+    const d = remindDay();
+    return APPOINTMENTS.filter((a) => a.day === d)
+      .filter((a) => !state.hidden.has(a.ther))
+      .sort((x, y) => toMin(x.start) - toMin(y.start))
+      .map((a) => {
+        const rec = PATIENTS.find((p) => p.name === a.patient) || { remind: true, channel: "SMS" };
+        const key = `${d}-${a.start}-${a.patient}`;
+        const state_ = !rec.remind ? "abgemeldet"
+          : (sentReminders.has(key) || dateOfDay(d) <= addDays(TODAY, 1)) ? "gesendet" : "geplant";
+        return { a, rec, key, state: state_ };
+      });
+  }
+
+  function renderReminders() {
+    const d = remindDay();
+    const rows = reminderRows();
+    const n = (s) => rows.filter((r) => r.state === s).length;
+    byId("remindSum").innerHTML =
+      `<b>${DE_DAY[d]}, ${deDate(dateOfDay(d))}</b>
+       <span>${rows.length} Termine · ${n("gesendet")} gesendet · ${n("geplant")} geplant ·
+       ${n("abgemeldet")} abgemeldet</span>`;
+    byId("remindSend").disabled = n("geplant") === 0;
+
+    byId("remindBody").innerHTML = rows.map((r) => `
+      <tr>
+        <td class="bp"><b>${r.a.start}</b><small>${DAYS[d].short} ${DAYS[d].date}</small></td>
+        <td>${esc(r.a.patient)}</td>
+        <td class="bmuted">${r.a.type}</td>
+        <td class="bmuted">${r.state === "abgemeldet" ? "—" : r.rec.channel}</td>
+        <td>${r.state === "gesendet" ? `<span class="pill is-paid">✓ gesendet</span>`
+            : r.state === "geplant" ? `<span class="pill is-open">● geplant</span>`
+            : `<span class="pill is-off">– abgemeldet</span>`}</td>
+      </tr>`).join("") || `<tr><td colspan="5">Für diesen Tag stehen keine Termine an.</td></tr>`;
+  }
+
+  byId("remindSend").addEventListener("click", () => {
+    reminderRows().filter((r) => r.state === "geplant").forEach((r) => sentReminders.add(r.key));
+    renderReminders();
+  });
+
+  /* =======================================================================
+     Anfragen aus der Website + Warteliste
+     ======================================================================= */
+
+  const reqState = new Map();          // id -> state changed in this session
+  const KIND = { termin: "Terminwunsch", rueckruf: "Rückruf" };
+
+  const requests = () => readRequests().map((r) => ({ ...r, state: reqState.get(r.id) || r.state }));
+
+  function renderRequests() {
+    const all = requests();
+    const open = all.filter((r) => r.state === "offen");
+    byId("reqOpen").textContent = open.length;
+    byId("reqBook").textContent = all.filter((r) => r.kind === "termin").length;
+    byId("reqCall").textContent = all.filter((r) => r.kind === "rueckruf").length;
+    byId("reqWait").textContent = WAITLIST.length;
+    const badge = byId("tabBadge");
+    badge.textContent = open.length || "";
+    badge.hidden = !open.length;
+
+    const order = { offen: 0, "bestätigt": 1, erledigt: 2 };
+    byId("reqList").innerHTML = all
+      .sort((a, b) => (order[a.state] - order[b.state]) || b.at.localeCompare(a.at))
+      .map((r) => {
+        const t = r.ther ? therOf(r.ther) : null;
+        return `<article class="req is-${r.kind} is-${r.state === "offen" ? "open" : "done"}">
+          <div class="req-top">
+            <span class="req-kind">${KIND[r.kind]}</span>
+            <span class="req-id">${r.id}</span>
+            <span class="req-at">${r.at.replace(" ", " · ")} Uhr</span>
+          </div>
+          <h3>${esc(r.name)}</h3>
+          <dl class="req-facts">
+            <div><dt>Telefon</dt><dd><a href="tel:${r.phone.replace(/\\s/g, "")}">${r.phone}</a></dd></div>
+            ${r.mail ? `<div><dt>E-Mail</dt><dd><a href="mailto:${r.mail}">${r.mail}</a></dd></div>` : ""}
+            ${r.kind === "termin"
+              ? `<div><dt>Wunschtermin</dt><dd>${deDate(r.date)} · ${r.start} Uhr</dd></div>
+                 <div><dt>Leistung</dt><dd>${esc(r.type)}${t ? ` · ${t.name}` : " · egal wer"}</dd></div>`
+              : `<div><dt>Zeitfenster</dt><dd>${esc(r.window || "egal")}</dd></div>`}
+          </dl>
+          ${r.note ? `<p class="req-note">„${esc(r.note)}“</p>` : ""}
+          <div class="req-foot">
+            <span class="pill ${r.state === "offen" ? "is-open" : "is-paid"}">
+              ${r.state === "offen" ? "● offen" : "✓ " + r.state}</span>
+            ${r.state === "offen" ? `
+              <button type="button" class="btn-line" data-req="${r.id}" data-to="bestätigt">Bestätigen</button>
+              <button type="button" class="btn-line" data-req="${r.id}" data-to="erledigt">Erledigt</button>` : ""}
+          </div>
+        </article>`;
+      }).join("");
+
+    byId("reqList").querySelectorAll("[data-req]").forEach((b) => {
+      b.addEventListener("click", () => {
+        reqState.set(b.dataset.req, b.dataset.to);
+        renderRequests();
+      });
+    });
+
+    byId("waitBody").innerHTML = WAITLIST.map((w, i) => {
+      const t = w.ther ? therOf(w.ther) : null;
+      return `<tr>
+        <td class="bp"><b>${esc(w.patient)}</b><small>${w.phone}</small></td>
+        <td>${esc(w.type)}</td>
+        <td class="bmuted">${esc(w.prefer)}${t ? ` · ${t.short}` : ""}</td>
+        <td class="bmuted">${deDate(w.since)}</td>
+        <td class="bmuted">${esc(w.note) || "—"}</td>
+        <td><button type="button" class="btn-line" data-wait="${i}">Passende suchen</button></td>
+      </tr>`;
+    }).join("");
+
+    byId("waitBody").querySelectorAll("[data-wait]").forEach((b) => {
+      b.addEventListener("click", () => openWait(WAITLIST[+b.dataset.wait]));
+    });
+  }
+
+  /** What could this person be offered? Reads the same availability the
+      website's booking page uses, so nothing is offered twice. */
+  function openWait(w) {
+    const svc = SERVICES.find((s) => s.name === w.type && s.book) || SERVICES.find((s) => s.name === w.type);
+    const found = [];
+    for (const d of P.nextDates(10)) {
+      const slots = svc ? slotsFor(svc.key, d, w.ther || null) : [];
+      slots.slice(0, 3).forEach((s) => found.push({ date: d, ...s }));
+      if (found.length >= 9) break;
+    }
+    byId("dTime").textContent = `Warteliste · wartet seit ${deDate(w.since)}`;
+    byId("dTitle").textContent = w.patient;
+    drawerBody.innerHTML = `
+      <dl class="drawer-list">
+        <div><dt>Gewünschte Leistung</dt><dd>${esc(w.type)}</dd></div>
+        <div><dt>Wunschzeit</dt><dd>${esc(w.prefer)}</dd></div>
+        <div><dt>Therapeut:in</dt><dd>${w.ther ? therOf(w.ther).name : "egal"}</dd></div>
+        <div><dt>Telefon</dt><dd><a href="tel:${w.phone.replace(/\s/g, "")}">${w.phone}</a></dd></div>
+      </dl>
+      <h3 class="drawer-sub">Freie Termine, die passen</h3>
+      ${found.length ? `<ul class="slotlist">${found.map((f) => `
+        <li><b>${DE_DAY[weekday(f.date)].slice(0, 2)} ${deDate(f.date)}</b>
+            <span>${f.start} Uhr</span>
+            <em>${therOf(f.ther).name}</em></li>`).join("")}</ul>`
+        : `<p class="drawer-empty">In den nächsten zehn Tagen ist nichts frei, das passt.
+           ${w.ther ? "Ohne Bindung an eine Person wären es mehr." : ""}</p>`}
+      <p class="drawer-hint">Dieselbe Verfügbarkeit, die auch die Online-Buchung anzeigt.</p>`;
+    drawer.hidden = false;
+  }
+
+  /* =======================================================================
+     Patient:innen
+     ======================================================================= */
+
+  const patState = { q: "", filter: "alle" };
+
+  const apptsOf = (name) => APPOINTMENTS.filter((a) => a.patient === name);
+  const rxOf = (name) => PRESCRIPTIONS.find((r) => r.patient === name);
+  function nextApptOf(name) {
+    return apptsOf(name).map((a) => ({ a, date: dateOfDay(a.day) }))
+      .filter((x) => x.date >= TODAY)
+      .sort((x, y) => x.date.localeCompare(y.date) || toMin(x.a.start) - toMin(y.a.start))[0] || null;
+  }
+
+  function patientRows() {
+    const q = patState.q.trim().toLowerCase();
+    return mine(PATIENTS, "ther").filter((p) => {
+      const list = apptsOf(p.name);
+      if (patState.filter === "rezept" && !rxOf(p.name)) return false;
+      if (patState.filter === "woche" && !list.length) return false;
+      if (!q) return true;
+      const t = therOf(p.ther);
+      return p.name.toLowerCase().includes(q) ||
+             (t && t.name.toLowerCase().includes(q)) ||
+             list.some((a) => a.type.toLowerCase().includes(q));
+    }).sort((a, b) => a.name.localeCompare(b.name, "de"));
+  }
+
+  function renderPatients() {
+    const rows = patientRows();
+    byId("patBody").innerHTML = rows.map((p) => {
+      const t = therOf(p.ther);
+      const list = apptsOf(p.name);
+      const types = [...new Set(list.map((a) => a.type))];
+      const rx = rxOf(p.name);
+      const st = rx ? rxStatus(rx) : null;
+      return `<tr tabindex="0" role="button" data-pat="${esc(p.name)}">
+        <td class="bp"><b>${esc(p.name)}</b><small>${p.phone}</small></td>
+        <td class="bmuted">${p.born}</td>
+        <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.name}</span></td>
+        <td><span class="chips">${types.map((x) => `<span>${x}</span>`).join("") || "—"}</span></td>
+        <td class="num">${list.length}</td>
+        <td>${rx ? `<span class="pill is-${st.tone}">${st.short}</span>` : `<span class="bmuted">Selbstzahler</span>`}</td>
+        <td class="bmuted">${p.remind ? p.channel : "abgemeldet"}</td>
+      </tr>`;
+    }).join("") || `<tr><td colspan="7">Keine Treffer.</td></tr>`;
+
+    byId("patBody").querySelectorAll("[data-pat]").forEach((tr) => {
+      const open = () => openPatient(PATIENTS.find((p) => p.name === tr.dataset.pat));
+      tr.addEventListener("click", open);
+      tr.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    });
+  }
+
+  function openPatient(p) {
+    const t = therOf(p.ther);
+    const list = apptsOf(p.name).sort((x, y) => x.day - y.day || toMin(x.start) - toMin(y.start));
+    const rx = rxOf(p.name);
+    const st = rx ? rxStatus(rx) : null;
+    const sum = list.reduce((s, a) => s + priceOf(a), 0);
+    byId("dTime").textContent = `Patientenakte · seit ${deDate(p.since)}`;
+    byId("dTitle").textContent = p.name;
+    drawerBody.innerHTML = `
+      <dl class="drawer-list">
+        <div><dt>Jahrgang</dt><dd>${p.born}</dd></div>
+        <div><dt>Telefon</dt><dd><a href="tel:${p.phone.replace(/\s/g, "")}">${p.phone}</a></dd></div>
+        <div><dt>E-Mail</dt><dd>${p.mail}</dd></div>
+        <div><dt>Adresse</dt><dd>${esc(p.street)}</dd></div>
+        <div><dt>Therapeut:in</dt><dd>${t.name}</dd></div>
+        <div><dt>Erinnerung</dt><dd>${p.remind ? p.channel + ", 24 h vorher" : "abgemeldet"}</dd></div>
+      </dl>
+
+      ${rx ? `<h3 class="drawer-sub">Verordnung ${rx.no}</h3>
+      <div class="rxbox is-${st.tone}">
+        <div class="rxbox-top"><b>${rx.type}</b><span>${rx.done} von ${rx.units} Einheiten</span></div>
+        <span class="meter"><i style="width:${Math.min(100, (rx.done / rx.units) * 100)}%"></i></span>
+        <p>${st.label}</p>
+      </div>` : `<p class="drawer-hint">Keine laufende Verordnung — Selbstzahler.</p>`}
+
+      <h3 class="drawer-sub">Behandlungen dieser Woche</h3>
+      ${list.length ? `<table class="postable">
+        <thead><tr><th scope="col">Tag</th><th scope="col">Leistung</th>
+                   <th scope="col">Wer</th><th scope="col" class="num">Dauer</th>
+                   <th scope="col" class="num money">Betrag</th></tr></thead>
+        <tbody>${list.map((a) => {
+          const th = therOf(a.ther);
+          return `<tr><td>${DAYS[a.day].short} ${DAYS[a.day].date}<small>${a.start}</small></td>
+            <td>${a.type}</td>
+            <td><span class="who-cell" style="--c:${th.color}"><i></i>${th.short}</span></td>
+            <td class="num">${a.min} Min.</td>
+            <td class="num money">${eur(priceOf(a))}</td></tr>`;
+        }).join("")}</tbody>
+        <tfoot><tr><th scope="row" colspan="4">Gesamt</th>
+                   <td class="num money">${eur(sum)}</td></tr></tfoot>
+      </table>` : `<p class="drawer-empty">In dieser Beispielwoche kein Termin.</p>`}`;
+    drawer.hidden = false;
+  }
+
+  byId("patSearch").addEventListener("input", (e) => { patState.q = e.target.value; renderPatients(); });
+  document.querySelectorAll("[data-patf]").forEach((b) => {
+    b.addEventListener("click", () => {
+      patState.filter = b.dataset.patf;
+      b.parentElement.querySelectorAll(".vbtn").forEach((x) => x.classList.toggle("is-on", x === b));
+      renderPatients();
+    });
+  });
+
+  /* =======================================================================
+     Heilmittelverordnungen.
+
+     Two deadlines decide whether the health insurer pays: treatment has to
+     start within 28 days of the issue date, and a running series must not be
+     interrupted for more than 14 days. A booked follow-up inside the window
+     settles it — that is why the next appointment is part of the check.
+     ======================================================================= */
+
+  const RX_START_DAYS = 28, RX_GAP_DAYS = 14;
+
+  function rxStatus(r) {
+    const next = nextApptOf(r.patient);
+    const nextDate = next ? next.date : null;
+
+    if (r.done >= r.units) {
+      return { tone: "late", short: "aufgebraucht", label:
+        `Alle ${r.units} Einheiten abgerechnet. Für weitere Behandlungen braucht es eine Folgeverordnung.`,
+        left: null, dead: null, rank: 1 };
+    }
+    const started = !!r.started;
+    const dead = addDays(started ? r.last : r.issued, started ? RX_GAP_DAYS : RX_START_DAYS);
+    const left = daysBetween(TODAY, dead);
+
+    if (nextDate && nextDate <= dead) {
+      return { tone: "paid", short: "terminiert", rank: 4,
+        label: `${started ? "Fortsetzung" : "Beginn"} am ${deDate(nextDate)} gebucht — Frist bis ${deDate(dead)} gewahrt.`,
+        left, dead };
+    }
+    const tone = left <= 3 ? "late" : left <= 7 ? "open" : "paid";
+    return {
+      tone, rank: left <= 3 ? 0 : left <= 7 ? 2 : 3,
+      short: left < 0 ? "abgelaufen" : `${left} Tage`,
+      label: started
+        ? `Letzte Behandlung am ${deDate(r.last)}. Ohne Folgetermin bis ${deDate(dead)} verfällt die Verordnung.`
+        : `Ausgestellt am ${deDate(r.issued)}. Behandlungsbeginn muss bis ${deDate(dead)} erfolgen.`,
+      left, dead,
+    };
+  }
+
+  const rxState = { filter: "handeln" };
+
+  function renderRx() {
+    const all = mine(PRESCRIPTIONS, "ther").map((r) => ({ r, st: rxStatus(r) }));
+    const count = (f) => all.filter(f).length;
+    byId("rxCrit").textContent = count((x) => x.st.rank === 0);
+    byId("rxWarn").textContent = count((x) => x.st.rank === 2);
+    byId("rxDone").textContent = count((x) => x.st.rank === 1);
+    byId("rxOk").textContent = count((x) => x.st.rank >= 3);
+
+    const rows = all
+      .filter((x) => rxState.filter === "alle" || x.st.rank <= 2)
+      .sort((a, b) => a.st.rank - b.st.rank || (a.st.left ?? 99) - (b.st.left ?? 99));
+
+    byId("rxBody").innerHTML = rows.map(({ r, st }) => {
+      const t = therOf(r.ther);
+      const next = nextApptOf(r.patient);
+      return `<tr tabindex="0" role="button" data-rx="${r.no}">
+        <td class="bp"><b>${r.no}</b><small>${deDate(r.issued)}</small></td>
+        <td>${esc(r.patient)}<br><span class="who-cell" style="--c:${t.color}"><i></i>${t.short}</span></td>
+        <td class="bmuted">${r.type}</td>
+        <td class="num">${r.done} / ${r.units}</td>
+        <td class="bmuted">${st.dead ? deDate(st.dead) : "—"}</td>
+        <td class="bmuted">${next ? `${deDate(next.date)} · ${next.a.start}` : "— nicht gebucht"}</td>
+        <td><span class="pill is-${st.tone}">${st.rank === 0 ? "▲ " : st.rank === 2 ? "● " : "✓ "}${st.short}</span></td>
+      </tr>`;
+    }).join("") || `<tr><td colspan="7">Nichts zu tun — alle Verordnungen laufen im Rahmen.</td></tr>`;
+
+    byId("rxBody").querySelectorAll("[data-rx]").forEach((tr) => {
+      const open = () => openRx(PRESCRIPTIONS.find((r) => r.no === tr.dataset.rx));
+      tr.addEventListener("click", open);
+      tr.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    });
+  }
+
+  function openRx(r) {
+    const st = rxStatus(r), t = therOf(r.ther);
+    const next = nextApptOf(r.patient);
+    const pat = PATIENTS.find((p) => p.name === r.patient);
+    byId("dTime").textContent = `${r.no} · ausgestellt ${deDate(r.issued)}`;
+    byId("dTitle").textContent = r.patient;
+    drawerBody.innerHTML = `
+      <div class="rxbox is-${st.tone}">
+        <div class="rxbox-top"><b>${r.type}</b><span>${r.done} von ${r.units} Einheiten</span></div>
+        <span class="meter"><i style="width:${Math.min(100, (r.done / r.units) * 100)}%"></i></span>
+        <p>${st.label}</p>
+      </div>
+      <dl class="drawer-list">
+        <div><dt>Art</dt><dd>${BILL[r.kind] || r.kind}</dd></div>
+        <div><dt>Therapeut:in</dt><dd>${t.name}</dd></div>
+        <div><dt>Behandlung begonnen</dt><dd>${r.started ? deDate(r.started) : "noch nicht"}</dd></div>
+        <div><dt>Letzte Behandlung</dt><dd>${r.last ? deDate(r.last) : "—"}</dd></div>
+        <div><dt>Nächster Termin</dt><dd>${next ? `${deDate(next.date)} · ${next.a.start} Uhr` : "nicht gebucht"}</dd></div>
+        ${pat ? `<div><dt>Telefon</dt><dd><a href="tel:${pat.phone.replace(/\s/g, "")}">${pat.phone}</a></dd></div>` : ""}
+      </dl>
+      <p class="drawer-hint">Fristen nach Heilmittel-Richtlinie: Behandlungsbeginn innerhalb von
+        ${RX_START_DAYS} Tagen nach Ausstellung, Unterbrechung höchstens ${RX_GAP_DAYS} Tage.</p>`;
+    drawer.hidden = false;
+  }
+
+  document.querySelectorAll("[data-rxf]").forEach((b) => {
+    b.addEventListener("click", () => {
+      rxState.filter = b.dataset.rxf;
+      b.parentElement.querySelectorAll(".vbtn").forEach((x) => x.classList.toggle("is-on", x === b));
+      renderRx();
+    });
+  });
+
+  /* =======================================================================
+     Umsatz im Verlauf — one measure over time, so one hue
+     ======================================================================= */
+
+  function renderTrend() {
+    const peak = Math.max(...MONTHS.map((m) => m.revenue));
+    byId("trend").innerHTML = MONTHS.map((m) => `
+      <div class="tcol${m.partial ? " is-partial" : ""}">
+        <span class="tcol-val">${eur0(m.revenue)}</span>
+        <span class="tcol-bar" style="height:${(m.revenue / peak) * 100}%"></span>
+        <span class="tcol-lab">${m.label}</span>
+      </div>`).join("");
+
+    byId("trendBody").innerHTML = MONTHS.map((m, i) => {
+      const prev = MONTHS[i - 1];
+      const delta = prev ? (m.revenue / prev.revenue - 1) * 100 : null;
+      return `<tr>
+        <td class="bp"><b>${m.label} 2026</b>${m.partial ? "<small>läuft noch</small>" : ""}</td>
+        <td class="num sum">${eur0(m.revenue)}</td>
+        <td class="num">${m.appts}</td>
+        <td class="num">${eur0(m.revenue / m.appts)}</td>
+        <td class="num ${delta === null ? "" : delta < 0 ? "is-down" : "is-up"}">${
+          delta === null ? "—" : (delta > 0 ? "+" : "") + delta.toFixed(1).replace(".", ",") + " %"}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  /* =======================================================================
+     Abwesenheiten und Raumblocker
+     ======================================================================= */
+
+  function renderAbsences() {
+    byId("absBody").innerHTML = ABSENCES.map((x) => {
+      const t = therOf(x.ther);
+      const days = daysBetween(x.from, x.to) + 1;
+      // series that would run into the gap
+      const hit = PRESCRIPTIONS.filter((r) => r.ther === x.ther && r.done < r.units).length;
+      return `<tr>
+        <td><span class="who-cell" style="--c:${t.color}"><i></i>${t.name}</span></td>
+        <td>${ABSENCE_KIND[x.kind]}${x.note ? `<br><span class="bmuted">${esc(x.note)}</span>` : ""}</td>
+        <td class="bmuted">${deDate(x.from)}</td>
+        <td class="bmuted">${deDate(x.to)}</td>
+        <td class="num">${days}</td>
+        <td class="bmuted">${hit} laufende Verordnung${hit === 1 ? "" : "en"}</td>
+      </tr>`;
+    }).join("");
+
+    byId("blockBody").innerHTML = BLOCKS.map((b) => `
+      <tr>
+        <td class="bp"><b>${DAYS[b.day].short}</b><small>${DAYS[b.day].date}</small></td>
+        <td class="bmuted">${b.start}–${fmt(toMin(b.start) + b.min)}</td>
+        <td>${ROOMS[b.room].name}</td>
+        <td>${BLOCK_KIND[b.kind]}</td>
+        <td class="bmuted">${esc(b.note)}</td>
+      </tr>`).join("") || `<tr><td colspan="5">Keine Blocker eingetragen.</td></tr>`;
+  }
+
   function render() {
     renderHead();
     renderBoard();
@@ -878,7 +1072,13 @@
     renderWeek();
     renderBill();
     renderTherRevenue();
+    renderTrend();
     renderTeam();
+    renderReminders();
+    renderRequests();
+    renderPatients();
+    renderRx();
+    renderAbsences();
   }
 
   /* =======================================================================
@@ -914,6 +1114,18 @@
     byId("dTime").textContent = `${inv.no} · Woche 10.–15.08.2026`;
     byId("dTitle").textContent = inv.patient;
     drawerBody.innerHTML = `
+      <div class="print-head">
+        <div>
+          <b>Luca Kolhoff · Privatpraxis für Physiotherapie</b>
+          <span>Musterstraße 12 · 00000 Musterstadt · +49 000 000 000</span>
+          <span>hallo@lucakolhoff.de · Steuernummer 000/000/00000</span>
+        </div>
+        <div class="print-inv">
+          <b>Rechnung ${inv.no}</b>
+          <span>Rechnungsdatum ${deDate(TODAY)}</span>
+          <span>Leistungszeitraum 10.–15.08.2026</span>
+        </div>
+      </div>
       <div class="inv-head">
         ${inv.paid
           ? `<span class="pill is-paid">✓ bezahlt<small>${inv.pay}</small></span>`
@@ -942,7 +1154,11 @@
         <tfoot>
           <tr><th scope="row" colspan="4">Gesamt</th><td class="num">${eur(inv.total)}</td></tr>
         </tfoot>
-      </table>`;
+      </table>
+      <p class="inv-terms">Zahlbar innerhalb von 14 Tagen ohne Abzug.
+        Leistungen nach GebüH; Heilmittel auf Grundlage der jeweiligen Verordnung.</p>
+      <button type="button" class="btn-line btn-wide" id="invPrint">Rechnung drucken / als PDF sichern</button>`;
+    byId("invPrint").addEventListener("click", () => window.print());
     drawer.hidden = false;
   }
   function closeDrawer() { drawer.hidden = true; }
@@ -955,7 +1171,7 @@
      renderers close over bindings declared above this point.
      ======================================================================= */
 
-  let restored = false;
-  try { restored = sessionStorage.getItem(SESSION_KEY) === "1"; } catch (e) { /* private mode */ }
-  if (restored) signIn();
+  let restored = null;
+  try { restored = sessionStorage.getItem(SESSION_KEY); } catch (e) { /* private mode */ }
+  if (restored && ROLES[restored]) signIn(restored);
 })();

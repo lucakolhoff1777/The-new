@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# The staff area holds patient data and never belongs in an index.
+Disallow: /plan.html
+
+Sitemap: https://www.lucakolhoff.de/sitemap.xml

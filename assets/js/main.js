@@ -357,3 +357,45 @@
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
+
+/* ---------------------------------------------------------------------------
+   Reviews. These are example texts until the practice's Google Business
+   Profile exists — see README.md for wiring up the real ones.
+   --------------------------------------------------------------------------- */
+(() => {
+  const box = document.getElementById("reviews");
+  if (!box || !window.PRAXIS) return;
+  const R = window.PRAXIS.REVIEWS;
+  const avg = R.reduce((s, r) => s + r.stars, 0) / R.length;
+  const stars = (n) => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+
+  document.getElementById("ratingStars").textContent = stars(Math.round(avg));
+  document.getElementById("ratingAvg").textContent = avg.toFixed(1).replace(".", ",");
+  document.getElementById("ratingCount").textContent = `aus ${R.length} Bewertungen`;
+
+  box.innerHTML = R.map((r, i) => `
+    <figure class="glass glass-lift review reveal" data-reveal data-delay="${i * 60}">
+      <span class="review-stars" aria-label="${r.stars} von 5 Sternen">${stars(r.stars)}</span>
+      <blockquote>${r.text}</blockquote>
+      <figcaption>${r.author}<span>${window.PRAXIS.deDate(r.date)}</span></figcaption>
+    </figure>`).join("");
+
+  // these cards appear after the page's reveal observer was wired up, so
+  // they get their own — otherwise they would stay invisible forever
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    box.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("is-visible");
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.1 });
+  box.querySelectorAll(".reveal").forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) el.classList.add("is-visible");
+    else io.observe(el);
+  });
+})();

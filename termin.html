@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termin buchen · Luca Kolhoff Physiotherapie</title>
+<meta name="description" content="Freie Termine der Praxis Luca Kolhoff online sehen und direkt buchen — Manuelle Therapie, Krankengymnastik, Sportphysiotherapie, CMD, Massage und Lymphdrainage.">
+<link rel="canonical" href="https://www.lucakolhoff.de/termin.html">
+<meta property="og:title" content="Termin buchen · Luca Kolhoff Physiotherapie">
+<meta property="og:description" content="Freie Termine sehen und direkt online buchen.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232C3424%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22%23DADED8%22 font-family=%22Georgia,serif%22>II</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="sub">
+
+<header class="site-header is-solid">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mono" viewBox="126 66 306 274" aria-hidden="true">
+        <g transform="translate(402,0) scale(-1,1)">
+          <text x="201" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">L</text>
+        </g>
+        <text x="347" y="270" text-anchor="middle" font-family="Cormorant, serif" font-weight="500" font-size="210" fill="#DADED8">K</text>
+      </svg>
+      <span class="logo-word">LUCA KOLHOFF<em>Physiotherapie · CMD</em></span>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html#leistungen" class="nav-link">Leistungen</a></li>
+        <li><a href="preise.html" class="nav-link">Preise</a></li>
+        <li><a href="erster-termin.html" class="nav-link">Erster Termin</a></li>
+        <li><a href="index.html#kontakt" class="nav-link">Kontakt</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+49000000000" class="btn btn-glass btn-small">Anrufen</a>
+    </div>
+  </div>
+</header>
+
+<main class="sub-main">
+  <div class="container">
+
+    <div class="sub-head">
+      <span class="num">Termin</span>
+      <h1>Freie Termine, direkt buchbar</h1>
+      <p>Die Zeiten unten kommen aus dem Praxiskalender. Was hier steht, ist wirklich frei —
+         und ist es Sekunden später nicht mehr, wenn jemand schneller war.</p>
+    </div>
+
+    <ol class="steps" id="steps">
+      <li class="step is-on" data-step="1"><b>1</b><span>Leistung</span></li>
+      <li class="step" data-step="2"><b>2</b><span>Termin</span></li>
+      <li class="step" data-step="3"><b>3</b><span>Kontakt</span></li>
+    </ol>
+
+    <!-- ---------------------------------------------------- 1. Leistung -->
+    <section class="bk-step" data-panel="1">
+      <h2 class="bk-h">Was brauchst du?</h2>
+      <div class="svc-pick" id="svcPick"></div>
+      <p class="bk-note">
+        Du bist unsicher, was das Richtige ist? Nimm die Manuelle Therapie oder ruf kurz an —
+        wir sortieren das im Erstgespräch. Für Kinder unter 14 Jahren bitte telefonisch buchen.
+      </p>
+    </section>
+
+    <!-- ------------------------------------------------------ 2. Termin -->
+    <section class="bk-step" data-panel="2" hidden>
+      <button type="button" class="bk-back" data-goto="1">← andere Leistung</button>
+      <h2 class="bk-h" id="bkPicked"></h2>
+
+      <div class="bk-filter">
+        <span>Therapeut:in</span>
+        <div class="chiprow" id="therPick" role="group" aria-label="Therapeut:in wählen"></div>
+      </div>
+
+      <div class="daystrip" id="dayStrip" role="tablist" aria-label="Tag wählen"></div>
+      <div class="slots" id="slots" aria-live="polite"></div>
+    </section>
+
+    <!-- ----------------------------------------------------- 3. Kontakt -->
+    <section class="bk-step" data-panel="3" hidden>
+      <button type="button" class="bk-back" data-goto="2">← anderen Termin</button>
+      <h2 class="bk-h">Fast fertig</h2>
+
+      <div class="bk-summary glass" id="bkSummary"></div>
+
+      <form class="bk-form" id="bkForm" novalidate>
+        <div class="form-row">
+          <label class="field"><span>Vor- und Nachname *</span>
+            <input type="text" id="fName" name="name" autocomplete="name" required></label>
+          <label class="field"><span>Telefon *</span>
+            <input type="tel" id="fPhone" name="phone" autocomplete="tel" required></label>
+        </div>
+        <label class="field"><span>E-Mail</span>
+          <input type="email" id="fMail" name="mail" autocomplete="email"></label>
+        <label class="field"><span>Worum geht es? Was sollen wir vorher wissen?</span>
+          <textarea id="fNote" name="note" rows="4"></textarea></label>
+
+        <label class="check">
+          <input type="checkbox" id="fRemind" checked>
+          <span>Erinnert mich 24 Stunden vorher per SMS.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="fPrivacy" required>
+          <span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin
+                mit der Verarbeitung meiner Angaben zur Terminvereinbarung einverstanden. *</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-wide">Termin verbindlich anfragen</button>
+        <p class="form-note" id="bkMsg" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- ----------------------------------------------------- Bestätigung -->
+    <section class="bk-step" data-panel="4" hidden>
+      <div class="bk-done glass">
+        <span class="bk-check" aria-hidden="true">✓</span>
+        <h2 id="doneTitle">Angefragt</h2>
+        <p id="doneText"></p>
+        <div class="bk-done-facts" id="doneFacts"></div>
+        <p class="bk-note">
+          Der Termin ist für dich vorgemerkt. Du bekommst die Bestätigung per SMS oder E-Mail,
+          in der Regel noch am selben Werktag. Wenn etwas dazwischenkommt: einfach anrufen,
+          bis 24 Stunden vorher ist das kostenfrei.
+        </p>
+        <div class="bk-done-actions">
+          <a href="index.html" class="btn btn-glass">Zur Startseite</a>
+          <a href="erster-termin.html" class="btn btn-primary">Was bringe ich mit?</a>
+        </div>
+      </div>
+    </section>
+
+    <aside class="bk-side">
+      <h2>Lieber telefonisch?</h2>
+      <p>Mo – Fr 08:00 – 19:00, 12 – 13 Uhr Mittagspause.
+         <a class="ul" href="tel:+49000000000" data-placeholder>+49 000 000 000</a></p>
+      <p>Oder <a class="ul" href="erster-termin.html#rueckruf">Rückruf anfordern</a> — dann melden
+         wir uns in deinem Wunschzeitfenster.</p>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="site-footer sub-footer">
+  <div class="container footer-inner">
+    <p>© 2026 Luca Kolhoff · Privatpraxis für Physiotherapie</p>
+    <nav class="footer-nav">
+      <a href="preise.html">Preise</a>
+      <a href="erster-termin.html">Erster Termin</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="en.html">English</a>
+      <a href="plan.html">Intern</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/js/practice-data.js"></script>
+<script src="assets/js/booking.js"></script>
+</body>
+</html>

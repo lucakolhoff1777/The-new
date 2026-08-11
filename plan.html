@@ -26,8 +26,12 @@
     <p>Interner Bereich · Luca Kolhoff Physiotherapie</p>
 
     <label class="gate-field">
-      <span>Benutzer</span>
-      <input type="text" id="gateUser" value="Praxisleitung" readonly tabindex="-1">
+      <span>Rolle</span>
+      <select id="gateRole">
+        <option value="leitung">Praxisleitung</option>
+        <option value="therapie">Therapeut:in</option>
+        <option value="empfang">Empfang</option>
+      </select>
     </label>
     <label class="gate-field">
       <span>Passwort</span>
@@ -35,7 +39,7 @@
     </label>
 
     <button type="submit" class="btn btn-primary btn-full">Anmelden</button>
-    <p class="gate-note" id="gateNote" role="status" aria-live="polite">Demo-Passwort: <strong>2026</strong></p>
+    <p class="gate-note" id="gateNote" role="status" aria-live="polite">Demo-Passwörter: Leitung <strong>2026</strong> · Therapie <strong>team26</strong> · Empfang <strong>front26</strong></p>
     <a class="gate-back" href="index.html">← Zurück zur Website</a>
   </form>
 </div>
@@ -60,12 +64,15 @@
     <nav class="tabs" id="tabs" role="tablist" aria-label="Bereiche">
       <button type="button" class="tab is-on" data-tab="tagesplan" role="tab" aria-selected="true">Tagesplan</button>
       <button type="button" class="tab" data-tab="woche" role="tab" aria-selected="false">Woche</button>
-      <button type="button" class="tab" data-tab="abrechnung" role="tab" aria-selected="false">Abrechnung</button>
+      <button type="button" class="tab" data-tab="anfragen" role="tab" aria-selected="false">Anfragen <i class="badge" id="tabBadge"></i></button>
+      <button type="button" class="tab" data-tab="patienten" role="tab" aria-selected="false">Patienten</button>
+      <button type="button" class="tab" data-tab="rezepte" role="tab" aria-selected="false">Rezepte</button>
+      <button type="button" class="tab" data-tab="abrechnung" role="tab" aria-selected="false" data-roles="leitung">Abrechnung</button>
       <button type="button" class="tab" data-tab="team" role="tab" aria-selected="false">Team</button>
     </nav>
 
     <div class="topbar-right">
-      <span class="whoami"><i></i>Praxisleitung</span>
+      <span class="whoami"><i></i><b id="whoami">Praxisleitung</b></span>
       <a class="ghost-btn" href="index.html">Website</a>
       <button type="button" class="ghost-btn" id="logout">Abmelden</button>
     </div>
@@ -124,6 +131,27 @@
         <tbody id="listBody"></tbody>
       </table>
     </section>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Erinnerungen</h2>
+      <p>Geht 24 Stunden vor dem Termin raus. Wer keine Erinnerung möchte, steht als
+         abgemeldet in der Liste und wird übersprungen.</p>
+    </div>
+    <div class="remind-head">
+      <div class="remind-sum" id="remindSum"></div>
+      <button type="button" class="btn-line" id="remindSend">Alle offenen senden</button>
+    </div>
+    <div class="matrix-wrap matrix-wrap-tall">
+      <table class="btable">
+        <caption class="sr-only">Erinnerungen für den Folgetag</caption>
+        <thead>
+          <tr><th scope="col">Termin</th><th scope="col">Patient:in</th>
+              <th scope="col">Leistung</th><th scope="col">Kanal</th>
+              <th scope="col">Status</th></tr>
+        </thead>
+        <tbody id="remindBody"></tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ================= WOCHE ================= -->
@@ -146,6 +174,124 @@
       <p>Anteil der belegten Zeit an der Öffnungszeit über die ganze Woche.</p>
     </div>
     <div class="rooms-load" id="roomsLoad"></div>
+  </section>
+
+  <!-- ================= ANFRAGEN ================= -->
+  <section class="panel" data-panel="anfragen" hidden>
+    <div class="panel-head">
+      <h2>Anfragen &amp; Warteliste</h2>
+      <p>Was über die Website hereinkommt: Terminwünsche aus der Online-Buchung und
+         Rückrufbitten. Darunter die Warteliste für frei werdende Termine.</p>
+    </div>
+
+    <section class="stats" aria-label="Kennzahlen der Anfragen">
+      <div class="stat"><span class="stat-label">Offen</span>
+        <span class="stat-value" id="reqOpen">—</span>
+        <span class="stat-note">unbeantwortet</span></div>
+      <div class="stat"><span class="stat-label">Terminwünsche</span>
+        <span class="stat-value" id="reqBook">—</span>
+        <span class="stat-note">aus der Online-Buchung</span></div>
+      <div class="stat"><span class="stat-label">Rückrufe</span>
+        <span class="stat-value" id="reqCall">—</span>
+        <span class="stat-note">mit Wunschzeitfenster</span></div>
+      <div class="stat"><span class="stat-label">Warteliste</span>
+        <span class="stat-value" id="reqWait">—</span>
+        <span class="stat-note">für frei werdende Termine</span></div>
+    </section>
+
+    <div class="req-list" id="reqList"></div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Warteliste</h2>
+      <p>Wenn ein Termin ausfällt: „Passende suchen“ zeigt, wer auf den freien Platz passt —
+         gleiche Leistung, gleiche Therapeut:in, Wunschzeit.</p>
+    </div>
+    <div class="matrix-wrap">
+      <table class="btable">
+        <caption class="sr-only">Warteliste</caption>
+        <thead>
+          <tr><th scope="col">Patient:in</th><th scope="col">Leistung</th>
+              <th scope="col">Wunsch</th><th scope="col">Wartet seit</th>
+              <th scope="col">Notiz</th><th scope="col"></th></tr>
+        </thead>
+        <tbody id="waitBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= PATIENTEN ================= -->
+  <section class="panel" data-panel="patienten" hidden>
+    <div class="panel-head">
+      <h2>Patient:innen</h2>
+      <p>Stammdaten, laufende Verordnung, Behandlungsverlauf. Ein Klick öffnet die Akte.</p>
+    </div>
+    <div class="bill-controls">
+      <label class="search">
+        <span class="sr-only">Patient:in suchen</span>
+        <input type="search" id="patSearch" placeholder="Name, Leistung oder Therapeut:in suchen" autocomplete="off">
+      </label>
+      <div class="viewtoggle" role="group" aria-label="Filter">
+        <button type="button" class="vbtn is-on" data-patf="alle">Alle</button>
+        <button type="button" class="vbtn" data-patf="rezept">Mit Verordnung</button>
+        <button type="button" class="vbtn" data-patf="woche">Diese Woche</button>
+      </div>
+    </div>
+    <div class="matrix-wrap matrix-wrap-tall">
+      <table class="btable">
+        <caption class="sr-only">Patientenübersicht</caption>
+        <thead>
+          <tr><th scope="col">Patient:in</th><th scope="col">Jahrgang</th>
+              <th scope="col">Therapeut:in</th><th scope="col">Leistungen</th>
+              <th scope="col" class="num">Termine</th><th scope="col">Verordnung</th>
+              <th scope="col">Erinnerung</th></tr>
+        </thead>
+        <tbody id="patBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= REZEPTE ================= -->
+  <section class="panel" data-panel="rezepte" hidden>
+    <div class="panel-head">
+      <h2>Heilmittelverordnungen</h2>
+      <p>Zwei Fristen entscheiden, ob die Kasse zahlt: Behandlungsbeginn innerhalb von
+         28 Tagen nach Ausstellung, und keine Unterbrechung von mehr als 14 Tagen.
+         Beides wird hier gegen den heutigen Tag gerechnet.</p>
+    </div>
+
+    <section class="stats" aria-label="Kennzahlen der Verordnungen">
+      <div class="stat"><span class="stat-label">Kritisch</span>
+        <span class="stat-value" id="rxCrit">—</span>
+        <span class="stat-note">verfällt in höchstens 3 Tagen</span></div>
+      <div class="stat"><span class="stat-label">Im Blick</span>
+        <span class="stat-value" id="rxWarn">—</span>
+        <span class="stat-note">verfällt in höchstens 7 Tagen</span></div>
+      <div class="stat"><span class="stat-label">Aufgebraucht</span>
+        <span class="stat-value" id="rxDone">—</span>
+        <span class="stat-note">Folgeverordnung nötig</span></div>
+      <div class="stat"><span class="stat-label">Laufend</span>
+        <span class="stat-value" id="rxOk">—</span>
+        <span class="stat-note">alles im Rahmen</span></div>
+    </section>
+
+    <div class="bill-controls">
+      <div class="viewtoggle" role="group" aria-label="Filter">
+        <button type="button" class="vbtn is-on" data-rxf="handeln">Handlungsbedarf</button>
+        <button type="button" class="vbtn" data-rxf="alle">Alle</button>
+      </div>
+    </div>
+    <div class="matrix-wrap matrix-wrap-tall">
+      <table class="btable">
+        <caption class="sr-only">Verordnungen mit Fristen</caption>
+        <thead>
+          <tr><th scope="col">Verordnung</th><th scope="col">Patient:in</th>
+              <th scope="col">Leistung</th><th scope="col" class="num">Einheiten</th>
+              <th scope="col">Frist</th><th scope="col">Nächster Termin</th>
+              <th scope="col">Status</th></tr>
+        </thead>
+        <tbody id="rxBody"></tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ================= ABRECHNUNG ================= -->
@@ -179,6 +325,21 @@
         <span class="stat-note" id="billHeadsNote">in dieser Woche</span>
       </div>
     </section>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Umsatz im Verlauf</h2>
+      <p>Sieben Monate. Der laufende Monat ist gestrichelt — er ist noch nicht zu Ende.</p>
+    </div>
+    <div class="trend" id="trend"></div>
+    <div class="matrix-wrap">
+      <table class="btable" id="trendTable">
+        <caption class="sr-only">Umsatz je Monat</caption>
+        <thead><tr><th scope="col">Monat</th><th scope="col" class="num">Umsatz</th>
+                   <th scope="col" class="num">Termine</th><th scope="col" class="num">Ø je Termin</th>
+                   <th scope="col" class="num">zum Vormonat</th></tr></thead>
+        <tbody id="trendBody"></tbody>
+      </table>
+    </div>
 
     <div class="panel-head panel-head-sub">
       <h2>Umsatz nach Leistung</h2>
@@ -269,6 +430,36 @@
       <p>Wer welche Leistungen abdeckt und wie die Woche verteilt ist.</p>
     </div>
     <div class="team-list" id="teamList"></div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Abwesenheiten</h2>
+      <p>Urlaub, Fortbildung und Krankheit. Die Online-Buchung bietet gesperrte Tage
+         gar nicht erst an — betroffene laufende Serien stehen daneben.</p>
+    </div>
+    <div class="matrix-wrap">
+      <table class="btable">
+        <caption class="sr-only">Geplante Abwesenheiten</caption>
+        <thead><tr><th scope="col">Wer</th><th scope="col">Grund</th>
+                   <th scope="col">Von</th><th scope="col">Bis</th>
+                   <th scope="col" class="num">Tage</th><th scope="col">Betroffen</th></tr></thead>
+        <tbody id="absBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel-head panel-head-sub">
+      <h2>Raumblocker</h2>
+      <p>Zeiten, die keinen Termin haben, aber den Raum belegen — Reinigung, Wartung,
+         Anlieferungen. Sie stehen mit im Tagesplan und blocken die Online-Buchung.</p>
+    </div>
+    <div class="matrix-wrap">
+      <table class="btable">
+        <caption class="sr-only">Raumblocker der Woche</caption>
+        <thead><tr><th scope="col">Tag</th><th scope="col">Zeit</th>
+                   <th scope="col">Raum</th><th scope="col">Art</th>
+                   <th scope="col">Notiz</th></tr></thead>
+        <tbody id="blockBody"></tbody>
+      </table>
+    </div>
   </section>
 
   <footer class="foot">
@@ -294,6 +485,7 @@
   </div>
 </div>
 
+<script src="assets/js/practice-data.js"></script>
 <script src="assets/js/plan.js"></script>
 </body>
 </html>

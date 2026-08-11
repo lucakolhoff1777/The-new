@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.lucakolhoff.de/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.lucakolhoff.de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lucakolhoff.de/en.html"/>
+  </url>
+  <url><loc>https://www.lucakolhoff.de/termin.html</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.lucakolhoff.de/preise.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lucakolhoff.de/erster-termin.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lucakolhoff.de/en.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.lucakolhoff.de/impressum.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://www.lucakolhoff.de/datenschutz.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+</urlset>

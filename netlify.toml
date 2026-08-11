@@ -1,0 +1,33 @@
+# Netlify. Password protection for the staff area needs a paid plan
+# (Basic Auth / Role-based access); on the free plan use a host that offers
+# directory protection, or move the staff area behind Netlify Identity.
+
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+[[headers]]
+  for = "/plan.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store, private"
+    # Uncomment on a plan that supports it — this is the actual lock:
+    # Basic-Auth = "praxis:BITTE-EIGENES-PASSWORT"
+
+[[redirects]]
+  from = "/termin"
+  to = "/termin.html"
+  status = 200
+
+[[redirects]]
+  from = "/preise"
+  to = "/preise.html"
+  status = 200

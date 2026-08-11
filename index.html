@@ -9,6 +9,66 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="canonical" href="https://www.lucakolhoff.de/">
+<link rel="alternate" hreflang="de" href="https://www.lucakolhoff.de/">
+<link rel="alternate" hreflang="en" href="https://www.lucakolhoff.de/en.html">
+<meta property="og:title" content="Luca Kolhoff — Privatpraxis für Physiotherapie">
+<meta property="og:description" content="Physiotherapie in ihrer ganzen Breite — vom ersten Befund bis zum Comeback. Manuelle Therapie, Sportphysiotherapie, CMD, Massage und Lymphdrainage.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.lucakolhoff.de/">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Structured data for local search. Replace the placeholder address,
+     phone number, coordinates and URL with the real ones before going live. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Physiotherapy",
+  "@id": "https://www.lucakolhoff.de/#praxis",
+  "name": "Luca Kolhoff — Privatpraxis für Physiotherapie",
+  "description": "Privatpraxis für Physiotherapie: Manuelle Therapie, Krankengymnastik, Sportphysiotherapie, CMD, Massage, Lymphdrainage und Athletik-Diagnostik.",
+  "url": "https://www.lucakolhoff.de/",
+  "telephone": "+49-000-000000",
+  "email": "hallo@lucakolhoff.de",
+  "priceRange": "€€",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Karte, Überweisung, Bar",
+  "medicalSpecialty": "Physiotherapy",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Musterstraße 12",
+    "postalCode": "00000",
+    "addressLocality": "Musterstadt",
+    "addressCountry": "DE"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 0, "longitude": 0 },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "08:00", "closes": "12:00" },
+    { "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "13:00", "closes": "19:00" }
+  ],
+  "availableService": [
+    { "@type": "MedicalTherapy", "name": "Manuelle Therapie" },
+    { "@type": "MedicalTherapy", "name": "Krankengymnastik" },
+    { "@type": "MedicalTherapy", "name": "Sportphysiotherapie" },
+    { "@type": "MedicalTherapy", "name": "CMD-Behandlung" },
+    { "@type": "MedicalTherapy", "name": "Klassische Massage" },
+    { "@type": "MedicalTherapy", "name": "Manuelle Lymphdrainage" }
+  ],
+  "potentialAction": {
+    "@type": "ReserveAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.lucakolhoff.de/termin.html",
+      "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+    },
+    "result": { "@type": "Reservation", "name": "Termin in der Praxis" }
+  }
+}
+</script>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -39,8 +99,8 @@
       <ul>
         <li><a href="#leistungen" class="nav-link">Leistungen</a></li>
         <li><a href="#raeume" class="nav-link">Räume</a></li>
-        <li><a href="#ablauf" class="nav-link">Ablauf</a></li>
-        <li><a href="#fragen" class="nav-link">Fragen</a></li>
+        <li><a href="preise.html" class="nav-link">Preise</a></li>
+        <li><a href="erster-termin.html" class="nav-link">Erster Termin</a></li>
         <li><a href="#team" class="nav-link">Team</a></li>
         <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
       </ul>
@@ -51,7 +111,7 @@
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10.5" width="14" height="9.5" rx="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 10.5V7.8a3.6 3.6 0 017.2 0v2.7" stroke="currentColor" stroke-width="1.6"/></svg>
         <span>Intern</span>
       </a>
-      <a href="#kontakt" class="btn btn-primary btn-small">Termin anfragen</a>
+      <a href="termin.html" class="btn btn-primary btn-small">Termin buchen</a>
       <button class="hamburger" id="hamburger" aria-label="Menü öffnen" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -69,9 +129,12 @@
     <li><a href="#team" class="nav-link">Team</a></li>
     <li><a href="#praxis" class="nav-link">Praxis</a></li>
     <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
+    <li><a href="preise.html" class="nav-link">Preise</a></li>
+    <li><a href="erster-termin.html" class="nav-link">Dein erster Termin</a></li>
+    <li><a href="en.html" class="nav-link">English</a></li>
     <li class="mobile-menu-sep"><a href="plan.html" class="nav-link nav-link-intern">Intern · Praxisplan</a></li>
   </ul>
-  <a href="#kontakt" class="btn btn-primary">Termin anfragen</a>
+  <a href="termin.html" class="btn btn-primary">Termin buchen</a>
 </div>
 
 <main id="top">
@@ -107,7 +170,7 @@
       Physiotherapie in ihrer ganzen Breite — vom ersten Befund bis zum Comeback.
     </p>
     <div class="hero-actions reveal" data-reveal data-delay="320">
-      <a href="#kontakt" class="btn btn-primary">Termin anfragen</a>
+      <a href="termin.html" class="btn btn-primary">Termin buchen</a>
       <a href="#leistungen" class="btn btn-glass">Leistungen ansehen</a>
     </div>
 
@@ -671,6 +734,36 @@
     </div>
   </section>
 
+  <!-- BEWERTUNGEN -->
+  <section class="block rule-top" id="stimmen">
+    <div class="pool pool-b" style="top:-120px; left:-140px;" aria-hidden="true"></div>
+    <div class="container">
+      <div class="sec-head">
+        <span class="num">viii.</span>
+        <h2 class="reveal" data-reveal>Was Patient:innen sagen</h2>
+        <p class="reveal" data-reveal data-delay="80">
+          Bewertungen von Google. Wir schreiben sie nicht selbst und wir löschen keine —
+          auch die vier Sterne nicht.
+        </p>
+      </div>
+
+      <div class="rating-line reveal" data-reveal data-delay="120">
+        <span class="rating-stars" id="ratingStars" aria-hidden="true"></span>
+        <b id="ratingAvg">—</b>
+        <span id="ratingCount">—</span>
+        <a class="ul" href="https://www.google.com/maps" rel="noopener" data-placeholder>Auf Google ansehen</a>
+      </div>
+
+      <div class="reviews" id="reviews"></div>
+
+      <p class="reviews-note reveal" data-reveal>
+        <b>Vor dem Livegang:</b> Diese Karten sind Beispieltexte. Sobald das Google-Business-Profil
+        steht, wird hier die Place-ID eingetragen und die echten Bewertungen werden geladen —
+        siehe <code>README.md</code>.
+      </p>
+    </div>
+  </section>
+
   <!-- KONTAKT -->
   <section class="block rule-top" id="kontakt">
     <div class="pool pool-b" style="bottom:-160px; left:-140px;" aria-hidden="true"></div>
@@ -748,15 +841,16 @@
     </div>
 
     <nav class="footer-nav">
+      <a href="termin.html">Termin buchen</a>
+      <a href="preise.html">Preise</a>
+      <a href="erster-termin.html">Dein erster Termin</a>
       <a href="#leistungen">Leistungen</a>
       <a href="#raeume">Räume</a>
-      <a href="#ablauf">Ablauf</a>
-      <a href="#fragen">Häufige Fragen</a>
       <a href="#team">Team</a>
-      <a href="#praxis">Praxis</a>
       <a href="#kontakt">Kontakt</a>
-      <a href="#">Impressum</a>
-      <a href="#">Datenschutz</a>
+      <a href="en.html">English</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
       <a href="plan.html">Intern · Praxisplan</a>
     </nav>
 
@@ -775,11 +869,12 @@
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h3.5l1.7 4.2-2.1 1.4a11 11 0 005.3 5.3l1.4-2.1L19 14.5V18a1.6 1.6 0 01-1.8 1.6C10.6 19 5 13.4 4.4 6.8A1.6 1.6 0 016 5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
     <span>Anrufen</span>
   </a>
-  <a href="#kontakt" class="btn btn-primary mobile-cta-book">Termin anfragen</a>
+  <a href="termin.html" class="btn btn-primary mobile-cta-book">Termin buchen</a>
 </div>
 
 <button class="back-to-top" id="backToTop" aria-label="Nach oben scrollen">↑</button>
 
+<script src="assets/js/practice-data.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -612,3 +612,162 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: .001ms !important; animation-duration: .001ms !important; }
 }
+
+/* -------------------------------------------------------------------------
+   Roles — what a role may not see simply is not rendered
+   ------------------------------------------------------------------------- */
+
+body.no-money .money,
+body.no-money [data-roles] { display: none; }
+
+.gate-field select {
+  width: 100%; background: transparent; color: var(--aloe);
+  border: none; border-bottom: 1px solid var(--line-strong);
+  padding: 10px 2px; font-family: var(--font-body); font-size: 1rem;
+}
+.gate-field select option { background: var(--surface); color: var(--aloe); }
+.gate-field select:focus { outline: none; border-bottom-color: var(--cedar-soft); }
+
+.tab .badge {
+  display: inline-grid; place-items: center; min-width: 17px; height: 17px;
+  margin-left: 6px; padding: 0 5px; border-radius: 999px;
+  background: #BE8418; color: #1B1508;
+  font-size: .62rem; font-style: normal; font-variant-numeric: tabular-nums;
+}
+.tab.is-on .badge { background: var(--moss); color: var(--aloe); }
+
+.btn-line {
+  padding: 7px 15px; border-radius: 999px;
+  background: none; border: 1px solid var(--line-strong);
+  color: var(--cedar-soft); font-family: var(--font-body); font-size: .74rem;
+  cursor: pointer; transition: border-color .3s var(--ease), color .3s var(--ease);
+}
+.btn-line:hover:not(:disabled) { border-color: var(--aloe); color: var(--aloe); }
+.btn-line:disabled { opacity: .4; cursor: default; }
+.btn-wide { width: 100%; margin-top: 20px; padding: 11px 16px; }
+
+/* -------------------------------------------------------------------------
+   Room blocks on the board
+   ------------------------------------------------------------------------- */
+
+.appt.blocker {
+  --c: #6B7360;
+  cursor: default;
+  background: repeating-linear-gradient(135deg,
+              rgba(218,222,216,.07) 0 7px, rgba(218,222,216,.02) 7px 14px);
+  border-style: dashed;
+}
+.appt.blocker .who { background: rgba(218,222,216,.16); }
+
+/* -------------------------------------------------------------------------
+   Erinnerungen
+   ------------------------------------------------------------------------- */
+
+.remind-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.remind-sum b { display: block; font-family: var(--font-display); font-size: 1.05rem; color: var(--aloe); }
+.remind-sum span { font-size: .76rem; color: var(--cedar); }
+.pill.is-off { background: rgba(218,222,216,.07); border-color: var(--line); color: var(--cedar); }
+.pill.is-late { background: rgba(196,87,79,.16); border-color: rgba(196,87,79,.45); color: #E8998F; }
+
+/* -------------------------------------------------------------------------
+   Anfragen
+   ------------------------------------------------------------------------- */
+
+.req-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.req {
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 3px solid var(--cedar); border-radius: 16px; padding: 18px 20px 16px;
+}
+.req.is-open { border-left-color: #BE8418; }
+.req.is-done { opacity: .62; }
+.req.is-rueckruf { border-left-style: dashed; }
+.req-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: .66rem; }
+.req-kind { letter-spacing: .14em; text-transform: uppercase; color: var(--cedar-soft); }
+.req-id { color: var(--cedar); font-variant-numeric: tabular-nums; }
+.req-at { margin-left: auto; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.req h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; margin: 6px 0 12px; }
+.req-facts { display: flex; flex-direction: column; gap: 7px; }
+.req-facts > div { display: flex; justify-content: space-between; gap: 14px; font-size: .8rem; }
+.req-facts dt { color: var(--cedar); }
+.req-facts dd { color: var(--cedar-soft); text-align: right; }
+.req-facts a { border-bottom: 1px solid var(--line-strong); }
+.req-note { margin-top: 12px; font-size: .82rem; color: var(--cedar-soft); font-style: italic; }
+.req-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 13px; border-top: 1px solid rgba(218,222,216,.08); }
+.req-foot .pill { margin-right: auto; }
+
+/* -------------------------------------------------------------------------
+   Drawer additions — slots, records, prescriptions
+   ------------------------------------------------------------------------- */
+
+.drawer-sub { font-family: var(--font-display); font-weight: 500; font-size: 1.05rem; margin: 22px 0 10px; }
+.drawer-hint { margin-top: 16px; font-size: .74rem; color: var(--cedar); }
+.drawer-empty { font-size: .84rem; color: var(--cedar-soft); }
+.slotlist { display: flex; flex-direction: column; gap: 6px; }
+.slotlist li {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px;
+  font-size: .82rem; color: var(--cedar-soft);
+}
+.slotlist b { color: var(--aloe); font-weight: 400; min-width: 96px; font-variant-numeric: tabular-nums; }
+.slotlist span { font-variant-numeric: tabular-nums; }
+.slotlist em { margin-left: auto; font-style: normal; color: var(--cedar); }
+
+.rxbox { border: 1px solid var(--line); border-radius: 14px; padding: 15px 17px; }
+.rxbox-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.rxbox-top b { font-weight: 400; color: var(--aloe); }
+.rxbox-top span { font-size: .76rem; color: var(--cedar); font-variant-numeric: tabular-nums; }
+.rxbox p { margin-top: 11px; font-size: .8rem; color: var(--cedar-soft); }
+.rxbox.is-late { border-color: rgba(196,87,79,.45); }
+.rxbox.is-late .meter i { background: #C4574F; }
+.rxbox.is-open { border-color: rgba(192,138,42,.45); }
+.rxbox.is-open .meter i { background: #C08A2A; }
+.rxbox.is-paid .meter i { background: #3E9C6D; }
+
+/* -------------------------------------------------------------------------
+   Umsatzverlauf — one measure over time, one hue
+   ------------------------------------------------------------------------- */
+
+.trend {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  gap: 12px; align-items: end; height: 210px; margin-bottom: 18px;
+  padding: 0 4px;
+}
+.tcol { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 7px; }
+.tcol-val { font-size: .72rem; color: var(--cedar-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tcol-bar { width: 100%; max-width: 74px; border-radius: 4px 4px 0 0; background: #6F9E70; transition: height .7s var(--ease); }
+.tcol.is-partial .tcol-bar { background: repeating-linear-gradient(135deg, #6F9E70 0 6px, #46644A 6px 12px); }
+.tcol-lab { font-size: .7rem; color: var(--cedar); }
+.btable .is-up { color: #7FCFA6; }
+.btable .is-down { color: #E8998F; }
+
+/* -------------------------------------------------------------------------
+   Printing an invoice
+   ------------------------------------------------------------------------- */
+
+.print-head { display: none; }
+.inv-terms { margin-top: 16px; font-size: .72rem; color: var(--cedar); }
+
+@media print {
+  body { background: #fff; }
+  body > *:not(.drawer) { display: none !important; }
+  .drawer { position: static; display: block; padding: 0; background: none; }
+  .drawer-close, .btn-line, .drawer-hint { display: none !important; }
+  .drawer-card {
+    width: 100%; max-width: none; border: none; box-shadow: none;
+    background: #fff; color: #14180F; padding: 0;
+  }
+  .drawer-card h2, .drawer-time, .postable td:first-child,
+  .postable tfoot th, .postable tfoot td { color: #14180F; }
+  .postable td, .postable th, .inv-meta, .inv-terms { color: #3B4433; }
+  .postable th, .postable td { border-color: #C9D0C2; }
+  .print-head {
+    display: flex; justify-content: space-between; gap: 30px;
+    padding-bottom: 18px; margin-bottom: 22px; border-bottom: 2px solid #14180F;
+    font-size: 10pt; line-height: 1.5;
+  }
+  .print-head b { display: block; font-size: 12pt; }
+  .print-head span { display: block; color: #3B4433; }
+  .print-inv { text-align: right; }
+  .pill { border-color: #C9D0C2 !important; color: #14180F !important; background: none !important; }
+  @page { margin: 18mm; }
+}
