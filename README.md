@@ -65,12 +65,12 @@ behörde. Ein unvollständiges Impressum ist abmahnfähig. Die Datenschutz-
 erklärung ist eine sorgfältige Vorlage, aber keine Rechtsberatung — wegen der
 Gesundheitsdaten vor dem Livegang prüfen lassen.
 
-### 3. Schriften lokal einbinden
+### 3. ~~Schriften lokal einbinden~~ — erledigt
 
-Aktuell kommen Cormorant und Jost von Google Fonts. Dabei wird die IP-Adresse
-der Besucher an Google übertragen — in Deutschland bereits abgemahnt. Beide
-Schriften herunterladen, nach `assets/fonts/` legen und die `<link>`-Zeilen
-durch `@font-face` ersetzen. Nebenbei wird die Seite dadurch schneller.
+Cormorant und Karla liegen unter `assets/fonts/` und werden über
+`assets/css/fonts.css` eingebunden. Es geht keine Anfrage mehr an Google, und
+die Seite lädt einen Roundtrip zu einem fremden Host weniger. Drei
+Variable-Font-Dateien, zusammen 88 KB.
 
 ### 4. Eigene Fotos
 

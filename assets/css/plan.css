@@ -17,8 +17,6 @@
   --line: rgba(218, 222, 216, .13);
   --line-strong: rgba(218, 222, 216, .26);
 
-  --font-display: "Cormorant", Georgia, serif;
-  --font-body: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
   --ease: cubic-bezier(.32,.72,0,1);
 
   --hour: 62px;          /* one hour of the day */
@@ -30,7 +28,7 @@
 
 body {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   background: var(--moss-deep);
   color: var(--aloe);
   line-height: 1.6;
@@ -594,8 +592,12 @@ a { color: inherit; text-decoration: none; }
   .control-right { justify-content: space-between; }
   .rooms-load, .team-list { grid-template-columns: 1fr; }
   .topbar { gap: 14px; }
-  .tabs { order: 3; width: 100%; justify-content: space-between; }
-  .tab { flex: 1; text-align: center; padding: 9px 10px; }
+  /* seven sections do not fit a phone — let the strip scroll instead of
+     squeezing every label to nothing */
+  .tabs { order: 3; width: 100%; justify-content: flex-start; overflow-x: auto;
+          scrollbar-width: none; -ms-overflow-style: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; white-space: nowrap; padding: 9px 15px; }
   .bar { grid-template-columns: 1fr; gap: 4px; }
   .bar-val { text-align: left; display: flex; align-items: baseline; gap: 8px; }
   .bar-val small { display: inline; }

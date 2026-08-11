@@ -15,8 +15,6 @@
   --ink: #2C3424;
   --ink-soft: #55604A;
 
-  --font-display: "Cormorant", Georgia, serif;
-  --font-body: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
 
   --ease-swish: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-glass: cubic-bezier(0.32, 0.72, 0, 1);
@@ -39,7 +37,8 @@ html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
 body {
   font-family: var(--font-body);
-  font-weight: 300;
+  /* Karla's 300 is anemic on a dark ground; 400 is its text weight */
+  font-weight: 400;
   color: var(--aloe);
   background: var(--moss);
   line-height: 1.65;
