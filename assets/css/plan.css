@@ -251,6 +251,21 @@ a { color: inherit; text-decoration: none; }
 .col .slot { height: var(--hour); border-bottom: 1px solid rgba(218,222,216,.06); }
 .col .slot:nth-child(odd) { background: rgba(218,222,216,.014); }
 
+/* the house-wide break — hatched, so the empty hour reads as closed, not free */
+.lunchband {
+  position: absolute; left: 62px; right: 0; z-index: 1; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(135deg,
+              rgba(218,222,216,.045) 0 9px, transparent 9px 18px);
+  border-top: 1px dashed rgba(218,222,216,.22);
+  border-bottom: 1px dashed rgba(218,222,216,.22);
+}
+.lunchband span {
+  font-size: .64rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--cedar); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 14px;
+}
+
 .appt {
   position: absolute; left: 5px; right: 5px;
   border-radius: 9px; padding: 7px 10px;
