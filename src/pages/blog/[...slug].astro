@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffiliateLink from '../../components/AffiliateLink.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = import.meta.env.BASE_URL;
+
+const dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p class="article-meta">
+      Veröffentlicht am {dateFormatter.format(post.data.pubDate)}
+      {post.data.updatedDate && (
+        <> · Aktualisiert am {dateFormatter.format(post.data.updatedDate)}</>
+      )}
+    </p>
+
+    {post.data.products.length > 0 && (
+      <div>
+        {post.data.products.map((product) => (
+          <AffiliateLink name={product.name} href={product.href} />
+        ))}
+      </div>
+    )}
+
+    <Content />
+
+    {post.data.tags.length > 0 && (
+      <div class="tags">
+        {post.data.tags.map((tag) => <span class="tag-pill">#{tag}</span>)}
+      </div>
+    )}
+  </article>
+</BaseLayout>

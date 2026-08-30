@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL;
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+<BaseLayout
+  title="Schreibtisch & Fokus"
+  description="Ehrliche Kaufberatung für ein besseres Home Office: Bürostühle, Schreibtische, Beleuchtung und mehr."
+>
+  <h1>Ein besserer Arbeitsplatz, ein produktiverer Tag</h1>
+  <p class="lede">
+    Schreibtisch &amp; Fokus zeigt dir, worauf es bei Home-Office-Ausstattung
+    wirklich ankommt – ohne Marketing-Blabla, dafür mit konkreten Kriterien,
+    die du beim Kauf selbst prüfen kannst.
+  </p>
+
+  <h2>Neueste Ratgeber</h2>
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <a href={`${base}blog/${post.id}/`}>{post.data.title}</a>
+        <p class="excerpt">{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

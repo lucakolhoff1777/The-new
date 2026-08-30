@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lucakolhoff1777.github.io/the-new/sitemap-index.xml

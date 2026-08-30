@@ -1,0 +1,18 @@
+---
+// Reusable affiliate call-to-action box.
+// IMPORTANT: `href` must point to a real product and include your own
+// Amazon PartnerNet tag (?tag=deintag-21) before this goes live.
+interface Props {
+  name: string;
+  href: string;
+  cta?: string;
+}
+const { name, href, cta = 'Preis auf Amazon ansehen' } = Astro.props;
+---
+<div class="affiliate-box">
+  <div>
+    <span class="name">{name}</span>
+    <span class="tag">Werbung / Affiliate-Link*</span>
+  </div>
+  <a class="btn" href={href} target="_blank" rel="nofollow sponsored noopener">{cta}</a>
+</div>
