@@ -1,0 +1,17 @@
+---
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <p>
+      &copy; {year} Schreibtisch&amp;Fokus. Als Amazon-Partner verdienen wir an
+      qualifizierten Käufen.
+    </p>
+    <nav>
+      <a href={`${base}affiliate-hinweis/`}>Affiliate-Hinweis</a>
+      <a href={`${base}datenschutz/`}>Datenschutz</a>
+      <a href={`${base}impressum/`}>Impressum</a>
+    </nav>
+  </div>
+</footer>
